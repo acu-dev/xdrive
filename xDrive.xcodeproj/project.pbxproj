@@ -9,6 +9,7 @@
 /* Begin PBXBuildFile section */
 		A93E36AA13C5630600DE693D /* DirectoryContentsViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = A93E36A913C5630600DE693D /* DirectoryContentsViewController.m */; };
 		A978436C13C6876700120A94 /* DirectoryNavigationController.m in Sources */ = {isa = PBXBuildFile; fileRef = A978436B13C6876700120A94 /* DirectoryNavigationController.m */; };
+		C30580341418207400E49727 /* README.md in Resources */ = {isa = PBXBuildFile; fileRef = C30580331418207400E49727 /* README.md */; };
 		C339669713C3757300F59D2C /* XServiceFetcher.m in Sources */ = {isa = PBXBuildFile; fileRef = C339669613C3757300F59D2C /* XServiceFetcher.m */; };
 		C351746E13C390B30078E361 /* AccountViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = C351746D13C390B30078E361 /* AccountViewController.m */; };
 		C378433713BE36BB00F1793A /* XService.m in Sources */ = {isa = PBXBuildFile; fileRef = C378433613BE36BB00F1793A /* XService.m */; };
@@ -48,6 +49,7 @@
 		A93E36A913C5630600DE693D /* DirectoryContentsViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DirectoryContentsViewController.m; sourceTree = "<group>"; };
 		A978436A13C6876700120A94 /* DirectoryNavigationController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DirectoryNavigationController.h; sourceTree = "<group>"; };
 		A978436B13C6876700120A94 /* DirectoryNavigationController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DirectoryNavigationController.m; sourceTree = "<group>"; };
+		C30580331418207400E49727 /* README.md */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = README.md; sourceTree = "<group>"; };
 		C339669513C3757300F59D2C /* XServiceFetcher.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = XServiceFetcher.h; sourceTree = "<group>"; };
 		C339669613C3757300F59D2C /* XServiceFetcher.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = XServiceFetcher.m; sourceTree = "<group>"; };
 		C351746C13C390B30078E361 /* AccountViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AccountViewController.h; sourceTree = "<group>"; };
@@ -203,6 +205,7 @@
 		C3FC6C4813BCB90B009FBAA3 = {
 			isa = PBXGroup;
 			children = (
+				C30580331418207400E49727 /* README.md */,
 				C3CF9CDA13D9D54D003F21D1 /* ATMHud */,
 				C3FC6C5D13BCB90B009FBAA3 /* xDrive */,
 				C3FC6C5613BCB90B009FBAA3 /* Frameworks */,
@@ -325,6 +328,7 @@
 				C3FC6C6213BCB90B009FBAA3 /* InfoPlist.strings in Resources */,
 				C3FC6C6B13BCB90B009FBAA3 /* MainStoryboard_iPhone.storyboard in Resources */,
 				C3FC6C6E13BCB90B009FBAA3 /* MainStoryboard_iPad.storyboard in Resources */,
+				C30580341418207400E49727 /* README.md in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
