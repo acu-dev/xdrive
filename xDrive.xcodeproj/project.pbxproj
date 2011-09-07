@@ -27,7 +27,6 @@
 		C3E6E0BB13DE010A00EA014B /* XDirectory.m in Sources */ = {isa = PBXBuildFile; fileRef = C3E6E0BA13DE010A00EA014B /* XDirectory.m */; };
 		C3E6E0BE13DE010A00EA014B /* XDefaultPath.m in Sources */ = {isa = PBXBuildFile; fileRef = C3E6E0BD13DE010A00EA014B /* XDefaultPath.m */; };
 		C3E6E0C113DE06E100EA014B /* xDrive.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = C3E6E0BF13DE06E100EA014B /* xDrive.xcdatamodeld */; };
-		C3EA7EC713E0A21B004889A0 /* FileFetcher.m in Sources */ = {isa = PBXBuildFile; fileRef = C3EA7EC613E0A21B004889A0 /* FileFetcher.m */; };
 		C3ECE28A13C3B8E8004FF63F /* XEntry.m in Sources */ = {isa = PBXBuildFile; fileRef = C3ECE28913C3B8E8004FF63F /* XEntry.m */; };
 		C3ECE28D13C3B8E9004FF63F /* XServer.m in Sources */ = {isa = PBXBuildFile; fileRef = C3ECE28C13C3B8E9004FF63F /* XServer.m */; };
 		C3ECE29613C3B8E9004FF63F /* XFile.m in Sources */ = {isa = PBXBuildFile; fileRef = C3ECE29513C3B8E9004FF63F /* XFile.m */; };
@@ -40,8 +39,6 @@
 		C3FC6C6813BCB90B009FBAA3 /* xDriveAppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = C3FC6C6713BCB90B009FBAA3 /* xDriveAppDelegate.m */; };
 		C3FC6C6B13BCB90B009FBAA3 /* MainStoryboard_iPhone.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = C3FC6C6913BCB90B009FBAA3 /* MainStoryboard_iPhone.storyboard */; };
 		C3FC6C6E13BCB90B009FBAA3 /* MainStoryboard_iPad.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = C3FC6C6C13BCB90B009FBAA3 /* MainStoryboard_iPad.storyboard */; };
-		C3FC6C8E13BCBADA009FBAA3 /* HTTPFetcher.m in Sources */ = {isa = PBXBuildFile; fileRef = C3FC6C8D13BCBADA009FBAA3 /* HTTPFetcher.m */; };
-		C3FC6C9513BCBE58009FBAA3 /* JSONFetcher.m in Sources */ = {isa = PBXBuildFile; fileRef = C3FC6C9413BCBE58009FBAA3 /* JSONFetcher.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -81,8 +78,6 @@
 		C3E6E0BC13DE010A00EA014B /* XDefaultPath.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = XDefaultPath.h; sourceTree = "<group>"; };
 		C3E6E0BD13DE010A00EA014B /* XDefaultPath.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = XDefaultPath.m; sourceTree = "<group>"; };
 		C3E6E0C013DE06E100EA014B /* xDrive.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = xDrive.xcdatamodel; sourceTree = "<group>"; };
-		C3EA7EC513E0A21B004889A0 /* FileFetcher.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FileFetcher.h; sourceTree = "<group>"; };
-		C3EA7EC613E0A21B004889A0 /* FileFetcher.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FileFetcher.m; sourceTree = "<group>"; };
 		C3ECE28813C3B8E8004FF63F /* XEntry.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = XEntry.h; sourceTree = "<group>"; };
 		C3ECE28913C3B8E8004FF63F /* XEntry.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = XEntry.m; sourceTree = "<group>"; };
 		C3ECE28B13C3B8E9004FF63F /* XServer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = XServer.h; sourceTree = "<group>"; };
@@ -103,10 +98,6 @@
 		C3FC6C6713BCB90B009FBAA3 /* xDriveAppDelegate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = xDriveAppDelegate.m; sourceTree = "<group>"; };
 		C3FC6C6A13BCB90B009FBAA3 /* en */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = en; path = en.lproj/MainStoryboard_iPhone.storyboard; sourceTree = "<group>"; };
 		C3FC6C6D13BCB90B009FBAA3 /* en */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = en; path = en.lproj/MainStoryboard_iPad.storyboard; sourceTree = "<group>"; };
-		C3FC6C8C13BCBADA009FBAA3 /* HTTPFetcher.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HTTPFetcher.h; sourceTree = "<group>"; };
-		C3FC6C8D13BCBADA009FBAA3 /* HTTPFetcher.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = HTTPFetcher.m; sourceTree = "<group>"; };
-		C3FC6C9313BCBE57009FBAA3 /* JSONFetcher.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = JSONFetcher.h; sourceTree = "<group>"; };
-		C3FC6C9413BCBE58009FBAA3 /* JSONFetcher.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = JSONFetcher.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -149,6 +140,7 @@
 		C378433A13BE475200F1793A /* Model */ = {
 			isa = PBXGroup;
 			children = (
+				C3D9E89E13C358D9007D1A7C /* Managed Objects */,
 				C3E6E0BF13DE06E100EA014B /* xDrive.xcdatamodeld */,
 				C378433513BE36BB00F1793A /* XService.h */,
 				C378433613BE36BB00F1793A /* XService.m */,
@@ -158,8 +150,6 @@
 				C3D9E88313C34D1A007D1A7C /* XServiceRemote.m */,
 				C339669513C3757300F59D2C /* XServiceFetcher.h */,
 				C339669613C3757300F59D2C /* XServiceFetcher.m */,
-				C3FC6C8F13BCBAE0009FBAA3 /* Net */,
-				C3D9E89E13C358D9007D1A7C /* Managed Objects */,
 			);
 			name = Model;
 			sourceTree = "<group>";
@@ -262,19 +252,6 @@
 			name = "Supporting Files";
 			sourceTree = "<group>";
 		};
-		C3FC6C8F13BCBAE0009FBAA3 /* Net */ = {
-			isa = PBXGroup;
-			children = (
-				C3FC6C8C13BCBADA009FBAA3 /* HTTPFetcher.h */,
-				C3FC6C8D13BCBADA009FBAA3 /* HTTPFetcher.m */,
-				C3FC6C9313BCBE57009FBAA3 /* JSONFetcher.h */,
-				C3FC6C9413BCBE58009FBAA3 /* JSONFetcher.m */,
-				C3EA7EC513E0A21B004889A0 /* FileFetcher.h */,
-				C3EA7EC613E0A21B004889A0 /* FileFetcher.m */,
-			);
-			name = Net;
-			sourceTree = "<group>";
-		};
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
@@ -341,8 +318,6 @@
 			files = (
 				C3FC6C6413BCB90B009FBAA3 /* main.m in Sources */,
 				C3FC6C6813BCB90B009FBAA3 /* xDriveAppDelegate.m in Sources */,
-				C3FC6C8E13BCBADA009FBAA3 /* HTTPFetcher.m in Sources */,
-				C3FC6C9513BCBE58009FBAA3 /* JSONFetcher.m in Sources */,
 				C378433713BE36BB00F1793A /* XService.m in Sources */,
 				C3D9E88413C34D1A007D1A7C /* XServiceRemote.m in Sources */,
 				C3D9E88813C34D2B007D1A7C /* XServiceLocal.m in Sources */,
@@ -363,7 +338,6 @@
 				C3E6E0BB13DE010A00EA014B /* XDirectory.m in Sources */,
 				C3E6E0BE13DE010A00EA014B /* XDefaultPath.m in Sources */,
 				C3E6E0C113DE06E100EA014B /* xDrive.xcdatamodeld in Sources */,
-				C3EA7EC713E0A21B004889A0 /* FileFetcher.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
