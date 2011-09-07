@@ -1,0 +1,502 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 46;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		A93E36AA13C5630600DE693D /* DirectoryContentsViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = A93E36A913C5630600DE693D /* DirectoryContentsViewController.m */; };
+		A978436C13C6876700120A94 /* DirectoryNavigationController.m in Sources */ = {isa = PBXBuildFile; fileRef = A978436B13C6876700120A94 /* DirectoryNavigationController.m */; };
+		C339669713C3757300F59D2C /* XServiceFetcher.m in Sources */ = {isa = PBXBuildFile; fileRef = C339669613C3757300F59D2C /* XServiceFetcher.m */; };
+		C351746E13C390B30078E361 /* AccountViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = C351746D13C390B30078E361 /* AccountViewController.m */; };
+		C378433713BE36BB00F1793A /* XService.m in Sources */ = {isa = PBXBuildFile; fileRef = C378433613BE36BB00F1793A /* XService.m */; };
+		C378433913BE45B800F1793A /* CoreData.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C378433813BE45B800F1793A /* CoreData.framework */; };
+		C3C9A9C213D9D61B003B5E91 /* AudioToolbox.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C3C9A9C113D9D61B003B5E91 /* AudioToolbox.framework */; };
+		C3C9A9C513D9D62F003B5E91 /* QuartzCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C3C9A9C413D9D62F003B5E91 /* QuartzCore.framework */; };
+		C3CF9CE813D9D54D003F21D1 /* ATMHud.m in Sources */ = {isa = PBXBuildFile; fileRef = C3CF9CDC13D9D54D003F21D1 /* ATMHud.m */; };
+		C3CF9CE913D9D54D003F21D1 /* ATMHudQueueItem.m in Sources */ = {isa = PBXBuildFile; fileRef = C3CF9CDF13D9D54D003F21D1 /* ATMHudQueueItem.m */; };
+		C3CF9CEA13D9D54D003F21D1 /* ATMHudView.m in Sources */ = {isa = PBXBuildFile; fileRef = C3CF9CE113D9D54D003F21D1 /* ATMHudView.m */; };
+		C3CF9CEB13D9D54D003F21D1 /* ATMProgressLayer.m in Sources */ = {isa = PBXBuildFile; fileRef = C3CF9CE313D9D54D003F21D1 /* ATMProgressLayer.m */; };
+		C3CF9CEC13D9D54D003F21D1 /* ATMSoundFX.m in Sources */ = {isa = PBXBuildFile; fileRef = C3CF9CE513D9D54D003F21D1 /* ATMSoundFX.m */; };
+		C3CF9CED13D9D54D003F21D1 /* ATMTextLayer.m in Sources */ = {isa = PBXBuildFile; fileRef = C3CF9CE713D9D54D003F21D1 /* ATMTextLayer.m */; };
+		C3D9E88413C34D1A007D1A7C /* XServiceRemote.m in Sources */ = {isa = PBXBuildFile; fileRef = C3D9E88313C34D1A007D1A7C /* XServiceRemote.m */; };
+		C3D9E88813C34D2B007D1A7C /* XServiceLocal.m in Sources */ = {isa = PBXBuildFile; fileRef = C3D9E88713C34D2B007D1A7C /* XServiceLocal.m */; };
+		C3E6E0BB13DE010A00EA014B /* XDirectory.m in Sources */ = {isa = PBXBuildFile; fileRef = C3E6E0BA13DE010A00EA014B /* XDirectory.m */; };
+		C3E6E0BE13DE010A00EA014B /* XDefaultPath.m in Sources */ = {isa = PBXBuildFile; fileRef = C3E6E0BD13DE010A00EA014B /* XDefaultPath.m */; };
+		C3E6E0C113DE06E100EA014B /* xDrive.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = C3E6E0BF13DE06E100EA014B /* xDrive.xcdatamodeld */; };
+		C3EA7EC713E0A21B004889A0 /* FileFetcher.m in Sources */ = {isa = PBXBuildFile; fileRef = C3EA7EC613E0A21B004889A0 /* FileFetcher.m */; };
+		C3ECE28A13C3B8E8004FF63F /* XEntry.m in Sources */ = {isa = PBXBuildFile; fileRef = C3ECE28913C3B8E8004FF63F /* XEntry.m */; };
+		C3ECE28D13C3B8E9004FF63F /* XServer.m in Sources */ = {isa = PBXBuildFile; fileRef = C3ECE28C13C3B8E9004FF63F /* XServer.m */; };
+		C3ECE29613C3B8E9004FF63F /* XFile.m in Sources */ = {isa = PBXBuildFile; fileRef = C3ECE29513C3B8E9004FF63F /* XFile.m */; };
+		C3ECE29913C3BF2E004FF63F /* RootTabBarController.m in Sources */ = {isa = PBXBuildFile; fileRef = C3ECE29813C3BF2D004FF63F /* RootTabBarController.m */; };
+		C3FC6C5813BCB90B009FBAA3 /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C3FC6C5713BCB90B009FBAA3 /* UIKit.framework */; };
+		C3FC6C5A13BCB90B009FBAA3 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C3FC6C5913BCB90B009FBAA3 /* Foundation.framework */; };
+		C3FC6C5C13BCB90B009FBAA3 /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C3FC6C5B13BCB90B009FBAA3 /* CoreGraphics.framework */; };
+		C3FC6C6213BCB90B009FBAA3 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = C3FC6C6013BCB90B009FBAA3 /* InfoPlist.strings */; };
+		C3FC6C6413BCB90B009FBAA3 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = C3FC6C6313BCB90B009FBAA3 /* main.m */; };
+		C3FC6C6813BCB90B009FBAA3 /* xDriveAppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = C3FC6C6713BCB90B009FBAA3 /* xDriveAppDelegate.m */; };
+		C3FC6C6B13BCB90B009FBAA3 /* MainStoryboard_iPhone.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = C3FC6C6913BCB90B009FBAA3 /* MainStoryboard_iPhone.storyboard */; };
+		C3FC6C6E13BCB90B009FBAA3 /* MainStoryboard_iPad.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = C3FC6C6C13BCB90B009FBAA3 /* MainStoryboard_iPad.storyboard */; };
+		C3FC6C8E13BCBADA009FBAA3 /* HTTPFetcher.m in Sources */ = {isa = PBXBuildFile; fileRef = C3FC6C8D13BCBADA009FBAA3 /* HTTPFetcher.m */; };
+		C3FC6C9513BCBE58009FBAA3 /* JSONFetcher.m in Sources */ = {isa = PBXBuildFile; fileRef = C3FC6C9413BCBE58009FBAA3 /* JSONFetcher.m */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXFileReference section */
+		A93E36A813C5630600DE693D /* DirectoryContentsViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DirectoryContentsViewController.h; sourceTree = "<group>"; };
+		A93E36A913C5630600DE693D /* DirectoryContentsViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DirectoryContentsViewController.m; sourceTree = "<group>"; };
+		A978436A13C6876700120A94 /* DirectoryNavigationController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DirectoryNavigationController.h; sourceTree = "<group>"; };
+		A978436B13C6876700120A94 /* DirectoryNavigationController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DirectoryNavigationController.m; sourceTree = "<group>"; };
+		C339669513C3757300F59D2C /* XServiceFetcher.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = XServiceFetcher.h; sourceTree = "<group>"; };
+		C339669613C3757300F59D2C /* XServiceFetcher.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = XServiceFetcher.m; sourceTree = "<group>"; };
+		C351746C13C390B30078E361 /* AccountViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AccountViewController.h; sourceTree = "<group>"; };
+		C351746D13C390B30078E361 /* AccountViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AccountViewController.m; sourceTree = "<group>"; };
+		C378433513BE36BB00F1793A /* XService.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = XService.h; sourceTree = "<group>"; };
+		C378433613BE36BB00F1793A /* XService.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = XService.m; sourceTree = "<group>"; };
+		C378433813BE45B800F1793A /* CoreData.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreData.framework; path = System/Library/Frameworks/CoreData.framework; sourceTree = SDKROOT; };
+		C3C9A9C113D9D61B003B5E91 /* AudioToolbox.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AudioToolbox.framework; path = System/Library/Frameworks/AudioToolbox.framework; sourceTree = SDKROOT; };
+		C3C9A9C413D9D62F003B5E91 /* QuartzCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = QuartzCore.framework; path = System/Library/Frameworks/QuartzCore.framework; sourceTree = SDKROOT; };
+		C3CF9CDB13D9D54D003F21D1 /* ATMHud.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ATMHud.h; sourceTree = "<group>"; };
+		C3CF9CDC13D9D54D003F21D1 /* ATMHud.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ATMHud.m; sourceTree = "<group>"; };
+		C3CF9CDD13D9D54D003F21D1 /* ATMHudDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ATMHudDelegate.h; sourceTree = "<group>"; };
+		C3CF9CDE13D9D54D003F21D1 /* ATMHudQueueItem.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ATMHudQueueItem.h; sourceTree = "<group>"; };
+		C3CF9CDF13D9D54D003F21D1 /* ATMHudQueueItem.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ATMHudQueueItem.m; sourceTree = "<group>"; };
+		C3CF9CE013D9D54D003F21D1 /* ATMHudView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ATMHudView.h; sourceTree = "<group>"; };
+		C3CF9CE113D9D54D003F21D1 /* ATMHudView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ATMHudView.m; sourceTree = "<group>"; };
+		C3CF9CE213D9D54D003F21D1 /* ATMProgressLayer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ATMProgressLayer.h; sourceTree = "<group>"; };
+		C3CF9CE313D9D54D003F21D1 /* ATMProgressLayer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ATMProgressLayer.m; sourceTree = "<group>"; };
+		C3CF9CE413D9D54D003F21D1 /* ATMSoundFX.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ATMSoundFX.h; sourceTree = "<group>"; };
+		C3CF9CE513D9D54D003F21D1 /* ATMSoundFX.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ATMSoundFX.m; sourceTree = "<group>"; };
+		C3CF9CE613D9D54D003F21D1 /* ATMTextLayer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ATMTextLayer.h; sourceTree = "<group>"; };
+		C3CF9CE713D9D54D003F21D1 /* ATMTextLayer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ATMTextLayer.m; sourceTree = "<group>"; };
+		C3D9E88213C34D1A007D1A7C /* XServiceRemote.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = XServiceRemote.h; sourceTree = "<group>"; };
+		C3D9E88313C34D1A007D1A7C /* XServiceRemote.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = XServiceRemote.m; sourceTree = "<group>"; };
+		C3D9E88613C34D2B007D1A7C /* XServiceLocal.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = XServiceLocal.h; sourceTree = "<group>"; };
+		C3D9E88713C34D2B007D1A7C /* XServiceLocal.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = XServiceLocal.m; sourceTree = "<group>"; };
+		C3E6E0B913DE010900EA014B /* XDirectory.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = XDirectory.h; sourceTree = "<group>"; };
+		C3E6E0BA13DE010A00EA014B /* XDirectory.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = XDirectory.m; sourceTree = "<group>"; };
+		C3E6E0BC13DE010A00EA014B /* XDefaultPath.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = XDefaultPath.h; sourceTree = "<group>"; };
+		C3E6E0BD13DE010A00EA014B /* XDefaultPath.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = XDefaultPath.m; sourceTree = "<group>"; };
+		C3E6E0C013DE06E100EA014B /* xDrive.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = xDrive.xcdatamodel; sourceTree = "<group>"; };
+		C3EA7EC513E0A21B004889A0 /* FileFetcher.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FileFetcher.h; sourceTree = "<group>"; };
+		C3EA7EC613E0A21B004889A0 /* FileFetcher.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FileFetcher.m; sourceTree = "<group>"; };
+		C3ECE28813C3B8E8004FF63F /* XEntry.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = XEntry.h; sourceTree = "<group>"; };
+		C3ECE28913C3B8E8004FF63F /* XEntry.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = XEntry.m; sourceTree = "<group>"; };
+		C3ECE28B13C3B8E9004FF63F /* XServer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = XServer.h; sourceTree = "<group>"; };
+		C3ECE28C13C3B8E9004FF63F /* XServer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = XServer.m; sourceTree = "<group>"; };
+		C3ECE29413C3B8E9004FF63F /* XFile.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = XFile.h; sourceTree = "<group>"; };
+		C3ECE29513C3B8E9004FF63F /* XFile.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = XFile.m; sourceTree = "<group>"; };
+		C3ECE29713C3BF2D004FF63F /* RootTabBarController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RootTabBarController.h; sourceTree = "<group>"; };
+		C3ECE29813C3BF2D004FF63F /* RootTabBarController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RootTabBarController.m; sourceTree = "<group>"; };
+		C3FC6C5313BCB90B009FBAA3 /* xDrive.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = xDrive.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		C3FC6C5713BCB90B009FBAA3 /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = System/Library/Frameworks/UIKit.framework; sourceTree = SDKROOT; };
+		C3FC6C5913BCB90B009FBAA3 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
+		C3FC6C5B13BCB90B009FBAA3 /* CoreGraphics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreGraphics.framework; path = System/Library/Frameworks/CoreGraphics.framework; sourceTree = SDKROOT; };
+		C3FC6C5F13BCB90B009FBAA3 /* xDrive-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "xDrive-Info.plist"; sourceTree = "<group>"; };
+		C3FC6C6113BCB90B009FBAA3 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
+		C3FC6C6313BCB90B009FBAA3 /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
+		C3FC6C6513BCB90B009FBAA3 /* xDrive-Prefix.pch */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "xDrive-Prefix.pch"; sourceTree = "<group>"; };
+		C3FC6C6613BCB90B009FBAA3 /* xDriveAppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = xDriveAppDelegate.h; sourceTree = "<group>"; };
+		C3FC6C6713BCB90B009FBAA3 /* xDriveAppDelegate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = xDriveAppDelegate.m; sourceTree = "<group>"; };
+		C3FC6C6A13BCB90B009FBAA3 /* en */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = en; path = en.lproj/MainStoryboard_iPhone.storyboard; sourceTree = "<group>"; };
+		C3FC6C6D13BCB90B009FBAA3 /* en */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = en; path = en.lproj/MainStoryboard_iPad.storyboard; sourceTree = "<group>"; };
+		C3FC6C8C13BCBADA009FBAA3 /* HTTPFetcher.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HTTPFetcher.h; sourceTree = "<group>"; };
+		C3FC6C8D13BCBADA009FBAA3 /* HTTPFetcher.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = HTTPFetcher.m; sourceTree = "<group>"; };
+		C3FC6C9313BCBE57009FBAA3 /* JSONFetcher.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = JSONFetcher.h; sourceTree = "<group>"; };
+		C3FC6C9413BCBE58009FBAA3 /* JSONFetcher.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = JSONFetcher.m; sourceTree = "<group>"; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		C3FC6C5013BCB90B009FBAA3 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				C3C9A9C513D9D62F003B5E91 /* QuartzCore.framework in Frameworks */,
+				C3C9A9C213D9D61B003B5E91 /* AudioToolbox.framework in Frameworks */,
+				C378433913BE45B800F1793A /* CoreData.framework in Frameworks */,
+				C3FC6C5813BCB90B009FBAA3 /* UIKit.framework in Frameworks */,
+				C3FC6C5A13BCB90B009FBAA3 /* Foundation.framework in Frameworks */,
+				C3FC6C5C13BCB90B009FBAA3 /* CoreGraphics.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		A978436813C6847300120A94 /* Directory Contents */ = {
+			isa = PBXGroup;
+			children = (
+				A978436A13C6876700120A94 /* DirectoryNavigationController.h */,
+				A978436B13C6876700120A94 /* DirectoryNavigationController.m */,
+				A93E36A813C5630600DE693D /* DirectoryContentsViewController.h */,
+				A93E36A913C5630600DE693D /* DirectoryContentsViewController.m */,
+			);
+			name = "Directory Contents";
+			sourceTree = "<group>";
+		};
+		C351747013C393690078E361 /* Account */ = {
+			isa = PBXGroup;
+			children = (
+				C351746C13C390B30078E361 /* AccountViewController.h */,
+				C351746D13C390B30078E361 /* AccountViewController.m */,
+			);
+			name = Account;
+			sourceTree = "<group>";
+		};
+		C378433A13BE475200F1793A /* Model */ = {
+			isa = PBXGroup;
+			children = (
+				C3E6E0BF13DE06E100EA014B /* xDrive.xcdatamodeld */,
+				C378433513BE36BB00F1793A /* XService.h */,
+				C378433613BE36BB00F1793A /* XService.m */,
+				C3D9E88613C34D2B007D1A7C /* XServiceLocal.h */,
+				C3D9E88713C34D2B007D1A7C /* XServiceLocal.m */,
+				C3D9E88213C34D1A007D1A7C /* XServiceRemote.h */,
+				C3D9E88313C34D1A007D1A7C /* XServiceRemote.m */,
+				C339669513C3757300F59D2C /* XServiceFetcher.h */,
+				C339669613C3757300F59D2C /* XServiceFetcher.m */,
+				C3FC6C8F13BCBAE0009FBAA3 /* Net */,
+				C3D9E89E13C358D9007D1A7C /* Managed Objects */,
+			);
+			name = Model;
+			sourceTree = "<group>";
+		};
+		C3CF9CDA13D9D54D003F21D1 /* ATMHud */ = {
+			isa = PBXGroup;
+			children = (
+				C3CF9CDB13D9D54D003F21D1 /* ATMHud.h */,
+				C3CF9CDC13D9D54D003F21D1 /* ATMHud.m */,
+				C3CF9CDD13D9D54D003F21D1 /* ATMHudDelegate.h */,
+				C3CF9CDE13D9D54D003F21D1 /* ATMHudQueueItem.h */,
+				C3CF9CDF13D9D54D003F21D1 /* ATMHudQueueItem.m */,
+				C3CF9CE013D9D54D003F21D1 /* ATMHudView.h */,
+				C3CF9CE113D9D54D003F21D1 /* ATMHudView.m */,
+				C3CF9CE213D9D54D003F21D1 /* ATMProgressLayer.h */,
+				C3CF9CE313D9D54D003F21D1 /* ATMProgressLayer.m */,
+				C3CF9CE413D9D54D003F21D1 /* ATMSoundFX.h */,
+				C3CF9CE513D9D54D003F21D1 /* ATMSoundFX.m */,
+				C3CF9CE613D9D54D003F21D1 /* ATMTextLayer.h */,
+				C3CF9CE713D9D54D003F21D1 /* ATMTextLayer.m */,
+			);
+			name = ATMHud;
+			path = xDrive/ATMHud;
+			sourceTree = "<group>";
+		};
+		C3D9E89E13C358D9007D1A7C /* Managed Objects */ = {
+			isa = PBXGroup;
+			children = (
+				C3ECE28B13C3B8E9004FF63F /* XServer.h */,
+				C3ECE28C13C3B8E9004FF63F /* XServer.m */,
+				C3ECE28813C3B8E8004FF63F /* XEntry.h */,
+				C3ECE28913C3B8E8004FF63F /* XEntry.m */,
+				C3ECE29413C3B8E9004FF63F /* XFile.h */,
+				C3ECE29513C3B8E9004FF63F /* XFile.m */,
+				C3E6E0BC13DE010A00EA014B /* XDefaultPath.h */,
+				C3E6E0BD13DE010A00EA014B /* XDefaultPath.m */,
+				C3E6E0B913DE010900EA014B /* XDirectory.h */,
+				C3E6E0BA13DE010A00EA014B /* XDirectory.m */,
+			);
+			name = "Managed Objects";
+			sourceTree = "<group>";
+		};
+		C3FC6C4813BCB90B009FBAA3 = {
+			isa = PBXGroup;
+			children = (
+				C3CF9CDA13D9D54D003F21D1 /* ATMHud */,
+				C3FC6C5D13BCB90B009FBAA3 /* xDrive */,
+				C3FC6C5613BCB90B009FBAA3 /* Frameworks */,
+				C3FC6C5413BCB90B009FBAA3 /* Products */,
+			);
+			sourceTree = "<group>";
+		};
+		C3FC6C5413BCB90B009FBAA3 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				C3FC6C5313BCB90B009FBAA3 /* xDrive.app */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		C3FC6C5613BCB90B009FBAA3 /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				C3C9A9C413D9D62F003B5E91 /* QuartzCore.framework */,
+				C3C9A9C113D9D61B003B5E91 /* AudioToolbox.framework */,
+				C378433813BE45B800F1793A /* CoreData.framework */,
+				C3FC6C5713BCB90B009FBAA3 /* UIKit.framework */,
+				C3FC6C5913BCB90B009FBAA3 /* Foundation.framework */,
+				C3FC6C5B13BCB90B009FBAA3 /* CoreGraphics.framework */,
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
+		C3FC6C5D13BCB90B009FBAA3 /* xDrive */ = {
+			isa = PBXGroup;
+			children = (
+				C3FC6C6613BCB90B009FBAA3 /* xDriveAppDelegate.h */,
+				C3FC6C6713BCB90B009FBAA3 /* xDriveAppDelegate.m */,
+				C3FC6C6913BCB90B009FBAA3 /* MainStoryboard_iPhone.storyboard */,
+				C3FC6C6C13BCB90B009FBAA3 /* MainStoryboard_iPad.storyboard */,
+				C3ECE29713C3BF2D004FF63F /* RootTabBarController.h */,
+				C3ECE29813C3BF2D004FF63F /* RootTabBarController.m */,
+				A978436813C6847300120A94 /* Directory Contents */,
+				C351747013C393690078E361 /* Account */,
+				C378433A13BE475200F1793A /* Model */,
+				C3FC6C5E13BCB90B009FBAA3 /* Supporting Files */,
+			);
+			path = xDrive;
+			sourceTree = "<group>";
+		};
+		C3FC6C5E13BCB90B009FBAA3 /* Supporting Files */ = {
+			isa = PBXGroup;
+			children = (
+				C3FC6C5F13BCB90B009FBAA3 /* xDrive-Info.plist */,
+				C3FC6C6013BCB90B009FBAA3 /* InfoPlist.strings */,
+				C3FC6C6313BCB90B009FBAA3 /* main.m */,
+				C3FC6C6513BCB90B009FBAA3 /* xDrive-Prefix.pch */,
+			);
+			name = "Supporting Files";
+			sourceTree = "<group>";
+		};
+		C3FC6C8F13BCBAE0009FBAA3 /* Net */ = {
+			isa = PBXGroup;
+			children = (
+				C3FC6C8C13BCBADA009FBAA3 /* HTTPFetcher.h */,
+				C3FC6C8D13BCBADA009FBAA3 /* HTTPFetcher.m */,
+				C3FC6C9313BCBE57009FBAA3 /* JSONFetcher.h */,
+				C3FC6C9413BCBE58009FBAA3 /* JSONFetcher.m */,
+				C3EA7EC513E0A21B004889A0 /* FileFetcher.h */,
+				C3EA7EC613E0A21B004889A0 /* FileFetcher.m */,
+			);
+			name = Net;
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		C3FC6C5213BCB90B009FBAA3 /* xDrive */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = C3FC6C8113BCB90B009FBAA3 /* Build configuration list for PBXNativeTarget "xDrive" */;
+			buildPhases = (
+				C3FC6C4F13BCB90B009FBAA3 /* Sources */,
+				C3FC6C5013BCB90B009FBAA3 /* Frameworks */,
+				C3FC6C5113BCB90B009FBAA3 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = xDrive;
+			productName = xDrive;
+			productReference = C3FC6C5313BCB90B009FBAA3 /* xDrive.app */;
+			productType = "com.apple.product-type.application";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		C3FC6C4A13BCB90B009FBAA3 /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				LastUpgradeCheck = 0420;
+			};
+			buildConfigurationList = C3FC6C4D13BCB90B009FBAA3 /* Build configuration list for PBXProject "xDrive" */;
+			compatibilityVersion = "Xcode 3.2";
+			developmentRegion = English;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				en,
+			);
+			mainGroup = C3FC6C4813BCB90B009FBAA3;
+			productRefGroup = C3FC6C5413BCB90B009FBAA3 /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				C3FC6C5213BCB90B009FBAA3 /* xDrive */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXResourcesBuildPhase section */
+		C3FC6C5113BCB90B009FBAA3 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				C3FC6C6213BCB90B009FBAA3 /* InfoPlist.strings in Resources */,
+				C3FC6C6B13BCB90B009FBAA3 /* MainStoryboard_iPhone.storyboard in Resources */,
+				C3FC6C6E13BCB90B009FBAA3 /* MainStoryboard_iPad.storyboard in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		C3FC6C4F13BCB90B009FBAA3 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				C3FC6C6413BCB90B009FBAA3 /* main.m in Sources */,
+				C3FC6C6813BCB90B009FBAA3 /* xDriveAppDelegate.m in Sources */,
+				C3FC6C8E13BCBADA009FBAA3 /* HTTPFetcher.m in Sources */,
+				C3FC6C9513BCBE58009FBAA3 /* JSONFetcher.m in Sources */,
+				C378433713BE36BB00F1793A /* XService.m in Sources */,
+				C3D9E88413C34D1A007D1A7C /* XServiceRemote.m in Sources */,
+				C3D9E88813C34D2B007D1A7C /* XServiceLocal.m in Sources */,
+				C339669713C3757300F59D2C /* XServiceFetcher.m in Sources */,
+				C351746E13C390B30078E361 /* AccountViewController.m in Sources */,
+				C3ECE28A13C3B8E8004FF63F /* XEntry.m in Sources */,
+				C3ECE28D13C3B8E9004FF63F /* XServer.m in Sources */,
+				C3ECE29613C3B8E9004FF63F /* XFile.m in Sources */,
+				C3ECE29913C3BF2E004FF63F /* RootTabBarController.m in Sources */,
+				A93E36AA13C5630600DE693D /* DirectoryContentsViewController.m in Sources */,
+				A978436C13C6876700120A94 /* DirectoryNavigationController.m in Sources */,
+				C3CF9CE813D9D54D003F21D1 /* ATMHud.m in Sources */,
+				C3CF9CE913D9D54D003F21D1 /* ATMHudQueueItem.m in Sources */,
+				C3CF9CEA13D9D54D003F21D1 /* ATMHudView.m in Sources */,
+				C3CF9CEB13D9D54D003F21D1 /* ATMProgressLayer.m in Sources */,
+				C3CF9CEC13D9D54D003F21D1 /* ATMSoundFX.m in Sources */,
+				C3CF9CED13D9D54D003F21D1 /* ATMTextLayer.m in Sources */,
+				C3E6E0BB13DE010A00EA014B /* XDirectory.m in Sources */,
+				C3E6E0BE13DE010A00EA014B /* XDefaultPath.m in Sources */,
+				C3E6E0C113DE06E100EA014B /* xDrive.xcdatamodeld in Sources */,
+				C3EA7EC713E0A21B004889A0 /* FileFetcher.m in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin PBXVariantGroup section */
+		C3FC6C6013BCB90B009FBAA3 /* InfoPlist.strings */ = {
+			isa = PBXVariantGroup;
+			children = (
+				C3FC6C6113BCB90B009FBAA3 /* en */,
+			);
+			name = InfoPlist.strings;
+			sourceTree = "<group>";
+		};
+		C3FC6C6913BCB90B009FBAA3 /* MainStoryboard_iPhone.storyboard */ = {
+			isa = PBXVariantGroup;
+			children = (
+				C3FC6C6A13BCB90B009FBAA3 /* en */,
+			);
+			name = MainStoryboard_iPhone.storyboard;
+			sourceTree = "<group>";
+		};
+		C3FC6C6C13BCB90B009FBAA3 /* MainStoryboard_iPad.storyboard */ = {
+			isa = PBXVariantGroup;
+			children = (
+				C3FC6C6D13BCB90B009FBAA3 /* en */,
+			);
+			name = MainStoryboard_iPad.storyboard;
+			sourceTree = "<group>";
+		};
+/* End PBXVariantGroup section */
+
+/* Begin XCBuildConfiguration section */
+		C3FC6C7F13BCB90B009FBAA3 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				ARCHS = "$(ARCHS_STANDARD_32_BIT)";
+				CLANG_ENABLE_OBJC_ARC = YES;
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				COPY_PHASE_STRIP = NO;
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
+				GCC_VERSION = com.apple.compilers.llvm.clang.1_0;
+				GCC_WARN_ABOUT_MISSING_PROTOTYPES = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 5.0;
+				SDKROOT = iphoneos;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Debug;
+		};
+		C3FC6C8013BCB90B009FBAA3 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				ARCHS = "$(ARCHS_STANDARD_32_BIT)";
+				CLANG_ENABLE_OBJC_ARC = YES;
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				COPY_PHASE_STRIP = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_VERSION = com.apple.compilers.llvm.clang.1_0;
+				GCC_WARN_ABOUT_MISSING_PROTOTYPES = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 5.0;
+				OTHER_CFLAGS = "-DNS_BLOCK_ASSERTIONS=1";
+				SDKROOT = iphoneos;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				VALIDATE_PRODUCT = YES;
+			};
+			name = Release;
+		};
+		C3FC6C8213BCB90B009FBAA3 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = "xDrive/xDrive-Prefix.pch";
+				INFOPLIST_FILE = "xDrive/xDrive-Info.plist";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				WRAPPER_EXTENSION = app;
+			};
+			name = Debug;
+		};
+		C3FC6C8313BCB90B009FBAA3 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = "xDrive/xDrive-Prefix.pch";
+				INFOPLIST_FILE = "xDrive/xDrive-Info.plist";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				WRAPPER_EXTENSION = app;
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		C3FC6C4D13BCB90B009FBAA3 /* Build configuration list for PBXProject "xDrive" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				C3FC6C7F13BCB90B009FBAA3 /* Debug */,
+				C3FC6C8013BCB90B009FBAA3 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		C3FC6C8113BCB90B009FBAA3 /* Build configuration list for PBXNativeTarget "xDrive" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				C3FC6C8213BCB90B009FBAA3 /* Debug */,
+				C3FC6C8313BCB90B009FBAA3 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+/* End XCConfigurationList section */
+
+/* Begin XCVersionGroup section */
+		C3E6E0BF13DE06E100EA014B /* xDrive.xcdatamodeld */ = {
+			isa = XCVersionGroup;
+			children = (
+				C3E6E0C013DE06E100EA014B /* xDrive.xcdatamodel */,
+			);
+			currentVersion = C3E6E0C013DE06E100EA014B /* xDrive.xcdatamodel */;
+			path = xDrive.xcdatamodeld;
+			sourceTree = "<group>";
+			versionGroupType = wrapper.xcdatamodel;
+		};
+/* End XCVersionGroup section */
+	};
+	rootObject = C3FC6C4A13BCB90B009FBAA3 /* Project object */;
+}
