@@ -1,0 +1,3 @@
+[submodule "CGNetUtils"]
+	path = CGNetUtils
+	url = git://github.com/chrisgibbs/CGNetUtils.git

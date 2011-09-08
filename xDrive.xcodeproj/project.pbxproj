@@ -12,6 +12,8 @@
 		C30580341418207400E49727 /* README.md in Resources */ = {isa = PBXBuildFile; fileRef = C30580331418207400E49727 /* README.md */; };
 		C339669713C3757300F59D2C /* XServiceFetcher.m in Sources */ = {isa = PBXBuildFile; fileRef = C339669613C3757300F59D2C /* XServiceFetcher.m */; };
 		C351746E13C390B30078E361 /* AccountViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = C351746D13C390B30078E361 /* AccountViewController.m */; };
+		C354ABE0141932E600E88410 /* libCGNetUtils.a in Frameworks */ = {isa = PBXBuildFile; fileRef = C354ABDC1419327A00E88410 /* libCGNetUtils.a */; };
+		C354ABE2141932F000E88410 /* Security.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C354ABE1141932F000E88410 /* Security.framework */; };
 		C378433713BE36BB00F1793A /* XService.m in Sources */ = {isa = PBXBuildFile; fileRef = C378433613BE36BB00F1793A /* XService.m */; };
 		C378433913BE45B800F1793A /* CoreData.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C378433813BE45B800F1793A /* CoreData.framework */; };
 		C3C9A9C213D9D61B003B5E91 /* AudioToolbox.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C3C9A9C113D9D61B003B5E91 /* AudioToolbox.framework */; };
@@ -41,6 +43,23 @@
 		C3FC6C6E13BCB90B009FBAA3 /* MainStoryboard_iPad.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = C3FC6C6C13BCB90B009FBAA3 /* MainStoryboard_iPad.storyboard */; };
 /* End PBXBuildFile section */
 
+/* Begin PBXContainerItemProxy section */
+		C354ABDB1419327A00E88410 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = C354ABD41419327A00E88410 /* CGNetUtils.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = A94A6FB81415E07A00FE0DAA;
+			remoteInfo = CGNetUtils;
+		};
+		C354ABDE141932DF00E88410 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = C354ABD41419327A00E88410 /* CGNetUtils.xcodeproj */;
+			proxyType = 1;
+			remoteGlobalIDString = A94A6FB71415E07A00FE0DAA;
+			remoteInfo = CGNetUtils;
+		};
+/* End PBXContainerItemProxy section */
+
 /* Begin PBXFileReference section */
 		A93E36A813C5630600DE693D /* DirectoryContentsViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DirectoryContentsViewController.h; sourceTree = "<group>"; };
 		A93E36A913C5630600DE693D /* DirectoryContentsViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DirectoryContentsViewController.m; sourceTree = "<group>"; };
@@ -51,6 +70,8 @@
 		C339669613C3757300F59D2C /* XServiceFetcher.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = XServiceFetcher.m; sourceTree = "<group>"; };
 		C351746C13C390B30078E361 /* AccountViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AccountViewController.h; sourceTree = "<group>"; };
 		C351746D13C390B30078E361 /* AccountViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AccountViewController.m; sourceTree = "<group>"; };
+		C354ABD41419327A00E88410 /* CGNetUtils.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = CGNetUtils.xcodeproj; path = CGNetUtils/CGNetUtils.xcodeproj; sourceTree = "<group>"; };
+		C354ABE1141932F000E88410 /* Security.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Security.framework; path = System/Library/Frameworks/Security.framework; sourceTree = SDKROOT; };
 		C378433513BE36BB00F1793A /* XService.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = XService.h; sourceTree = "<group>"; };
 		C378433613BE36BB00F1793A /* XService.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = XService.m; sourceTree = "<group>"; };
 		C378433813BE45B800F1793A /* CoreData.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreData.framework; path = System/Library/Frameworks/CoreData.framework; sourceTree = SDKROOT; };
@@ -105,6 +126,8 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				C354ABE2141932F000E88410 /* Security.framework in Frameworks */,
+				C354ABE0141932E600E88410 /* libCGNetUtils.a in Frameworks */,
 				C3C9A9C513D9D62F003B5E91 /* QuartzCore.framework in Frameworks */,
 				C3C9A9C213D9D61B003B5E91 /* AudioToolbox.framework in Frameworks */,
 				C378433913BE45B800F1793A /* CoreData.framework in Frameworks */,
@@ -135,6 +158,14 @@
 				C351746D13C390B30078E361 /* AccountViewController.m */,
 			);
 			name = Account;
+			sourceTree = "<group>";
+		};
+		C354ABD51419327A00E88410 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				C354ABDC1419327A00E88410 /* libCGNetUtils.a */,
+			);
+			name = Products;
 			sourceTree = "<group>";
 		};
 		C378433A13BE475200F1793A /* Model */ = {
@@ -195,6 +226,7 @@
 		C3FC6C4813BCB90B009FBAA3 = {
 			isa = PBXGroup;
 			children = (
+				C354ABD41419327A00E88410 /* CGNetUtils.xcodeproj */,
 				C30580331418207400E49727 /* README.md */,
 				C3CF9CDA13D9D54D003F21D1 /* ATMHud */,
 				C3FC6C5D13BCB90B009FBAA3 /* xDrive */,
@@ -214,6 +246,7 @@
 		C3FC6C5613BCB90B009FBAA3 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				C354ABE1141932F000E88410 /* Security.framework */,
 				C3C9A9C413D9D62F003B5E91 /* QuartzCore.framework */,
 				C3C9A9C113D9D61B003B5E91 /* AudioToolbox.framework */,
 				C378433813BE45B800F1793A /* CoreData.framework */,
@@ -266,6 +299,7 @@
 			buildRules = (
 			);
 			dependencies = (
+				C354ABDF141932DF00E88410 /* PBXTargetDependency */,
 			);
 			name = xDrive;
 			productName = xDrive;
@@ -290,12 +324,28 @@
 			mainGroup = C3FC6C4813BCB90B009FBAA3;
 			productRefGroup = C3FC6C5413BCB90B009FBAA3 /* Products */;
 			projectDirPath = "";
+			projectReferences = (
+				{
+					ProductGroup = C354ABD51419327A00E88410 /* Products */;
+					ProjectRef = C354ABD41419327A00E88410 /* CGNetUtils.xcodeproj */;
+				},
+			);
 			projectRoot = "";
 			targets = (
 				C3FC6C5213BCB90B009FBAA3 /* xDrive */,
 			);
 		};
 /* End PBXProject section */
+
+/* Begin PBXReferenceProxy section */
+		C354ABDC1419327A00E88410 /* libCGNetUtils.a */ = {
+			isa = PBXReferenceProxy;
+			fileType = archive.ar;
+			path = libCGNetUtils.a;
+			remoteRef = C354ABDB1419327A00E88410 /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+/* End PBXReferenceProxy section */
 
 /* Begin PBXResourcesBuildPhase section */
 		C3FC6C5113BCB90B009FBAA3 /* Resources */ = {
@@ -342,6 +392,14 @@
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXSourcesBuildPhase section */
+
+/* Begin PBXTargetDependency section */
+		C354ABDF141932DF00E88410 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			name = CGNetUtils;
+			targetProxy = C354ABDE141932DF00E88410 /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
 
 /* Begin PBXVariantGroup section */
 		C3FC6C6013BCB90B009FBAA3 /* InfoPlist.strings */ = {
@@ -423,6 +481,7 @@
 			buildSettings = {
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "xDrive/xDrive-Prefix.pch";
+				HEADER_SEARCH_PATHS = "$(SOURCE_ROOT)/CGNetUtils/CGNetUtils";
 				INFOPLIST_FILE = "xDrive/xDrive-Info.plist";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				WRAPPER_EXTENSION = app;
@@ -434,6 +493,7 @@
 			buildSettings = {
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "xDrive/xDrive-Prefix.pch";
+				HEADER_SEARCH_PATHS = "$(SOURCE_ROOT)/CGNetUtils/CGNetUtils";
 				INFOPLIST_FILE = "xDrive/xDrive-Info.plist";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				WRAPPER_EXTENSION = app;
