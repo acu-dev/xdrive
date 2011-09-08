@@ -17,12 +17,12 @@
 @interface XService()
 
 // Account validation
-@property (nonatomic, weak) AccountViewController *accountViewController;
-@property (nonatomic, strong) NSDictionary *accountDetailsToValidate;
+//@property (nonatomic, weak) AccountViewController *accountViewController;
+//@property (nonatomic, strong) NSDictionary *accountDetailsToValidate;
 @property (nonatomic, assign) int fetchingDefaultPaths;
 
 // Account validation/storage
-- (void)receiveValidateAccountDetailsResponse:(XServiceFetcher *)fetcher;
+//- (void)receiveValidateAccountDetailsResponse:(XServiceFetcher *)fetcher;
 - (void)saveServerWithDetails:(NSDictionary *)details;
 - (void)fetchDefaultPaths:(NSDictionary *)pathDetails;
 - (void)receiveDefaultPath:(XServiceFetcher *)fetcher;
@@ -94,7 +94,7 @@ static XService *sharedXService;
 {
 	return [localService activeServer];
 }
-
+/*
 #pragma mark - Account validation
 
 - (void)validateAccountDetails:(NSDictionary *)details withViewController:(AccountViewController *)viewController
@@ -126,7 +126,7 @@ static XService *sharedXService;
 	{
 		XSvcLog(@"Invalid response");
 	}
-}
+}*/
 
 #pragma mark - Account storage
 

@@ -21,13 +21,19 @@
 	
 	if ([[UIDevice currentDevice] userInterfaceIdiom] == UIUserInterfaceIdiomPhone)
 	{
-		// iPhone
+		// iPhone views
 		UIStoryboard *storyboard = [UIStoryboard storyboardWithName:@"MainStoryboard_iPhone" bundle:nil];
 		
 		if ([[XService sharedXService] activeServer])
+		{
+			// Send to root view
 			viewController = [storyboard instantiateInitialViewController];
+		}
 		else
+		{
+			// Send to account view
 			viewController = [storyboard instantiateViewControllerWithIdentifier:@"accountInfo"];
+		}
 	}
 	else
 	{
@@ -37,11 +43,11 @@
 				
 		if ([[XService sharedXService] activeServer])
 		{
-			// do stuff
+			// Send to root view
 		}
 		else
 		{
-			// do other stuff
+			// Send to account view
 		}
 	}
 	

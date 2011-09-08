@@ -26,7 +26,7 @@
 - (XServer *)activeServer;
 
 // Server/account validation
-- (void)validateAccountDetails:(NSDictionary *)details withViewController:(AccountViewController *)viewController;
+//- (void)validateAccountDetails:(NSDictionary *)details withViewController:(AccountViewController *)viewController;
 
 // Directory entries
 - (XDirectory *)directoryWithPath:(NSString *)path;
