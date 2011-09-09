@@ -49,8 +49,8 @@
 @synthesize remoteService;
 
 // Account validation
-@synthesize accountViewController;
-@synthesize accountDetailsToValidate;
+//@synthesize accountViewController;
+//@synthesize accountDetailsToValidate;
 @synthesize fetchingDefaultPaths;
 
 
@@ -169,6 +169,7 @@ static XService *sharedXService;
 	}
 }
 
+/*
 - (void)fetchDefaultPaths:(NSDictionary *)pathDetails
 {
 	XSvcLog(@"Fetching default paths...");
@@ -235,7 +236,7 @@ static XService *sharedXService;
 		accountViewController = nil;
 		accountDetailsToValidate = nil;
 	}
-}
+}*/
 
 - (void)saveCredentialWithUsername:(NSString *)user password:(NSString *)pass
 {

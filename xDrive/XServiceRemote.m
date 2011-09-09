@@ -14,7 +14,6 @@
 //
 @interface XServiceRemote()
 @property (nonatomic, strong) NSMutableDictionary *requests;
-- (NSString *)serviceUrlString;
 @end
 
 
@@ -72,15 +71,15 @@ static NSString *serviceInfoPath = @"/info";
 									  defaultServiceBase,
 									  serviceInfoPath];
 	
-	XServiceFetcher *fetcher = [[XServiceFetcher alloc] initWithURLString:infoServiceUrlString receiver:target action:action];
+	//XServiceFetcher *fetcher = [[XServiceFetcher alloc] initWithURLString:infoServiceUrlString receiver:target action:action];
 	
 	// Create temporary auth credentials
 	NSURLCredential *tmpCredential = [NSURLCredential credentialWithUser:[accountDetails objectForKey:@"username"]
 																password:[accountDetails objectForKey:@"password"]
 															 persistence:NSURLCredentialPersistenceNone];
-	fetcher.tmpAuthCredential = tmpCredential;
+	//fetcher.tmpAuthCredential = tmpCredential;
 	
-	[fetcher start];
+	//[fetcher start];
 }
 
 #pragma mark - Fetches
@@ -89,16 +88,16 @@ static NSString *serviceInfoPath = @"/info";
 {
 	NSString *directoryService = [[self serviceUrlString] stringByAppendingFormat:@"/directory/?path=%@", path];
 	
-	XServiceFetcher *fetcher = [[XServiceFetcher alloc] initWithURLString:directoryService receiver:target action:action];
-	[fetcher start];
+	//XServiceFetcher *fetcher = [[XServiceFetcher alloc] initWithURLString:directoryService receiver:target action:action];
+	//[fetcher start];
 }
 
 - (void)fetchDirectoryContentsAtPath:(NSString *)path withTarget:(id)target action:(SEL)action
 {
-	NSString *encodedPath = [path stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
+	/*NSString *encodedPath = [path stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
 	NSString *directoryService = [[self serviceUrlString] stringByAppendingFormat:@"/directory/?path=%@", encodedPath];
 	
-	XServiceFetcher *fetcher = [[XServiceFetcher alloc] initWithURLString:directoryService receiver:self action:@selector(receiveResponse:)];
+	//XServiceFetcher *fetcher = [[XServiceFetcher alloc] initWithURLString:directoryService receiver:self action:@selector(receiveResponse:)];
 	
 	// Save request data for handling upon return
 	NSDictionary *request = [[NSDictionary alloc] initWithObjectsAndKeys:
@@ -109,14 +108,14 @@ static NSString *serviceInfoPath = @"/info";
 	[requests setObject:request forKey:[fetcher description]];
 	
 	// Fire off request
-	[fetcher start];
+	[fetcher start];*/
 }
 
 #pragma mark - Responses
 
 - (void)receiveResponse:(XServiceFetcher *)fetcher
 {
-	// Get request details
+	/*// Get request details
 	NSDictionary *request = [requests objectForKey:[fetcher description]];
 	if (!request)
 	{
@@ -137,7 +136,7 @@ static NSString *serviceInfoPath = @"/info";
 	
 	// Clean up request
 	request = nil;
-	[requests removeObjectForKey:[fetcher description]];
+	[requests removeObjectForKey:[fetcher description]];*/
 }
 
 @end

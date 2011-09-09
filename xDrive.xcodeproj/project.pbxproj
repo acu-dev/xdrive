@@ -126,8 +126,8 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				C354ABE2141932F000E88410 /* Security.framework in Frameworks */,
 				C354ABE0141932E600E88410 /* libCGNetUtils.a in Frameworks */,
+				C354ABE2141932F000E88410 /* Security.framework in Frameworks */,
 				C3C9A9C513D9D62F003B5E91 /* QuartzCore.framework in Frameworks */,
 				C3C9A9C213D9D61B003B5E91 /* AudioToolbox.framework in Frameworks */,
 				C378433913BE45B800F1793A /* CoreData.framework in Frameworks */,
@@ -449,6 +449,7 @@
 				GCC_WARN_ABOUT_MISSING_PROTOTYPES = YES;
 				GCC_WARN_ABOUT_RETURN_TYPE = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
+				HEADER_SEARCH_PATHS = "$(SOURCE_ROOT)/CGNetUtils/CGNetUtils";
 				IPHONEOS_DEPLOYMENT_TARGET = 5.0;
 				SDKROOT = iphoneos;
 				TARGETED_DEVICE_FAMILY = "1,2";
@@ -468,6 +469,7 @@
 				GCC_WARN_ABOUT_MISSING_PROTOTYPES = YES;
 				GCC_WARN_ABOUT_RETURN_TYPE = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
+				HEADER_SEARCH_PATHS = "$(SOURCE_ROOT)/CGNetUtils/CGNetUtils";
 				IPHONEOS_DEPLOYMENT_TARGET = 5.0;
 				OTHER_CFLAGS = "-DNS_BLOCK_ASSERTIONS=1";
 				SDKROOT = iphoneos;
@@ -481,7 +483,7 @@
 			buildSettings = {
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "xDrive/xDrive-Prefix.pch";
-				HEADER_SEARCH_PATHS = "$(SOURCE_ROOT)/CGNetUtils/CGNetUtils";
+				HEADER_SEARCH_PATHS = "$(SOURCE_ROOT)/CGNetUtils";
 				INFOPLIST_FILE = "xDrive/xDrive-Info.plist";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				WRAPPER_EXTENSION = app;
@@ -493,7 +495,7 @@
 			buildSettings = {
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "xDrive/xDrive-Prefix.pch";
-				HEADER_SEARCH_PATHS = "$(SOURCE_ROOT)/CGNetUtils/CGNetUtils";
+				HEADER_SEARCH_PATHS = "$(SOURCE_ROOT)/CGNetUtils";
 				INFOPLIST_FILE = "xDrive/xDrive-Info.plist";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				WRAPPER_EXTENSION = app;

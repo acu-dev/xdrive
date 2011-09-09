@@ -6,9 +6,9 @@
 //  Copyright 2011 Abilene Christian University. All rights reserved.
 //
 
-#import "JSONFetcher.h"
+//#import "JSONFetcher.h"
 
-@interface XServiceFetcher : JSONFetcher
+@interface XServiceFetcher : NSObject
 
 
 
