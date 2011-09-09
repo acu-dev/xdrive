@@ -19,8 +19,6 @@
 - (IBAction)textFieldValueChanged:(id)sender;
 
 - (void)validateAccount;
-- (void)updateDisplayWithMessage:(NSString *)message;
-- (void)receiveValidateAccountResponse:(BOOL)isAccountValid withMessage:(NSString *)message;
 
 - (BOOL)isFormValid;
 - (void)enableSignIn;

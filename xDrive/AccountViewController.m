@@ -17,6 +17,8 @@
 @property (nonatomic, strong) XServer *server;
 @property (nonatomic, assign) BOOL isAuthenticating;
 @property (nonatomic, strong) ATMHud *hud;
+
+- (void)updateHudWithDelay;
 @end
 
 
@@ -128,6 +130,13 @@
 	[self performSegueWithIdentifier:@"dismissAccountInfo" sender:self];
 }
 
+- (void)updateHudWithDelay
+{
+	NSTimeInterval updateDisplayTime = 2.0;
+	[hud update];
+	[hud hideAfter:updateDisplayTime];
+}
+
 
 
 #pragma mark - Validation
@@ -213,29 +222,26 @@
 {
 	NSLog(@"result: %@", result);
 	
-	// Time to display message before hiding
-	NSTimeInterval updateDisplayTime = 2.0;
-	
 	// Success!
+	[hud setActivity:NO];
 	[hud setImage:[UIImage imageNamed:@"check"]];
-	[hud update];
-	[hud hideAfter:updateDisplayTime];
+	[hud setCaption:@"Success!"];
+	[self updateHudWithDelay];
 	
 	// Hide view after hud hides
-	[self performSelector:@selector(dismissAccountInfo) withObject:nil afterDelay:updateDisplayTime];
+	//[self performSelector:@selector(dismissAccountInfo) withObject:nil afterDelay:2.0];
 }
 
 - (void)cgConnection:(CGConnection *)connection failedWithError:(NSError *)error
 {
-	// Time to display message before hiding
-	NSTimeInterval updateDisplayTime = 2.0;
-	
-	// Display error message
-	[hud setActivity:NO];
-	[hud setCaption:[error localizedDescription]];
-	[hud setImage:[UIImage imageNamed:@"x"]];
-	[hud update];
-	[hud hideAfter:updateDisplayTime];
+	if ([error code] != NSURLErrorUserCancelledAuthentication)
+	{
+		// Display error message
+		[hud setActivity:NO];
+		[hud setImage:[UIImage imageNamed:@"x"]];
+		[hud setCaption:[error localizedDescription]];
+		[self updateHudWithDelay];
+	}
 	
 	[self enableSignIn];
 	
@@ -249,16 +255,27 @@
 - (void)respondToAuthenticationChallenge:(NSURLAuthenticationChallenge *)challenge
 							  forHandler:(CGChallengeHandler *)challengeHandler
 {
-	NSLog(@"responding to auth challenge...");
-	
-	[hud setCaption:@"Authenticating..."];
-	[hud update];
-	
-	// Create credential from login form
-	NSURLCredential *credential = [NSURLCredential credentialWithUser:usernameField.text 
-															 password:passwordField.text 
-														  persistence:NSURLCredentialPersistencePermanent];
-	[challengeHandler stopWithCredential:credential];
+	if (!challenge.previousFailureCount)
+	{
+		[hud setCaption:@"Authenticating..."];
+		[hud update];
+		
+		// Create credential from login form
+		NSURLCredential *credential = [NSURLCredential credentialWithUser:usernameField.text 
+																 password:passwordField.text 
+															  persistence:NSURLCredentialPersistencePermanent];
+		[challengeHandler stopWithCredential:credential];
+	}
+	else
+	{
+		// Display error message
+		[hud setActivity:NO];
+		[hud setCaption:@"Authentication failed"];
+		[hud setImage:[UIImage imageNamed:@"x"]];
+		[self updateHudWithDelay];
+		
+		[challengeHandler stopWithCredential:nil];
+	}
 }
 
 @end
