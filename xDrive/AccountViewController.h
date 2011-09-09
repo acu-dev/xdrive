@@ -10,7 +10,7 @@
 #import "ATMHudDelegate.h"
 #import <CGNetUtils/CGNetUtils.h>
 
-@interface AccountViewController : UITableViewController <ATMHudDelegate, UITextFieldDelegate, CGConnectionDelegate>
+@interface AccountViewController : UITableViewController <ATMHudDelegate, UITextFieldDelegate, CGConnectionDelegate, CGChallengeResponseDelegate>
 
 @property (nonatomic, strong) IBOutlet UITextField *serverURLField, *usernameField, *passwordField;
 @property (nonatomic, strong) IBOutlet UILabel *signInLabel;

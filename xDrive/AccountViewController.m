@@ -56,6 +56,9 @@
 	
 	hud = [[ATMHud alloc] initWithDelegate:self];
 	[self.view addSubview:hud.view];
+	
+	// Set self as challenge response delegate
+	[CGNet utils].challengeResponseDelegate = self;
 }
 
 - (void)viewDidUnload
@@ -73,6 +76,9 @@
 	self.passwordField = nil;
 	self.signInLabel = nil;
 	self.signInCell = nil;
+	
+	// Unset self as challenge response delgate
+	[CGNet utils].challengeResponseDelegate = nil;
 }
 
 - (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation
@@ -117,12 +123,12 @@
 	[activeConnection start];
 }
 
-- (void)updateDisplayWithMessage:(NSString *)message
+/*- (void)updateDisplayWithMessage:(NSString *)message
 {
 	[hud setCaption:message];
 	[hud update];
 }
-/*
+
 - (void)receiveValidateAccountResponse:(BOOL)isAccountValid withMessage:(NSString *)message
 {
 	// Time to display hud before hiding
@@ -241,7 +247,50 @@
 
 - (void)cgConnection:(CGConnection *)connection finishedWithResult:(id)result
 {
-	NSLog(@"finished with: %@", result);
+	// Time to display message before hiding
+	NSTimeInterval updateDisplayTime = 2.0;
+	
+	// Success!
+	[hud setImage:[UIImage imageNamed:@"check"]];
+	[hud update];
+	[hud hideAfter:updateDisplayTime];
+	
+	// Hide view after hud hides
+	[self performSelector:@selector(dismissAccountInfo) withObject:nil afterDelay:updateDisplayTime];
+}
+
+- (void)cgConnection:(CGConnection *)connection failedWithError:(NSError *)error
+{
+	// Time to display message before hiding
+	NSTimeInterval updateDisplayTime = 2.0;
+	
+	// Display error message
+	[hud setActivity:NO];
+	[hud setCaption:[error localizedDescription]];
+	[hud setImage:[UIImage imageNamed:@"x"]];
+	[hud update];
+	[hud hideAfter:updateDisplayTime];
+	
+	[self enableSignIn];
+	
+	self.activeConnection = nil;
+}
+
+
+
+#pragma mark - CGChallengeResponseDelegate
+
+- (void)respondToAuthenticationChallenge:(NSURLAuthenticationChallenge *)challenge
+							  forHandler:(CGChallengeHandler *)challengeHandler
+{
+	[hud setCaption:@"Authenticating..."];
+	[hud update];
+	
+	// Create credential from login form
+	NSURLCredential *credential = [NSURLCredential credentialWithUser:usernameField.text 
+															 password:passwordField.text 
+														  persistence:NSURLCredentialPersistencePermanent];
+	[challengeHandler stopWithCredential:credential];
 }
 
 @end
