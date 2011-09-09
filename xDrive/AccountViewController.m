@@ -123,42 +123,6 @@
 	[activeConnection start];
 }
 
-/*- (void)updateDisplayWithMessage:(NSString *)message
-{
-	[hud setCaption:message];
-	[hud update];
-}
-
-- (void)receiveValidateAccountResponse:(BOOL)isAccountValid withMessage:(NSString *)message
-{
-	// Time to display hud before hiding
-	NSTimeInterval updateDisplayTime = 2.0;
-	
-	// Stop activity indicator and show message
-	[hud setCaption:message];
-	[hud setActivity:NO];
-	
-	if (isAccountValid)
-	{
-		// Success!
-		[hud setImage:[UIImage imageNamed:@"check"]];
-		
-		// Hide view after hud hides
-		[self performSelector:@selector(dismissAccountInfo) withObject:nil afterDelay:updateDisplayTime];
-	}
-	else
-	{
-		// Failed
-		[hud setImage:[UIImage imageNamed:@"x"]];
-	}
-	
-	// Display updated hud temporarily
-	[hud update];
-	[hud hideAfter:updateDisplayTime];
-	
-	[self enableSignIn];
-}*/
-
 - (void)dismissAccountInfo
 {
 	[self performSegueWithIdentifier:@"dismissAccountInfo" sender:self];
@@ -247,6 +211,8 @@
 
 - (void)cgConnection:(CGConnection *)connection finishedWithResult:(id)result
 {
+	NSLog(@"result: %@", result);
+	
 	// Time to display message before hiding
 	NSTimeInterval updateDisplayTime = 2.0;
 	
@@ -283,6 +249,8 @@
 - (void)respondToAuthenticationChallenge:(NSURLAuthenticationChallenge *)challenge
 							  forHandler:(CGChallengeHandler *)challengeHandler
 {
+	NSLog(@"responding to auth challenge...");
+	
 	[hud setCaption:@"Authenticating..."];
 	[hud update];
 	
