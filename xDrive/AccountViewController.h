@@ -10,18 +10,12 @@
 #import "ATMHudDelegate.h"
 #import <CGNetUtils/CGNetUtils.h>
 
-@interface AccountViewController : UITableViewController <ATMHudDelegate, UITextFieldDelegate, CGConnectionDelegate, CGChallengeResponseDelegate>
+@interface AccountViewController : UITableViewController <UITextFieldDelegate>
 
 @property (nonatomic, strong) IBOutlet UITextField *serverURLField, *usernameField, *passwordField;
 @property (nonatomic, strong) IBOutlet UILabel *signInLabel;
 @property (nonatomic, strong) IBOutlet UITableViewCell *signInCell;
 
 - (IBAction)textFieldValueChanged:(id)sender;
-
-- (void)validateAccount;
-
-- (BOOL)isFormValid;
-- (void)enableSignIn;
-- (void)disableSignIn;
 
 @end

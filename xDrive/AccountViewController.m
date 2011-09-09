@@ -11,14 +11,27 @@
 
 
 
-@interface AccountViewController()
+@interface AccountViewController() <CGConnectionDelegate, CGChallengeResponseDelegate>
 
 @property (nonatomic, strong) CGConnection *activeConnection;
-@property (nonatomic, strong) XServer *server;
-@property (nonatomic, assign) BOOL isAuthenticating;
+	// The connection used to validate the server/authentication settings
+
 @property (nonatomic, strong) ATMHud *hud;
+	// Heads up display for account validation messages
+
+- (void)validateAccount;
+	// Kicks off a connection to the server with the given info
+
+- (BOOL)isFormValid;
+	// Evaluates the user, pass, and server text fields for valid data
+
+- (void)enableSignIn;
+- (void)disableSignIn;
+	// Enables/disables the sign in button
 
 - (void)updateHudWithDelay;
+	// Tells the hud to update and dismiss after a given number of seconds
+
 @end
 
 
@@ -27,8 +40,6 @@
 
 // Private ivars
 @synthesize activeConnection;
-@synthesize server;
-@synthesize isAuthenticating;
 @synthesize hud;
 
 // Public ivars
@@ -36,13 +47,16 @@
 @synthesize signInLabel;
 @synthesize signInCell;
 
+
+
+
 #pragma mark - View lifecycle
 
 - (void)viewDidLoad
 {
     [super viewDidLoad];
 	
-	server = [[XService sharedXService] activeServer];
+	XServer *server = [[XService sharedXService] activeServer];
 	if (server)
 	{
 		serverURLField.text = [NSString stringWithFormat:@"%@://%@:%i", server.protocol, server.hostname, server.port];
@@ -70,7 +84,6 @@
     // e.g. self.myOutlet = nil;
 	
 	self.activeConnection = nil;
-	self.server = nil;
 	self.hud = nil;
 	
 	self.serverURLField = nil;
@@ -139,7 +152,15 @@
 
 
 
-#pragma mark - Validation
+#pragma mark - Form Validation
+
+- (IBAction)textFieldValueChanged:(id)sender
+{
+	if ([self isFormValid])
+		[self enableSignIn];
+	else
+		[self disableSignIn];
+}
 
 - (BOOL)isFormValid
 {
@@ -154,29 +175,21 @@
 
 - (void)enableSignIn
 {
-	isAuthenticating = NO;
+	//isAuthenticating = NO;
 	signInLabel.textColor = [UIColor blackColor];
 	signInCell.selectionStyle = UITableViewCellSelectionStyleBlue;
 }
 
 - (void)disableSignIn
 {
-	isAuthenticating = YES;
+	//isAuthenticating = YES;
 	signInLabel.textColor = [UIColor grayColor];
 	signInCell.selectionStyle = UITableViewCellSelectionStyleNone;
 }
 
 
 
-#pragma mark - Text field delegate
-
-- (IBAction)textFieldValueChanged:(id)sender
-{
-	if ([self isFormValid])
-		[self enableSignIn];
-	else
-		[self disableSignIn];
-}
+#pragma mark - UITextFieldDelegate
 
 - (BOOL)textFieldShouldReturn:(UITextField *)textField
 {
@@ -188,10 +201,9 @@
 	{
 		[passwordField becomeFirstResponder];
 	}
-	else
+	else if ([self isFormValid])
 	{
-		if ([self isFormValid] && !isAuthenticating)
-			[self validateAccount];
+		[self validateAccount];
 	}
 	
 	return NO;
@@ -199,7 +211,7 @@
 
 
 
-#pragma mark - Table view delegate
+#pragma mark - UITableViewDelegate
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
@@ -208,7 +220,6 @@
 	
 	if (![self isFormValid])
 		return;
-	
 	
 	[tableView deselectRowAtIndexPath:indexPath animated:YES];
 	[self validateAccount];
