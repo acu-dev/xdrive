@@ -22,8 +22,9 @@
 // One XService to rule them all
 + (XService *)sharedXService;
 
-// Accessors
+// Server
 - (XServer *)activeServer;
+- (void)saveServerWithDetails:(NSDictionary *)details;
 
 // Server/account validation
 //- (void)validateAccountDetails:(NSDictionary *)details withViewController:(AccountViewController *)viewController;

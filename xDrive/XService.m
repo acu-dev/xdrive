@@ -23,7 +23,7 @@
 
 // Account validation/storage
 //- (void)receiveValidateAccountDetailsResponse:(XServiceFetcher *)fetcher;
-- (void)saveServerWithDetails:(NSDictionary *)details;
+
 - (void)fetchDefaultPaths:(NSDictionary *)pathDetails;
 - (void)receiveDefaultPath:(XServiceFetcher *)fetcher;
 - (void)saveCredentialWithUsername:(NSString *)user password:(NSString *)pass;
@@ -88,12 +88,23 @@ static XService *sharedXService;
     return self;
 }
 
-#pragma mark - Accessors
+#pragma mark - Server
 
 - (XServer *)activeServer
 {
 	return [localService activeServer];
 }
+
+- (void)getServerInfo:(NSString *)host
+{
+	[remoteService fetchInfoFromServer:host];
+}
+
+- (void)receiveServerInfo:(id)result
+{
+	
+}
+
 /*
 #pragma mark - Account validation
 

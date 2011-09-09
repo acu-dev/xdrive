@@ -15,7 +15,7 @@
 
 - (id)initWithServer:(XServer *)aServer;
 
-- (void)fetchServerInfo:(NSDictionary *)serverHost withTarget:(id)target action:(SEL)action;
+- (void)fetchServerInfo:(NSString *)host withTarget:(id)target action:(SEL)action;
 
 - (void)fetchDefaultPath:(NSString *)path withTarget:(id)target action:(SEL)action;
 - (void)fetchDirectoryContentsAtPath:(NSString *)path withTarget:(id)target action:(SEL)action;

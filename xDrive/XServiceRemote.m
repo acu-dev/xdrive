@@ -8,12 +8,13 @@
 
 #import "XServiceRemote.h"
 #import "XService.h"
+#import <CGNetUtils/CGNetUtils.h>
 
-//
-// Private interface
-//
+
+
 @interface XServiceRemote()
 @property (nonatomic, strong) NSMutableDictionary *requests;
+- (NSString *)serviceUrlStringForHost:(NSString *)host;
 @end
 
 
@@ -21,10 +22,16 @@
 
 static NSString *serviceInfoPath = @"/info";
 
+
+
+
 @implementation XServiceRemote
+
 
 @synthesize server;
 @synthesize requests;
+
+
 
 - (id)initWithServer:(XServer *)aServer
 {
@@ -41,45 +48,51 @@ static NSString *serviceInfoPath = @"/info";
 
 - (NSString *)serviceUrlString
 {
-	if (!server)
+	return [self serviceUrlStringForHost:nil];
+}
+
+- (NSString *)serviceUrlStringForHost:(NSString *)host
+{
+	int port = 443;
+	NSString *protocol = @"https";
+	NSString *serviceBase = @"/xservice";
+	
+	if (server)
+	{
+		protocol = server.protocol;
+		host = server.hostname;
+		port = [server.port intValue];
+		serviceBase = server.servicePath;
+	}
+	
+	if (!host)
 		return nil;
 	
-	NSString *urlString = [NSString stringWithFormat:@"%@://%@:%i%@",
-						   server.protocol,
-						   server.hostname,
-						   [server.port intValue],
-						   server.servicePath];
-	return urlString;
+	return [NSString stringWithFormat:@"%@://%@:%i%@",
+			protocol,
+			host,
+			port,
+			serviceBase];
 }
+
+
 
 #pragma mark - Account Info
 
-- (void)fetchServerInfo:(NSDictionary *)accountDetails withTarget:(id)target action:(SEL)action
+- (void)fetchServerInfo:(NSString *)host withTarget:(id)target action:(SEL)action
 {
-	// Default lookup values until we get the official ones from the info service.
-	//		Someday this could make a couple attempts with different values until
-	//		it found the info service.
-	int defaultPort = 443;
-	NSString *defaultProtocol = @"https";
-	NSString *defaultServiceBase = @"/xservice";
+	NSString *infoServiceUrlString = [self serviceUrlStringForHost:host];
 	
-	// Build info service url
-	NSString *infoServiceUrlString = [NSString stringWithFormat:@"%@://%@:%i%@%@",
-									  defaultProtocol,
-									  [accountDetails objectForKey:@"serverHost"],
-									  defaultPort,
-									  defaultServiceBase,
-									  serviceInfoPath];
-	
-	//XServiceFetcher *fetcher = [[XServiceFetcher alloc] initWithURLString:infoServiceUrlString receiver:target action:action];
+	/*XServiceFetcher *fetcher = [[XServiceFetcher alloc] initWithURLString:infoServiceUrlString receiver:target action:action];
 	
 	// Create temporary auth credentials
 	NSURLCredential *tmpCredential = [NSURLCredential credentialWithUser:[accountDetails objectForKey:@"username"]
 																password:[accountDetails objectForKey:@"password"]
 															 persistence:NSURLCredentialPersistenceNone];
-	//fetcher.tmpAuthCredential = tmpCredential;
+	fetcher.tmpAuthCredential = tmpCredential;
+	[fetcher start]*/
 	
-	//[fetcher start];
+	
 }
 
 #pragma mark - Fetches
@@ -138,5 +151,9 @@ static NSString *serviceInfoPath = @"/info";
 	request = nil;
 	[requests removeObjectForKey:[fetcher description]];*/
 }
+
+
+
+#pragma mark - 
 
 @end
