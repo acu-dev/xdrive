@@ -7,25 +7,36 @@
 //
 
 #import "XService.h"
-#import "AccountViewController.h"
 #import "XDefaultPath.h"
-#import "XServiceFetcher.h"
+#import <CGNetUtils/CGNetUtils.h>
 
-//
-// Private interface
-//
-@interface XService()
 
-// Account validation
-//@property (nonatomic, weak) AccountViewController *accountViewController;
-//@property (nonatomic, strong) NSDictionary *accountDetailsToValidate;
+
+@interface XService() <CGChallengeResponseDelegate>
+
+@property (nonatomic, strong) XServiceLocal *localService;
+	// A service object to handle reading/writing objects to local db
+
+@property (nonatomic, strong) XServiceRemote *remoteService;
+	// A service object to handle fetching/pushing data to the server
+
+@property (nonatomic, weak) AccountViewController *accountViewController;
+	// View controller to send server validation results back to
+
+- (void)receiveServerVersionResult:(NSDictionary *)result;
+	// Determines if server's version is compatible
+
+- (void)receiveServerInfoResult:(NSDictionary *)result;
+	// Creates the server object to be saved and calls -fetchDefaultPaths
+
+
 @property (nonatomic, assign) int fetchingDefaultPaths;
 
 // Account validation/storage
 //- (void)receiveValidateAccountDetailsResponse:(XServiceFetcher *)fetcher;
 
 - (void)fetchDefaultPaths:(NSDictionary *)pathDetails;
-- (void)receiveDefaultPath:(XServiceFetcher *)fetcher;
+//- (void)receiveDefaultPath:(XServiceFetcher *)fetcher;
 - (void)saveCredentialWithUsername:(NSString *)user password:(NSString *)pass;
 - (void)removeAllCredentialsForProtectionSpace:(NSURLProtectionSpace *)protectionSpace;
 - (NSURLProtectionSpace *)protectionSpace;
@@ -40,26 +51,21 @@
 
 @implementation XService
 
-//
-// Private ivars
-//
 
-// Services
+
+// Private ivars
 @synthesize localService;
 @synthesize remoteService;
+@synthesize accountViewController;
 
-// Account validation
-//@synthesize accountViewController;
-//@synthesize accountDetailsToValidate;
+
+
 @synthesize fetchingDefaultPaths;
 
 
-//
 // Public ivars
-//
-
 static XService *sharedXService;
-
+@synthesize rootViewController;
 
 
 #pragma mark - Initialization
@@ -84,9 +90,14 @@ static XService *sharedXService;
 		// Init local and remote services
 		localService = [[XServiceLocal alloc] init];
 		remoteService = [[XServiceRemote alloc] initWithServer:[localService activeServer]];
+		
+		// Set self as the challenge response delegate
+		[CGNet utils].challengeResponseDelegate = self;
     }
     return self;
 }
+
+
 
 #pragma mark - Server
 
@@ -97,7 +108,7 @@ static XService *sharedXService;
 
 - (void)getServerInfo:(NSString *)host
 {
-	[remoteService fetchInfoFromServer:host];
+	//[remoteService fetchInfoFromServer:host];
 }
 
 - (void)receiveServerInfo:(id)result
@@ -171,7 +182,7 @@ static XService *sharedXService;
 		XSvcLog(@"Successfully created server");
 		
 		// Update remote service
-		remoteService.server = newServer;
+		remoteService.activeServer = newServer;
 	}
 	else
 	{
@@ -327,7 +338,7 @@ static XService *sharedXService;
 - (XDirectory *)directoryWithPath:(NSString *)path
 {
 	// Fire off remote directory fetch
-	[remoteService fetchDirectoryContentsAtPath:path withTarget:self action:@selector(updateDirectoryDetails:)];
+	//[remoteService fetchDirectoryContentsAtPath:path withTarget:self action:@selector(updateDirectoryDetails:)];
 	
 	// Return local directory object
 	return [localService directoryWithPath:path];
@@ -381,6 +392,16 @@ static XService *sharedXService;
 	
 	return directory;
 }
+
+
+
+#pragma mark - CGChallengeResponseDelegate
+
+- (void)respondToAuthenticationChallenge:(NSURLAuthenticationChallenge *)challenge forHandler:(CGAuthenticationChallengeHandler *)challengeHandler
+{
+	// 
+}
+
 
 
 @end

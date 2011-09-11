@@ -12,7 +12,6 @@
 		C30580341418207400E49727 /* README.md in Resources */ = {isa = PBXBuildFile; fileRef = C30580331418207400E49727 /* README.md */; };
 		C328C42B141A89C900D578ED /* check.png in Resources */ = {isa = PBXBuildFile; fileRef = C328C429141A89C900D578ED /* check.png */; };
 		C328C42C141A89C900D578ED /* x.png in Resources */ = {isa = PBXBuildFile; fileRef = C328C42A141A89C900D578ED /* x.png */; };
-		C339669713C3757300F59D2C /* XServiceFetcher.m in Sources */ = {isa = PBXBuildFile; fileRef = C339669613C3757300F59D2C /* XServiceFetcher.m */; };
 		C351746E13C390B30078E361 /* AccountViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = C351746D13C390B30078E361 /* AccountViewController.m */; };
 		C354ABE0141932E600E88410 /* libCGNetUtils.a in Frameworks */ = {isa = PBXBuildFile; fileRef = C354ABDC1419327A00E88410 /* libCGNetUtils.a */; };
 		C354ABE2141932F000E88410 /* Security.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C354ABE1141932F000E88410 /* Security.framework */; };
@@ -70,8 +69,6 @@
 		C30580331418207400E49727 /* README.md */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = README.md; sourceTree = "<group>"; };
 		C328C429141A89C900D578ED /* check.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = check.png; sourceTree = "<group>"; };
 		C328C42A141A89C900D578ED /* x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = x.png; sourceTree = "<group>"; };
-		C339669513C3757300F59D2C /* XServiceFetcher.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = XServiceFetcher.h; sourceTree = "<group>"; };
-		C339669613C3757300F59D2C /* XServiceFetcher.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = XServiceFetcher.m; sourceTree = "<group>"; };
 		C351746C13C390B30078E361 /* AccountViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AccountViewController.h; sourceTree = "<group>"; };
 		C351746D13C390B30078E361 /* AccountViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AccountViewController.m; sourceTree = "<group>"; };
 		C354ABD41419327A00E88410 /* CGNetUtils.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = CGNetUtils.xcodeproj; path = CGNetUtils/CGNetUtils.xcodeproj; sourceTree = "<group>"; };
@@ -192,8 +189,6 @@
 				C3D9E88713C34D2B007D1A7C /* XServiceLocal.m */,
 				C3D9E88213C34D1A007D1A7C /* XServiceRemote.h */,
 				C3D9E88313C34D1A007D1A7C /* XServiceRemote.m */,
-				C339669513C3757300F59D2C /* XServiceFetcher.h */,
-				C339669613C3757300F59D2C /* XServiceFetcher.m */,
 			);
 			name = Model;
 			sourceTree = "<group>";
@@ -387,7 +382,6 @@
 				C378433713BE36BB00F1793A /* XService.m in Sources */,
 				C3D9E88413C34D1A007D1A7C /* XServiceRemote.m in Sources */,
 				C3D9E88813C34D2B007D1A7C /* XServiceLocal.m in Sources */,
-				C339669713C3757300F59D2C /* XServiceFetcher.m in Sources */,
 				C351746E13C390B30078E361 /* AccountViewController.m in Sources */,
 				C3ECE28A13C3B8E8004FF63F /* XEntry.m in Sources */,
 				C3ECE28D13C3B8E9004FF63F /* XServer.m in Sources */,

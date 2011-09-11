@@ -7,23 +7,35 @@
 //
 
 
+#import "AccountViewController.h"
 #import "XServiceLocal.h"
 #import "XServiceRemote.h"
 #import "XServer.h"
-#import "AccountViewController.h"
 
 
 @interface XService : NSObject
 
-// Services
-@property (nonatomic, strong) XServiceLocal *localService;
-@property (nonatomic, strong) XServiceRemote *remoteService;
+@property (nonatomic, weak) UIViewController *rootViewController;
+	// Top level view controller. Gets messages about server status
 
-// One XService to rule them all
 + (XService *)sharedXService;
+	// One XService to rule them all
 
-// Server
 - (XServer *)activeServer;
+	// Accessor for the server object saved in db (nil if none saved)
+
+- (void)validateActiveServer;
+	// Sends request for the saved server's version info
+
+- (void)validateUsername:(NSString *)username password:(NSString *)password forHost:(NSString *)host withViewController:(AccountViewController *)viewController;
+	// Saves user/pass as a temporary credential and sends request for the server's version info
+
+
+
+
+
+
+
 - (void)saveServerWithDetails:(NSDictionary *)details;
 
 // Server/account validation
@@ -33,6 +45,15 @@
 - (XDirectory *)directoryWithPath:(NSString *)path;
 
 @end
+
+
+
+
+
+
+
+
+
 
 
 
