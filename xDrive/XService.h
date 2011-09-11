@@ -15,6 +15,12 @@
 
 @interface XService : NSObject
 
+@property (nonatomic, strong, readonly) XServiceLocal *localService;
+// A service object to handle reading/writing objects to local db
+
+@property (nonatomic, strong, readonly) XServiceRemote *remoteService;
+// A service object to handle fetching/pushing data to the server
+
 @property (nonatomic, weak) UIViewController *rootViewController;
 	// Top level view controller. Gets messages about server status
 

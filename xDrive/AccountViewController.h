@@ -17,5 +17,8 @@
 @property (nonatomic, strong) IBOutlet UITableViewCell *signInCell;
 
 - (IBAction)textFieldValueChanged:(id)sender;
+	// Checks if the form is now valid/invalid and enables/disables the sign in
+
+
 
 @end

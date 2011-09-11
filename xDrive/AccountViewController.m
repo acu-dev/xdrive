@@ -119,9 +119,7 @@
 	[hud setActivity:YES];
 	[hud show];
 	
-	// TODO make this look at a /version service to validate compatibility
-	
-	// Build service validation URL
+	/*// Build service validation URL
 	int port = 443;
 	NSString *protocol = @"https";
 	NSString *serviceBase = @"/xservice";
@@ -135,7 +133,13 @@
 	
 	// Attempt to get JSON at server URL
 	activeConnection = [[CGNet utils] getJSONAtURL:[NSURL URLWithString:infoServiceUrlString] withDelegate:self];
-	[activeConnection start];
+	[activeConnection start];*/
+	
+	[[XService sharedXService] validateUsername:usernameField.text 
+									  password:passwordField.text 
+									   forHost:serverURLField.text 
+							withViewController:self];
+	
 }
 
 - (void)dismissAccountInfo

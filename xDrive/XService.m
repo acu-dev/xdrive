@@ -14,14 +14,11 @@
 
 @interface XService() <CGChallengeResponseDelegate>
 
-@property (nonatomic, strong) XServiceLocal *localService;
-	// A service object to handle reading/writing objects to local db
-
-@property (nonatomic, strong) XServiceRemote *remoteService;
-	// A service object to handle fetching/pushing data to the server
-
 @property (nonatomic, weak) AccountViewController *accountViewController;
 	// View controller to send server validation results back to
+
+@property (nonatomic, strong) NSURLCredential *validateCredential;
+	// Credential to use when validating server version
 
 - (void)receiveServerVersionResult:(NSDictionary *)result;
 	// Determines if server's version is compatible
@@ -49,15 +46,19 @@
 
 
 
+
+
+
+
 @implementation XService
 
 
 
 // Private ivars
-@synthesize localService;
-@synthesize remoteService;
+@synthesize localService = _localService;
+@synthesize remoteService = _remoteService;
 @synthesize accountViewController;
-
+@synthesize validateCredential;
 
 
 @synthesize fetchingDefaultPaths;
@@ -88,8 +89,8 @@ static XService *sharedXService;
     if (self)
 	{
 		// Init local and remote services
-		localService = [[XServiceLocal alloc] init];
-		remoteService = [[XServiceRemote alloc] initWithServer:[localService activeServer]];
+		_localService = [[XServiceLocal alloc] init];
+		_remoteService = [[XServiceRemote alloc] initWithServer:[self.localService activeServer]];
 		
 		// Set self as the challenge response delegate
 		[CGNet utils].challengeResponseDelegate = self;
@@ -103,18 +104,27 @@ static XService *sharedXService;
 
 - (XServer *)activeServer
 {
-	return [localService activeServer];
+	return [self.localService activeServer];
 }
 
-- (void)getServerInfo:(NSString *)host
+- (void)validateActiveServer
 {
-	//[remoteService fetchInfoFromServer:host];
+	[self.remoteService fetchServerVersion:nil withTarget:self action:@selector(receiveServerVersionResult:)];
 }
 
-- (void)receiveServerInfo:(id)result
+- (void)validateUsername:(NSString *)username password:(NSString *)password forHost:(NSString *)host withViewController:(AccountViewController *)viewController
 {
-	
+	accountViewController = viewController;
+	validateCredential = [NSURLCredential credentialWithUser:username password:password persistence:NSURLCredentialPersistenceNone];
+	[self.remoteService fetchServerVersion:host withTarget:self action:@selector(receiveServerVersionResult:)];
 }
+
+- (void)receiveServerVersionResult:(NSDictionary *)result
+{
+	NSLog(@"received version result: %@", result);
+	// message accountVC the version status
+}
+
 
 /*
 #pragma mark - Account validation
@@ -156,7 +166,7 @@ static XService *sharedXService;
 {
 	XSvcLog(@"Creating new server object");
 	XServer *newServer = [NSEntityDescription insertNewObjectForEntityForName:@"Server" 
-													   inManagedObjectContext:[localService managedObjectContext]];
+													   inManagedObjectContext:[self.localService managedObjectContext]];
 	NSDictionary *serverDetails = [details objectForKey:@"server"];
 	newServer.protocol = [serverDetails objectForKey:@"protocol"];
 	newServer.port = [serverDetails objectForKey:@"port"];
@@ -168,7 +178,7 @@ static XService *sharedXService;
 	for (NSDictionary *defaultPath in pathDetails)
 	{
 		XDefaultPath *newDefaultPath = [NSEntityDescription insertNewObjectForEntityForName:@"DefaultPath"
-																	 inManagedObjectContext:[localService managedObjectContext]];
+																	 inManagedObjectContext:[self.localService managedObjectContext]];
 		newDefaultPath.name = [defaultPath objectForKey:@"name"];
 		newDefaultPath.path = [defaultPath objectForKey:@"path"];
 		[newServer addDefaultPathsObject:newDefaultPath];
@@ -176,13 +186,13 @@ static XService *sharedXService;
 	
 	// Save context
 	NSError *error = nil;
-	if ([[localService managedObjectContext] save:&error])
+	if ([[self.localService managedObjectContext] save:&error])
 	{
 		// Success!
 		XSvcLog(@"Successfully created server");
 		
 		// Update remote service
-		remoteService.activeServer = newServer;
+		self.remoteService.activeServer = newServer;
 	}
 	else
 	{
@@ -287,7 +297,7 @@ static XService *sharedXService;
 
 - (NSURLProtectionSpace *)protectionSpace
 {
-	XServer *server = [localService activeServer];
+	XServer *server = [self.localService activeServer];
 	if (!server)
 	{
 		XSvcLog(@"No server found, protection space is nil");
@@ -341,7 +351,7 @@ static XService *sharedXService;
 	//[remoteService fetchDirectoryContentsAtPath:path withTarget:self action:@selector(updateDirectoryDetails:)];
 	
 	// Return local directory object
-	return [localService directoryWithPath:path];
+	return [self.localService directoryWithPath:path];
 }
 
 - (XDirectory *)updateDirectoryDetails:(NSDictionary *)details
@@ -349,7 +359,7 @@ static XService *sharedXService;
 	//XSvcLog(@"Updating directory details at path: %@", [details objectForKey:@"path"]);
 	
 	// Get directory
-	XDirectory *directory = [localService directoryWithPath:[details objectForKey:@"path"]];
+	XDirectory *directory = [self.localService directoryWithPath:[details objectForKey:@"path"]];
 	NSSet *localEntries = [directory contents];
 	
 	// Go through contents and create a set of remote entries (entries that don't exist are created on the fly)
@@ -362,9 +372,9 @@ static XService *sharedXService;
 		
 		XEntry *entry = nil;
 		if ([[entryFromJson objectForKey:@"type"] isEqualToString:@"folder"])
-			entry = [localService directoryWithPath:[entryFromJson objectForKey:@"path"]];
+			entry = [self.localService directoryWithPath:[entryFromJson objectForKey:@"path"]];
 		else
-			entry = [localService fileWithPath:[entryFromJson objectForKey:@"path"]];
+			entry = [self.localService fileWithPath:[entryFromJson objectForKey:@"path"]];
 		entry.parent = directory;
 		[remoteEntries addObject:entry];
 	}
@@ -381,7 +391,7 @@ static XService *sharedXService;
 	
 	// Save changes
 	NSError *error = nil;
-	if ([[localService managedObjectContext] save:&error])
+	if ([[self.localService managedObjectContext] save:&error])
 	{
 		//XSvcLog(@"Successfully updated directory: %@", directory.path);
 	}
