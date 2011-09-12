@@ -42,8 +42,6 @@
 
 
 
-- (void)saveServerWithDetails:(NSDictionary *)details;
-
 // Server/account validation
 //- (void)validateAccountDetails:(NSDictionary *)details withViewController:(AccountViewController *)viewController;
 

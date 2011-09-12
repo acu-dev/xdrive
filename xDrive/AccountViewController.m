@@ -11,10 +11,7 @@
 
 
 
-@interface AccountViewController() <CGConnectionDelegate, CGChallengeResponseDelegate>
-
-@property (nonatomic, strong) CGConnection *activeConnection;
-	// The connection used to validate the server/authentication settings
+@interface AccountViewController()
 
 @property (nonatomic, strong) ATMHud *hud;
 	// Heads up display for account validation messages
@@ -27,7 +24,7 @@
 
 - (void)enableSignIn;
 - (void)disableSignIn;
-	// Enables/disables the sign in button
+	// Enables/disables the sign in cell
 
 - (void)updateHudWithDelay;
 	// Tells the hud to update and dismiss after a given number of seconds
@@ -39,7 +36,6 @@
 @implementation AccountViewController
 
 // Private ivars
-@synthesize activeConnection;
 @synthesize hud;
 
 // Public ivars
@@ -72,9 +68,6 @@
 	
 	hud = [[ATMHud alloc] initWithDelegate:self];
 	[self.view addSubview:hud.view];
-	
-	// Set self as challenge response delegate
-	[CGNet utils].challengeResponseDelegate = self;
 }
 
 - (void)viewDidUnload
@@ -83,7 +76,6 @@
     // Release any retained subviews of the main view.
     // e.g. self.myOutlet = nil;
 	
-	self.activeConnection = nil;
 	self.hud = nil;
 	
 	self.serverURLField = nil;
@@ -91,9 +83,6 @@
 	self.passwordField = nil;
 	self.signInLabel = nil;
 	self.signInCell = nil;
-	
-	// Unset self as challenge response delgate
-	[CGNet utils].challengeResponseDelegate = nil;
 }
 
 - (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation
@@ -119,28 +108,43 @@
 	[hud setActivity:YES];
 	[hud show];
 	
-	/*// Build service validation URL
-	int port = 443;
-	NSString *protocol = @"https";
-	NSString *serviceBase = @"/xservice";
-	NSString *infoService = @"/info";
-	NSString *infoServiceUrlString = [NSString stringWithFormat:@"%@://%@:%i%@%@",
-									  protocol,
-									  serverURLField.text,
-									  port,
-									  serviceBase,
-									  infoService];
-	
-	// Attempt to get JSON at server URL
-	activeConnection = [[CGNet utils] getJSONAtURL:[NSURL URLWithString:infoServiceUrlString] withDelegate:self];
-	[activeConnection start];*/
-	
+	// Ask XService to validate account
 	[[XService sharedXService] validateUsername:usernameField.text 
 									  password:passwordField.text 
 									   forHost:serverURLField.text 
 							withViewController:self];
-	
 }
+
+- (void)updateValidateAccountStatus:(NSString *)status
+{
+	[hud setCaption:status];
+	[hud update];
+}
+
+- (void)validateAccountFailedWithError:(NSError *)error
+{
+	// Display error message
+	[hud setActivity:NO];
+	[hud setImage:[UIImage imageNamed:@"x"]];
+	[hud setCaption:[error localizedDescription]];
+	[self updateHudWithDelay];
+}
+
+- (void)validateAccountSucceeded
+{
+	// Success!
+	[hud setActivity:NO];
+	[hud setImage:[UIImage imageNamed:@"check"]];
+	[hud setCaption:@"Success!"];
+	[self updateHudWithDelay];
+	
+	// Hide view after hud hides
+	//[self performSelector:@selector(dismissAccountInfo) withObject:nil afterDelay:2.0];
+}
+
+
+
+#pragma mark - Utils
 
 - (void)dismissAccountInfo
 {
@@ -179,14 +183,12 @@
 
 - (void)enableSignIn
 {
-	//isAuthenticating = NO;
 	signInLabel.textColor = [UIColor blackColor];
 	signInCell.selectionStyle = UITableViewCellSelectionStyleBlue;
 }
 
 - (void)disableSignIn
 {
-	//isAuthenticating = YES;
 	signInLabel.textColor = [UIColor grayColor];
 	signInCell.selectionStyle = UITableViewCellSelectionStyleNone;
 }
@@ -229,69 +231,6 @@
 	[self validateAccount];
 }
 
-
-
-#pragma mark - CGConnectionDelegate
-
-- (void)cgConnection:(CGConnection *)connection finishedWithResult:(id)result
-{
-	NSLog(@"result: %@", result);
-	
-	// Success!
-	[hud setActivity:NO];
-	[hud setImage:[UIImage imageNamed:@"check"]];
-	[hud setCaption:@"Success!"];
-	[self updateHudWithDelay];
-	
-	// Hide view after hud hides
-	//[self performSelector:@selector(dismissAccountInfo) withObject:nil afterDelay:2.0];
-}
-
-- (void)cgConnection:(CGConnection *)connection failedWithError:(NSError *)error
-{
-	if ([error code] != NSURLErrorUserCancelledAuthentication)
-	{
-		// Display error message
-		[hud setActivity:NO];
-		[hud setImage:[UIImage imageNamed:@"x"]];
-		[hud setCaption:[error localizedDescription]];
-		[self updateHudWithDelay];
-	}
-	
-	[self enableSignIn];
-	
-	self.activeConnection = nil;
-}
-
-
-
-#pragma mark - CGChallengeResponseDelegate
-
-- (void)respondToAuthenticationChallenge:(NSURLAuthenticationChallenge *)challenge
-							  forHandler:(CGChallengeHandler *)challengeHandler
-{
-	if (!challenge.previousFailureCount)
-	{
-		[hud setCaption:@"Authenticating..."];
-		[hud update];
-		
-		// Create credential from login form
-		NSURLCredential *credential = [NSURLCredential credentialWithUser:usernameField.text 
-																 password:passwordField.text 
-															  persistence:NSURLCredentialPersistencePermanent];
-		[challengeHandler stopWithCredential:credential];
-	}
-	else
-	{
-		// Display error message
-		[hud setActivity:NO];
-		[hud setCaption:@"Authentication failed"];
-		[hud setImage:[UIImage imageNamed:@"x"]];
-		[self updateHudWithDelay];
-		
-		[challengeHandler stopWithCredential:nil];
-	}
-}
 
 @end
 

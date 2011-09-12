@@ -19,6 +19,13 @@
 - (IBAction)textFieldValueChanged:(id)sender;
 	// Checks if the form is now valid/invalid and enables/disables the sign in
 
+- (void)updateValidateAccountStatus:(NSString *)status;
+	// Called from XService during account validation. Updates the HUD with the status
 
+- (void)validateAccountFailedWithError:(NSError *)error;
+	// Called from XService after account validation has finished. Updates the HUD with the error message
+
+- (void)validateAccountSucceeded;
+	// Called from XService after account validation has finished. Updates the HUD with a success briefly, then dismisses this view
 
 @end
