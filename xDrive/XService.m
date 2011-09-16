@@ -7,6 +7,7 @@
 //
 
 #import "XService.h"
+#import "XDriveConfig.h"
 #import "XDefaultPath.h"
 #import <CGNetUtils/CGNetUtils.h>
 
@@ -14,17 +15,33 @@
 
 @interface XService() <CGChallengeResponseDelegate>
 
+
+// Validating / Creating Server
+
 @property (nonatomic, weak) AccountViewController *accountViewController;
 	// View controller to send server validation results back to
 
 @property (nonatomic, strong) NSURLCredential *validateCredential;
 	// Credential to use when validating server version
 
-- (void)receiveServerVersionResult:(NSDictionary *)result;
-	// Determines if server's version is compatible
+- (void)receiveServerValidationResult:(NSDictionary *)result;
+	// Validates server version and informs stored accountViewController
 
 - (void)receiveServerInfoResult:(NSDictionary *)result;
 	// Creates the server object to be saved and calls -fetchDefaultPaths
+
+
+// Server Version
+
+- (void)receiveServerVersionResult:(NSObject *)result;
+	// Examines server version and if necessary calls -alertUserToNewAppVersion
+
+- (BOOL)isServerVersionCompatible:(NSString *)version;
+	// Determines if server's version is compatible
+
+- (void)alertUserToNewAppVersion;
+	// Alerts the user to a new app version
+
 
 
 @property (nonatomic, assign) int fetchingDefaultPaths;
@@ -100,6 +117,20 @@ static XService *sharedXService;
 
 
 
+#pragma mark - App Info
+
++ (NSString *)appVersion
+{
+	return [[[NSBundle mainBundle] infoDictionary] objectForKey:@"CFBundleVersion"];
+}
+
++ (NSString *)appName
+{
+	return [[[NSBundle mainBundle] infoDictionary] objectForKey:@"CFBundleDisplayName"];
+}
+
+
+
 #pragma mark - Server
 
 - (XServer *)activeServer
@@ -107,29 +138,100 @@ static XService *sharedXService;
 	return [self.localService activeServer];
 }
 
-- (void)validateActiveServer
-{
-	[self.remoteService fetchServerVersion:nil withTarget:self action:@selector(receiveServerVersionResult:)];
-}
-
 - (void)validateUsername:(NSString *)username password:(NSString *)password forHost:(NSString *)host withViewController:(AccountViewController *)viewController
+	// Basically checks server version but uses the passed user/pass/host and different callback
 {
 	accountViewController = viewController;
 	validateCredential = [NSURLCredential credentialWithUser:username password:password persistence:NSURLCredentialPersistenceNone];
-	[self.remoteService fetchServerVersion:host withTarget:self action:@selector(receiveServerVersionResult:)];
+	[self.remoteService fetchServerVersion:host withTarget:self action:@selector(receiveServerValidationResult:)];
+}
+
+- (void)receiveServerValidationResult:(NSObject *)result
+{
+	if ([result isKindOfClass:[NSError class]])
+	{
+		XDrvLog(@"Error getting server version");
+		[accountViewController validateAccountFailedWithError:(NSError *)result];
+	}
+	
+	XDrvDebug(@"Received version data: %@", result);
+	
+	// Get version string
+	NSString *serverVersion = [[(NSDictionary *)result objectForKey:@"versions"] objectForKey:@"xservice"];
+	if ([self isServerVersionCompatible:serverVersion])
+	{
+		// Success!
+		XDrvDebug(@"Server version %@ is compatible", serverVersion);
+		[accountViewController validateAccountSucceeded];
+	}
+	else
+	{
+		// Version incompatible
+		XDrvLog(@"Server version %@ is incompatible with this app version %@", serverVersion, [XService appVersion]);
+		[accountViewController validateAccountFailedWithError:nil];
+	}
+}
+
+
+
+#pragma mark - Version
+
+- (void)checkServerVersion
+{
+	[self.remoteService fetchServerVersion:nil withTarget:self action:@selector(receiveServerVersionResult:)];
 }
 
 - (void)receiveServerVersionResult:(NSObject *)result
 {
 	if ([result isKindOfClass:[NSError class]])
 	{
-		NSLog(@"Error getting server version");
-		[accountViewController validateAccountFailedWithError:(NSError *)result];
+		// Silently fail
+		XDrvLog(@"Error getting server version: %@", [(NSError *)result localizedDescription]);
+		return;
 	}
 	
-	NSLog(@"received version result: %@", result);
-	// message accountVC the version status
+	XDrvDebug(@"Received version data: %@", result);
+	
+	// Get version string
+	NSString *serverVersion = [[(NSDictionary *)result objectForKey:@"versions"] objectForKey:@"xservice"];
+	if ([self isServerVersionCompatible:serverVersion])
+	{
+		// Success!
+		XDrvDebug(@"Server version %@ is compatible", serverVersion);
+		return;
+	}
+	else
+	{
+		// Version incompatible
+		XDrvLog(@"Server version %@ is incompatible with this app version %@", serverVersion, [XService appVersion]);
+		[self alertUserToNewAppVersion];
+	}
 }
+
+- (BOOL)isServerVersionCompatible:(NSString *)version
+{
+	if ([version isEqualToString:[XService appVersion]])
+		return YES;
+	
+	else
+		return NO;
+}
+
+- (void)alertUserToNewAppVersion
+{
+	
+	NSString *title = @"A newer version of InTouch is available";
+	NSString *message = @"Would you like to download it now?";
+	
+	UIAlertView *alert = [[UIAlertView alloc] initWithTitle:title message:message delegate:self cancelButtonTitle:@"Not Now" otherButtonTitles:@"Download", nil];
+	[alert show];
+}
+
+
+
+
+
+
 
 
 /*
@@ -170,7 +272,7 @@ static XService *sharedXService;
 
 - (void)saveServerWithDetails:(NSDictionary *)details
 {
-	XSvcLog(@"Creating new server object");
+	XDrvDebug(@"Creating new server object...");
 	XServer *newServer = [NSEntityDescription insertNewObjectForEntityForName:@"Server" 
 													   inManagedObjectContext:[self.localService managedObjectContext]];
 	NSDictionary *serverDetails = [details objectForKey:@"server"];
@@ -195,7 +297,7 @@ static XService *sharedXService;
 	if ([[self.localService managedObjectContext] save:&error])
 	{
 		// Success!
-		XSvcLog(@"Successfully created server");
+		XDrvDebug(@"Successfully created server");
 		
 		// Update remote service
 		self.remoteService.activeServer = newServer;
@@ -203,7 +305,7 @@ static XService *sharedXService;
 	else
 	{
 		// Handle error
-		XSvcLog(@"Error: unable to save context after adding new server - %@", [error localizedDescription]);
+		XDrvLog(@"Error: unable to save context after adding new server - %@", [error localizedDescription]);
 	}
 }
 
@@ -282,20 +384,20 @@ static XService *sharedXService;
 	NSURLCredential *credential = [NSURLCredential credentialWithUser:user password:pass persistence:NSURLCredentialPersistencePermanent];
 	
 	// Save credential to be used for protection space
-	XSvcLog(@"Setting credential for user: %@", user);
+	XDrvDebug(@"Setting credential for user: %@", user);
 	[[NSURLCredentialStorage sharedCredentialStorage] setCredential:credential forProtectionSpace:[self protectionSpace]];
 }
 
 - (void)removeAllCredentialsForProtectionSpace:(NSURLProtectionSpace *)protectionSpace
 {	
 	NSDictionary *allCredentials = [[NSURLCredentialStorage sharedCredentialStorage] credentialsForProtectionSpace:[self protectionSpace]];
-	XSvcLog(@"Found %i credentials", [allCredentials count]);
+	XDrvDebug(@"Found %i credentials", [allCredentials count]);
 	
 	NSArray *allKeys = [allCredentials allKeys];
 	
 	for (NSString *username in allKeys)
 	{
-		XSvcLog(@"Removing credential for user: %@", username);
+		XDrvDebug(@"Removing credential for user: %@", username);
 		NSURLCredential *credential = [allCredentials objectForKey:username];
 		[[NSURLCredentialStorage sharedCredentialStorage] removeCredential:credential forProtectionSpace:protectionSpace];
 	}
@@ -306,7 +408,7 @@ static XService *sharedXService;
 	XServer *server = [self.localService activeServer];
 	if (!server)
 	{
-		XSvcLog(@"No server found, protection space is nil");
+		XDrvLog(@"No server found, protection space is nil");
 		return nil;
 	}
 	
@@ -323,7 +425,7 @@ static XService *sharedXService;
 	NSDictionary *allCredentials = [[NSURLCredentialStorage sharedCredentialStorage] credentialsForProtectionSpace:[self protectionSpace]];
 	if (![allCredentials count])
 	{
-		XSvcLog(@"No credentials were found for given protection space");
+		XDrvLog(@"No credentials were found for given protection space");
 		return nil;
 	}
 	
@@ -339,13 +441,13 @@ static XService *sharedXService;
 	if (![allCredentials count])
 	{
 		// None found
-		XSvcLog(@"No username was found");
+		XDrvLog(@"No username was found");
 		return nil;
 	}
 	
 	// Return the first username found
 	NSArray *allKeys = [allCredentials allKeys];
-	XSvcLog(@"First user found: %@", [allKeys objectAtIndex:0]);
+	XDrvDebug(@"First user found: %@", [allKeys objectAtIndex:0]);
 	return [allKeys objectAtIndex:0];
 }
 
@@ -362,7 +464,7 @@ static XService *sharedXService;
 
 - (XDirectory *)updateDirectoryDetails:(NSDictionary *)details
 {
-	//XSvcLog(@"Updating directory details at path: %@", [details objectForKey:@"path"]);
+	//XDrvDebug(@"Updating directory details at path: %@", [details objectForKey:@"path"]);
 	
 	// Get directory
 	XDirectory *directory = [self.localService directoryWithPath:[details objectForKey:@"path"]];
@@ -374,7 +476,7 @@ static XService *sharedXService;
 	for (NSDictionary *entryFromJson in contents)
 	{
 		// Describe object
-		//XSvcLog(@"type: %@ path: %@", [entryFromJson objectForKey:@"type"], [entryFromJson objectForKey:@"path"]);
+		//XDrvDebug(@"type: %@ path: %@", [entryFromJson objectForKey:@"type"], [entryFromJson objectForKey:@"path"]);
 		
 		XEntry *entry = nil;
 		if ([[entryFromJson objectForKey:@"type"] isEqualToString:@"folder"])
@@ -388,7 +490,7 @@ static XService *sharedXService;
 	// Look for entries that no longer exist on server and need to be deleted
 	for (XEntry *entry in localEntries) {
 		if (![remoteEntries containsObject:entry]) {
-			XSvcLog(@"Entry %@ no longer exists on server; deleting...", entry.path);
+			XDrvDebug(@"Entry %@ no longer exists on server; deleting...", entry.path);
 		}
 	}
 	
@@ -399,11 +501,11 @@ static XService *sharedXService;
 	NSError *error = nil;
 	if ([[self.localService managedObjectContext] save:&error])
 	{
-		//XSvcLog(@"Successfully updated directory: %@", directory.path);
+		XDrvDebug(@"Successfully updated directory: %@", directory.path);
 	}
 	else
 	{
-		XSvcLog(@"Error: problem saving changes to directory: %@", directory.path);
+		XDrvLog(@"Error: problem saving changes to directory: %@", directory.path);
 	}
 	
 	return directory;
@@ -417,7 +519,13 @@ static XService *sharedXService;
 {
 	if (validateCredential)
 	{
-
+		// Validating account, use saved credential
+		[challengeHandler resolveWithCredential:validateCredential];
+	}
+	else
+	{
+		// Attempt to continue without credential
+		[challenge.sender continueWithoutCredentialForAuthenticationChallenge:challenge];
 	}
 }
 

@@ -71,6 +71,7 @@
 		C328C42A141A89C900D578ED /* x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = x.png; sourceTree = "<group>"; };
 		C351746C13C390B30078E361 /* AccountViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AccountViewController.h; sourceTree = "<group>"; };
 		C351746D13C390B30078E361 /* AccountViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AccountViewController.m; sourceTree = "<group>"; };
+		C3527A371423CBFB00B830DF /* XDriveConfig.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = XDriveConfig.h; sourceTree = "<group>"; };
 		C354ABD41419327A00E88410 /* CGNetUtils.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = CGNetUtils.xcodeproj; path = CGNetUtils/CGNetUtils.xcodeproj; sourceTree = "<group>"; };
 		C354ABE1141932F000E88410 /* Security.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Security.framework; path = System/Library/Frameworks/Security.framework; sourceTree = SDKROOT; };
 		C378433513BE36BB00F1793A /* XService.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = XService.h; sourceTree = "<group>"; };
@@ -269,6 +270,7 @@
 			isa = PBXGroup;
 			children = (
 				C328C428141A89C900D578ED /* images */,
+				C3527A371423CBFB00B830DF /* XDriveConfig.h */,
 				C3FC6C6613BCB90B009FBAA3 /* xDriveAppDelegate.h */,
 				C3FC6C6713BCB90B009FBAA3 /* xDriveAppDelegate.m */,
 				C3FC6C6913BCB90B009FBAA3 /* MainStoryboard_iPhone.storyboard */,

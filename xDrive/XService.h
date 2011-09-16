@@ -27,14 +27,20 @@
 + (XService *)sharedXService;
 	// One XService to rule them all
 
++ (NSString *)appVersion;
+	// Current version of the app as defined in the Info plist
+
++ (NSString *)appName;
+	// Display name of the app as defined in the Info plist9
+
 - (XServer *)activeServer;
 	// Accessor for the server object saved in db (nil if none saved)
 
-- (void)validateActiveServer;
-	// Sends request for the saved server's version info
-
 - (void)validateUsername:(NSString *)username password:(NSString *)password forHost:(NSString *)host withViewController:(AccountViewController *)viewController;
 	// Saves user/pass as a temporary credential and sends request for the server's version info
+
+- (void)checkServerVersion;
+	// Sends request for the saved server's version info
 
 
 
@@ -43,24 +49,3 @@
 - (XDirectory *)directoryWithPath:(NSString *)path;
 
 @end
-
-
-
-
-
-
-
-
-
-
-
-
-//
-// Logging Macro
-//
-#define X_SVC_DEBUG
-#ifdef X_SVC_DEBUG
-#	define XSvcLog(fmt, ...) NSLog((@"%s " fmt), __PRETTY_FUNCTION__, ##__VA_ARGS__);
-#else
-#	define XSvcLog(...)
-#endif
