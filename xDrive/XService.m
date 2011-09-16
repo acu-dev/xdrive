@@ -119,8 +119,14 @@ static XService *sharedXService;
 	[self.remoteService fetchServerVersion:host withTarget:self action:@selector(receiveServerVersionResult:)];
 }
 
-- (void)receiveServerVersionResult:(NSDictionary *)result
+- (void)receiveServerVersionResult:(NSObject *)result
 {
+	if ([result isKindOfClass:[NSError class]])
+	{
+		NSLog(@"Error getting server version");
+		[accountViewController validateAccountFailedWithError:(NSError *)result];
+	}
+	
 	NSLog(@"received version result: %@", result);
 	// message accountVC the version status
 }
@@ -409,7 +415,10 @@ static XService *sharedXService;
 
 - (void)respondToAuthenticationChallenge:(NSURLAuthenticationChallenge *)challenge forHandler:(CGAuthenticationChallengeHandler *)challengeHandler
 {
-	// 
+	if (validateCredential)
+	{
+		[challengeHandler stopWithCredential:validateCredential];
+	}
 }
 
 

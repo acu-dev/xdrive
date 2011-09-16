@@ -104,7 +104,7 @@ static NSString *serviceInfoPath = @"/info";
 
 - (void)fetchServerVersion:(NSString *)host withTarget:(id)target action:(SEL)action
 {
-	NSString *versionServiceURLString = [[self serviceUrlStringForHost:host] stringByAppendingPathComponent:@"info"]; // change this to "version" when the service is available
+	NSString *versionServiceURLString = [[self serviceUrlStringForHost:host] stringByAppendingPathComponent:@"version"];
 	[self fetchJSONAtURL:versionServiceURLString withTarget:target action:action];
 }
 
@@ -190,6 +190,26 @@ static NSString *serviceInfoPath = @"/info";
 	id target = [request objectForKey:@"targetObject"];
 	SEL action = NSSelectorFromString([request objectForKey:@"selectorString"]);
 	[target performSelector:action withObject:result];
+	
+	// Clean up request
+	request = nil;
+	[requests removeObjectForKey:[connection description]];
+}
+
+- (void)cgConnection:(CGConnection *)connection failedWithError:(NSError *)error
+{
+	// Get request details
+	NSDictionary *request = [requests objectForKey:[connection description]];
+	if (!request)
+	{
+		NSLog(@"- Error: Unable to find details for connection: %@; nothing to do", [connection description]);
+		return;
+	}
+	
+	// Send results off to request's target
+	id target = [request objectForKey:@"targetObject"];
+	SEL action = NSSelectorFromString([request objectForKey:@"selectorString"]);
+	[target performSelector:action withObject:error];
 	
 	// Clean up request
 	request = nil;

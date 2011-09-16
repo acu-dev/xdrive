@@ -55,7 +55,7 @@
 	XServer *server = [[XService sharedXService] activeServer];
 	if (server)
 	{
-		serverURLField.text = [NSString stringWithFormat:@"%@://%@:%i", server.protocol, server.hostname, server.port];
+		serverURLField.text = server.hostname;
 		
 		// TODO fill in the user/pass
 		
@@ -110,9 +110,9 @@
 	
 	// Ask XService to validate account
 	[[XService sharedXService] validateUsername:usernameField.text 
-									  password:passwordField.text 
-									   forHost:serverURLField.text 
-							withViewController:self];
+									   password:passwordField.text 
+										forHost:serverURLField.text 
+							 withViewController:self];
 }
 
 - (void)updateValidateAccountStatus:(NSString *)status
@@ -123,11 +123,22 @@
 
 - (void)validateAccountFailedWithError:(NSError *)error
 {
-	// Display error message
+	if ([error code] == NSURLErrorUserCancelledAuthentication)
+	{
+		// User cancelled auth
+		[hud setCaption:@"Unable to validate account."];
+	}
+	else
+	{
+		// Display error description
+		[hud setCaption:[error localizedDescription]];
+	}
+	
 	[hud setActivity:NO];
 	[hud setImage:[UIImage imageNamed:@"x"]];
-	[hud setCaption:[error localizedDescription]];
 	[self updateHudWithDelay];
+	
+	[self enableSignIn];
 }
 
 - (void)validateAccountSucceeded
@@ -153,7 +164,7 @@
 
 - (void)updateHudWithDelay
 {
-	NSTimeInterval updateDisplayTime = 2.0;
+	NSTimeInterval updateDisplayTime = 1.5;
 	[hud update];
 	[hud hideAfter:updateDisplayTime];
 }
