@@ -417,7 +417,7 @@ static XService *sharedXService;
 {
 	if (validateCredential)
 	{
-		[challengeHandler stopWithCredential:validateCredential];
+
 	}
 }
 
