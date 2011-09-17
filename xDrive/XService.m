@@ -152,6 +152,7 @@ static XService *sharedXService;
 	{
 		XDrvLog(@"Error getting server version");
 		[accountViewController validateAccountFailedWithError:(NSError *)result];
+		return;
 	}
 	
 	XDrvDebug(@"Received version data: %@", result);
