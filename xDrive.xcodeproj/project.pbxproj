@@ -9,6 +9,7 @@
 /* Begin PBXBuildFile section */
 		A93E36AA13C5630600DE693D /* DirectoryContentsViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = A93E36A913C5630600DE693D /* DirectoryContentsViewController.m */; };
 		A978436C13C6876700120A94 /* DirectoryNavigationController.m in Sources */ = {isa = PBXBuildFile; fileRef = A978436B13C6876700120A94 /* DirectoryNavigationController.m */; };
+		A9C34FCC1426668400E3BC3C /* OpenFileViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = A9C34FCB1426668400E3BC3C /* OpenFileViewController.m */; };
 		C30580341418207400E49727 /* README.md in Resources */ = {isa = PBXBuildFile; fileRef = C30580331418207400E49727 /* README.md */; };
 		C328C42B141A89C900D578ED /* check.png in Resources */ = {isa = PBXBuildFile; fileRef = C328C429141A89C900D578ED /* check.png */; };
 		C328C42C141A89C900D578ED /* x.png in Resources */ = {isa = PBXBuildFile; fileRef = C328C42A141A89C900D578ED /* x.png */; };
@@ -66,6 +67,8 @@
 		A93E36A913C5630600DE693D /* DirectoryContentsViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DirectoryContentsViewController.m; sourceTree = "<group>"; };
 		A978436A13C6876700120A94 /* DirectoryNavigationController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DirectoryNavigationController.h; sourceTree = "<group>"; };
 		A978436B13C6876700120A94 /* DirectoryNavigationController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DirectoryNavigationController.m; sourceTree = "<group>"; };
+		A9C34FCA1426668400E3BC3C /* OpenFileViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OpenFileViewController.h; sourceTree = "<group>"; };
+		A9C34FCB1426668400E3BC3C /* OpenFileViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OpenFileViewController.m; sourceTree = "<group>"; };
 		C30580331418207400E49727 /* README.md */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = README.md; sourceTree = "<group>"; };
 		C328C429141A89C900D578ED /* check.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = check.png; sourceTree = "<group>"; };
 		C328C42A141A89C900D578ED /* x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = x.png; sourceTree = "<group>"; };
@@ -151,6 +154,15 @@
 				A93E36A913C5630600DE693D /* DirectoryContentsViewController.m */,
 			);
 			name = "Directory Contents";
+			sourceTree = "<group>";
+		};
+		A9C34FC9142665CA00E3BC3C /* File Info */ = {
+			isa = PBXGroup;
+			children = (
+				A9C34FCA1426668400E3BC3C /* OpenFileViewController.h */,
+				A9C34FCB1426668400E3BC3C /* OpenFileViewController.m */,
+			);
+			name = "File Info";
 			sourceTree = "<group>";
 		};
 		C328C428141A89C900D578ED /* images */ = {
@@ -278,6 +290,7 @@
 				C3ECE29713C3BF2D004FF63F /* RootTabBarController.h */,
 				C3ECE29813C3BF2D004FF63F /* RootTabBarController.m */,
 				A978436813C6847300120A94 /* Directory Contents */,
+				A9C34FC9142665CA00E3BC3C /* File Info */,
 				C351747013C393690078E361 /* Account */,
 				C378433A13BE475200F1793A /* Model */,
 				C3FC6C5E13BCB90B009FBAA3 /* Supporting Files */,
@@ -400,6 +413,7 @@
 				C3E6E0BB13DE010A00EA014B /* XDirectory.m in Sources */,
 				C3E6E0BE13DE010A00EA014B /* XDefaultPath.m in Sources */,
 				C3E6E0C113DE06E100EA014B /* xDrive.xcdatamodeld in Sources */,
+				A9C34FCC1426668400E3BC3C /* OpenFileViewController.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
