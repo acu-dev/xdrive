@@ -186,8 +186,10 @@ static XService *sharedXService;
 			[self fetchDefaultPaths:defaultPaths];
 		}
 	}
-	
-	[serverStatusDelegate validateServerFinishedWithSuccess];
+	else
+	{
+		[serverStatusDelegate validateServerFinishedWithSuccess];
+	}
 }
 
 - (BOOL)isServerVersionCompatible:(NSString *)version

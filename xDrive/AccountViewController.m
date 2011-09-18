@@ -264,7 +264,7 @@
 	[self updateHudWithDelay];
 	
 	// Hide view after hud hides
-	//[self performSelector:@selector(dismissAccountInfo) withObject:nil afterDelay:2.0];
+	[self performSelector:@selector(dismissAccountInfo) withObject:nil afterDelay:2.0];
 }
 
 

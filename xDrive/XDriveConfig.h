@@ -16,7 +16,7 @@ static NSString *defaultServiceBasepath = @"/xservice";
 
 // Be sure to turn off all logging before a release build!
 
-#define XDRV_LOG
+//#define XDRV_LOG
 	// If defined, will log ERROR & WARNING type messages to the console.
 	// Watch for these logs during development.
 
