@@ -7,6 +7,7 @@
 //
 
 #import "XServiceRemote.h"
+#import "XDriveConfig.h"
 #import "XService.h"
 #import <CGNetUtils/CGNetUtils.h>
 
@@ -17,9 +18,17 @@
 @property (nonatomic, strong) NSMutableDictionary *requests;
 	// Container for each request's connection info
 
+- (NSString *)serviceUrlString;
+	// Returns an absolute url to the saved server's service base path.
+
 - (NSString *)serviceUrlStringForHost:(NSString *)host;
+	// Generates an absolute url to the service base path of the passed host
+	// (uses the default vars defined in XDriveConfig.h. If host is nil the
+	// details from the active server are used.
 		
-- (void)startConnection:(CGConnection *)connection withTarget:(id)target action:(SEL)action;
+- (void)fetchJSONAtURL:(NSString *)url withTarget:(id)target action:(SEL)action;
+	// Creates the connection and saves the target/action in the requests dictionary
+	// to be used when the connection returns.
 
 @end
 
@@ -59,9 +68,9 @@ static NSString *serviceInfoPath = @"/info";
 
 - (NSString *)serviceUrlStringForHost:(NSString *)host
 {
-	int port = 443;
-	NSString *protocol = @"https";
-	NSString *serviceBase = @"/xservice";
+	int port = defaultServerPort;
+	NSString *protocol = defaultServerProtocol;
+	NSString *serviceBase = defaultServiceBasepath;
 	
 	if (activeServer)
 	{
@@ -100,77 +109,20 @@ static NSString *serviceInfoPath = @"/info";
 
 
 
-#pragma mark - Server
+#pragma mark - Fetches
 
-- (void)fetchServerVersion:(NSString *)host withTarget:(id)target action:(SEL)action
-{
-	NSString *versionServiceURLString = [[self serviceUrlStringForHost:host] stringByAppendingPathComponent:@"version"];
-	[self fetchJSONAtURL:versionServiceURLString withTarget:target action:action];
-}
-
-- (void)fetchServerInfo:(NSString *)host withTarget:(id)target action:(SEL)action
+- (void)fetchServerInfoAtHost:(NSString *)host withTarget:(NSObject *)target action:(SEL)action
 {
 	NSString *infoServiceURLString = [[self serviceUrlStringForHost:host] stringByAppendingPathComponent:@"info"];
 	[self fetchJSONAtURL:infoServiceURLString withTarget:target action:action];
 }
 
-#pragma mark - Fetches
-
-
-/*- (void)fetchDefaultPath:(NSString *)path withTarget:(id)target action:(SEL)action
-{
-	NSString *directoryService = [[self serviceUrlString] stringByAppendingFormat:@"/directory/?path=%@", path];
-	
-	//XServiceFetcher *fetcher = [[XServiceFetcher alloc] initWithURLString:directoryService receiver:target action:action];
-	//[fetcher start];
-}*/
-
-/*- (void)fetchDirectoryContentsAtPath:(NSString *)path withTarget:(id)target action:(SEL)action
+- (void)fetchDirectoryContentsAtPath:(NSString *)path withTarget:(id)target action:(SEL)action
 {
 	NSString *encodedPath = [path stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
 	NSString *directoryService = [[self serviceUrlString] stringByAppendingFormat:@"/directory/?path=%@", encodedPath];
-	
-	//XServiceFetcher *fetcher = [[XServiceFetcher alloc] initWithURLString:directoryService receiver:self action:@selector(receiveResponse:)];
-	
-	// Save request data for handling upon return
-	NSDictionary *request = [[NSDictionary alloc] initWithObjectsAndKeys:
-							 target, @"targetObject",
-							 NSStringFromSelector(action), @"selectorString",
-							 fetcher, @"fetcher",
-							 nil];
-	[requests setObject:request forKey:[fetcher description]];
-	
-	// Fire off request
-	[fetcher start];
-}*/
-
-#pragma mark - Responses
-
-/*- (void)receiveResponse:(XServiceFetcher *)fetcher
-{
-	// Get request details
-	NSDictionary *request = [requests objectForKey:[fetcher description]];
-	if (!request)
-	{
-		NSLog(@"- Error: Unable to find request details for fetcher: %@; nothing to do", [fetcher description]);
-		return;
-	}
-	
-	if (!fetcher.result)
-	{
-		NSLog(@"- Error: No results found");
-		return;
-	}
-	
-	// Send results off to request's target
-	id target = [request objectForKey:@"targetObject"];
-	SEL action = NSSelectorFromString([request objectForKey:@"selectorString"]);
-	[target performSelector:action withObject:fetcher.result];
-	
-	// Clean up request
-	request = nil;
-	[requests removeObjectForKey:[fetcher description]];
-}*/
+	[self fetchJSONAtURL:directoryService withTarget:target action:action];
+}
 
 
 

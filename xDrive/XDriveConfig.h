@@ -7,6 +7,13 @@
 //
 
 
+// Default server connection info
+static int defaultServerPort = 443;
+static NSString *defaultServerProtocol = @"https";
+static NSString *defaultServiceBasepath = @"/xservice";
+#pragma unused(defaultServerPort)
+
+
 // Be sure to turn off all logging before a release build!
 
 #define XDRV_LOG

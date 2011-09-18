@@ -16,42 +16,30 @@
 @interface XService() <CGChallengeResponseDelegate>
 
 
-// Validating / Creating Server
-
-@property (nonatomic, weak) AccountViewController *accountViewController;
-	// View controller to send server validation results back to
-
 @property (nonatomic, strong) NSURLCredential *validateCredential;
-	// Credential to use when validating server version
-
-- (void)receiveServerValidationResult:(NSDictionary *)result;
-	// Validates server version and informs stored accountViewController
-
-- (void)receiveServerInfoResult:(NSDictionary *)result;
-	// Creates the server object to be saved and calls -fetchDefaultPaths
-
-
-// Server Version
-
-- (void)receiveServerVersionResult:(NSObject *)result;
-	// Examines server version and if necessary calls -alertUserToNewAppVersion
-
-- (BOOL)isServerVersionCompatible:(NSString *)version;
-	// Determines if server's version is compatible
-
-- (void)alertUserToNewAppVersion;
-	// Alerts the user to a new app version
-
-
+	// Credential used when validating server info.
 
 @property (nonatomic, assign) int fetchingDefaultPaths;
+	// Counter that gets decremented as default path fetches return.
 
-// Account validation/storage
-//- (void)receiveValidateAccountDetailsResponse:(XServiceFetcher *)fetcher;
+- (void)receiveServerInfoResult:(NSDictionary *)result;
+	// Evaluates the server info returned. If valid, server info is saved
+	// and setup as active server.
+	
+- (BOOL)isServerVersionCompatible:(NSString *)version;
+	// Determines if server's version is compatible with the app version.
+
+- (void)saveServerWithDetails:(NSDictionary *)details;
+	// Takes received server info and saves a server object with the details.
 
 - (void)fetchDefaultPaths:(NSDictionary *)pathDetails;
-//- (void)receiveDefaultPath:(XServiceFetcher *)fetcher;
-- (void)saveCredentialWithUsername:(NSString *)user password:(NSString *)pass;
+	// Fires off a request to get the directory contentes for each default path.
+
+- (void)receiveDefaultPath:(NSObject *)result;
+	// Evaluates and handles the result from each default path request.
+
+
+- (void)saveValidatedCredential;
 - (void)removeAllCredentialsForProtectionSpace:(NSURLProtectionSpace *)protectionSpace;
 - (NSURLProtectionSpace *)protectionSpace;
 - (NSURLCredential *)storedCredentialForProtectionSpace:(NSURLProtectionSpace *)protectionSpace withUser:(NSString *)user;
@@ -69,21 +57,14 @@
 
 @implementation XService
 
+static XService *sharedXService;
 
 
-// Private ivars
 @synthesize localService = _localService;
 @synthesize remoteService = _remoteService;
-@synthesize accountViewController;
+@synthesize serverStatusDelegate;
 @synthesize validateCredential;
-
-
 @synthesize fetchingDefaultPaths;
-
-
-// Public ivars
-static XService *sharedXService;
-@synthesize rootViewController;
 
 
 #pragma mark - Initialization
@@ -138,138 +119,87 @@ static XService *sharedXService;
 	return [self.localService activeServer];
 }
 
-- (void)validateUsername:(NSString *)username password:(NSString *)password forHost:(NSString *)host withViewController:(AccountViewController *)viewController
-	// Basically checks server version but uses the passed user/pass/host and different callback
+- (void)validateUsername:(NSString *)username password:(NSString *)password forHost:(NSString *)host withDelegate:(id<ServerStatusDelegate>)delegate
 {
-	accountViewController = viewController;
+	// Clear any saved credentials for host
+	/*NSURLProtectionSpace *protectionSpace = [[NSURLProtectionSpace alloc] initWithHost:host
+																				  port:defaultServerPort
+																			  protocol:defaultServerProtocol
+																				 realm:host
+																  authenticationMethod:@"NSURLAuthenticationMethodHTTPBasic"];
+	[self removeAllCredentialsForProtectionSpace:protectionSpace];*/
+	
+	serverStatusDelegate = delegate;
 	validateCredential = [NSURLCredential credentialWithUser:username password:password persistence:NSURLCredentialPersistenceNone];
-	[self.remoteService fetchServerVersion:host withTarget:self action:@selector(receiveServerValidationResult:)];
+	[self.remoteService fetchServerInfoAtHost:host withTarget:self action:@selector(receiveServerInfoResult:)];
 }
 
-- (void)receiveServerValidationResult:(NSObject *)result
+- (void)validateServerInfoWithDelegate:(id<ServerStatusDelegate>)delegate
+{
+	[self.remoteService fetchServerInfoAtHost:nil withTarget:self action:@selector(receiveServerInfoResult:)];
+}
+
+- (void)receiveServerInfoResult:(NSObject *)result
 {
 	if ([result isKindOfClass:[NSError class]])
 	{
-		XDrvLog(@"Error getting server version");
-		[accountViewController validateAccountFailedWithError:(NSError *)result];
+		// Pass errors off to delegate
+		[serverStatusDelegate validateServerFailedWithError:(NSError *)result];
 		return;
 	}
 	
-	XDrvDebug(@"Received version data: %@", result);
+	NSDictionary *info = (NSDictionary *)result;
+	XDrvDebug(@"Received info: %@", info);
 	
-	// Get version string
-	NSString *serverVersion = [[(NSDictionary *)result objectForKey:@"versions"] objectForKey:@"xservice"];
-	if ([self isServerVersionCompatible:serverVersion])
+	NSDictionary *versionInfo = [info objectForKey:@"versions"];
+	NSDictionary *serverInfo = [info objectForKey:@"server"];
+	NSDictionary *defaultPaths = [info objectForKey:@"defaultPaths"];
+	
+	if (versionInfo)
 	{
-		// Success!
-		XDrvDebug(@"Server version %@ is compatible", serverVersion);
-		[accountViewController validateAccountSucceeded];
-	}
-	else
-	{
-		// Version incompatible
-		XDrvLog(@"Server version %@ is incompatible with this app version %@", serverVersion, [XService appVersion]);
-		[accountViewController validateAccountFailedWithError:nil];
-	}
-}
-
-
-
-#pragma mark - Version
-
-- (void)checkServerVersion
-{
-	[self.remoteService fetchServerVersion:nil withTarget:self action:@selector(receiveServerVersionResult:)];
-}
-
-- (void)receiveServerVersionResult:(NSObject *)result
-{
-	if ([result isKindOfClass:[NSError class]])
-	{
-		// Silently fail
-		XDrvLog(@"Error getting server version: %@", [(NSError *)result localizedDescription]);
-		return;
+		// Evaluate version info
+		if (![self isServerVersionCompatible:[versionInfo objectForKey:@"xservice"]])
+		{
+			// Version incompatible
+			NSString *title = NSLocalizedStringFromTable(@"Unsupported server version",
+														 @"XService",
+														 @"Title for error given when a server responds with an unsupported version.");
+			NSString *localDesc = NSLocalizedStringFromTable(@"%@ responded with a version that is unsupported by this app. Please check for updates.", 
+															 @"XService",
+															 @"Description for error given when a server responds with an unsupported version.");
+			NSString *desc = [NSString stringWithFormat:localDesc, [serverInfo objectForKey:@"host"]];
+			NSDictionary *errorInfo = [NSDictionary dictionaryWithObjectsAndKeys:title, NSLocalizedFailureReasonErrorKey, desc, NSLocalizedDescriptionKey, nil];
+			NSError *error = [NSError errorWithDomain:@"XService" code:ServerIsIncompatible userInfo:errorInfo];
+			[serverStatusDelegate validateServerFailedWithError:error];
+			return;
+		}
 	}
 	
-	XDrvDebug(@"Received version data: %@", result);
+	if (![self activeServer])
+	{
+		// Save server info
+		[serverStatusDelegate validateServerStatusUpdate:@"Reticulating splines..."];
+		[self saveServerWithDetails:serverInfo];
+		[self saveValidatedCredential];
+		
+		if (defaultPaths)
+		{
+			[self fetchDefaultPaths:defaultPaths];
+		}
+	}
 	
-	// Get version string
-	NSString *serverVersion = [[(NSDictionary *)result objectForKey:@"versions"] objectForKey:@"xservice"];
-	if ([self isServerVersionCompatible:serverVersion])
-	{
-		// Success!
-		XDrvDebug(@"Server version %@ is compatible", serverVersion);
-		return;
-	}
-	else
-	{
-		// Version incompatible
-		XDrvLog(@"Server version %@ is incompatible with this app version %@", serverVersion, [XService appVersion]);
-		[self alertUserToNewAppVersion];
-	}
+	[serverStatusDelegate validateServerFinishedWithSuccess];
 }
 
 - (BOOL)isServerVersionCompatible:(NSString *)version
 {
-	if ([version isEqualToString:[XService appVersion]])
-		return YES;
-	
-	else
-		return NO;
+	return ([version isEqualToString:[XService appVersion]]);
+	/*if ([version isEqualToString:[XService appVersion]])
+	 return YES;
+	 
+	 else
+	 return NO;*/
 }
-
-- (void)alertUserToNewAppVersion
-{
-	
-	NSString *title = @"A newer version of InTouch is available";
-	NSString *message = @"Would you like to download it now?";
-	
-	UIAlertView *alert = [[UIAlertView alloc] initWithTitle:title message:message delegate:self cancelButtonTitle:@"Not Now" otherButtonTitles:@"Download", nil];
-	[alert show];
-}
-
-
-
-
-
-
-
-
-/*
-#pragma mark - Account validation
-
-- (void)validateAccountDetails:(NSDictionary *)details withViewController:(AccountViewController *)viewController
-{
-	accountDetailsToValidate = details;
-	accountViewController = viewController;
-	[remoteService fetchServerInfo:details withTarget:self action:@selector(receiveValidateAccountDetailsResponse:)];
-}
-
-- (void)receiveValidateAccountDetailsResponse:(XServiceFetcher *)fetcher
-{
-	if (fetcher.result)
-	{
-		// Received a valid server response
-		XSvcLog(@"Received a valid server description");
-		[self saveServerWithDetails:fetcher.result];
-		[self saveCredentialWithUsername:[accountDetailsToValidate objectForKey:@"username"] password:[accountDetailsToValidate objectForKey:@"password"]];
-		
-		
-		if ([fetcher.result objectForKey:@"defaultPaths"])
-			[self fetchDefaultPaths:[fetcher.result objectForKey:@"defaultPaths"]];
-	}
-	else if (fetcher.finalError)
-	{
-		XSvcLog(@"Received error with code %i", [fetcher.finalError code]);
-		[accountViewController receiveValidateAccountResponse:NO withMessage:[fetcher.finalError localizedDescription]];
-	}
-	else
-	{
-		XSvcLog(@"Invalid response");
-	}
-}*/
-
-#pragma mark - Account storage
 
 - (void)saveServerWithDetails:(NSDictionary *)details
 {
@@ -310,42 +240,37 @@ static XService *sharedXService;
 	}
 }
 
-/*
 - (void)fetchDefaultPaths:(NSDictionary *)pathDetails
 {
-	XSvcLog(@"Fetching default paths...");
-	
-	// Update display message
-	[accountViewController updateDisplayWithMessage:NSLocalizedStringFromTable(@"Downloading defaults...",
-																			   @"XService",
-																			   @"Message displayed while defaults are being downloaded from the server.")];
+	XDrvDebug(@"Fetching default paths...");
 
 	// Counter to decrement as fetches return
 	fetchingDefaultPaths = [pathDetails count] + 1;
 	
 	// Fire off directory request for root path
-	[remoteService fetchDefaultPath:@"/" withTarget:self action:@selector(receiveDefaultPath:)];
+	[self.remoteService fetchDirectoryContentsAtPath:@"/" withTarget:self action:@selector(receiveDefaultPath:)];
 	
 	// Fire off directory request for each default path
 	for (NSDictionary *defaultPath in pathDetails)
 	{
-		[remoteService fetchDefaultPath:[defaultPath objectForKey:@"path"] withTarget:self action:@selector(receiveDefaultPath:)];
+		[self.remoteService fetchDirectoryContentsAtPath:[defaultPath objectForKey:@"path"] withTarget:self action:@selector(receiveDefaultPath:)];
 	}
 }
 
-- (void)receiveDefaultPath:(XServiceFetcher *)fetcher
+- (void)receiveDefaultPath:(NSObject *)result
 {
 	// Decrement counter
 	fetchingDefaultPaths--;
 	
-	if (!fetcher.result)
+	if (!result || [result isKindOfClass:[NSError class]])
 	{
-		XSvcLog(@"Error: No data found for default path; server not configured correctly");
+		XDrvLog(@"Error: No data found for default path; server not configured correctly");
 		return;
 	}
 	
 	// Create directory
-	XDirectory *directory = [self updateDirectoryDetails:fetcher.result];
+	NSDictionary *details = (NSDictionary *)result;
+	XDirectory *directory = [self updateDirectoryDetails:details];
 	
 	// Find the default path object for the directory
 	for (XDefaultPath *defaultPath in [self activeServer].defaultPaths)
@@ -355,29 +280,23 @@ static XService *sharedXService;
 			// Associate directory with default path
 			defaultPath.directory = directory;
 			NSError *error = nil;
-			if (![[localService managedObjectContext] save:&error])
+			if (![[self.localService managedObjectContext] save:&error])
 			{
-				XSvcLog(@"Error: Unable to attach directory with path %@ to default path", directory.path);
+				XDrvLog(@"Error: Unable to attach directory with path %@ to default path", directory.path);
 			}
 		}
 	}
-	
-	// For funsies
-	if (fetchingDefaultPaths == 2)
-		[accountViewController updateDisplayWithMessage:@"Reticulating splines..."];
-	
+
 	if (!fetchingDefaultPaths)
 	{
-		// All done getting default paths; update view
-		[accountViewController receiveValidateAccountResponse:YES
-												  withMessage:NSLocalizedStringFromTable(@"All done.",
-																						 @"XService",
-																						 @"Message displayed when defaults are finished downloading")];
-		// Cleanup
-		accountViewController = nil;
-		accountDetailsToValidate = nil;
+		// All done getting default paths; notify delegate
+		[serverStatusDelegate validateServerFinishedWithSuccess];
 	}
-}*/
+}
+
+
+
+#pragma mark - Credentials
 
 - (void)saveCredentialWithUsername:(NSString *)user password:(NSString *)pass
 {
@@ -465,7 +384,7 @@ static XService *sharedXService;
 
 - (XDirectory *)updateDirectoryDetails:(NSDictionary *)details
 {
-	//XDrvDebug(@"Updating directory details at path: %@", [details objectForKey:@"path"]);
+	XDrvDebug(@"Updating directory details at path: %@", [details objectForKey:@"path"]);
 	
 	// Get directory
 	XDirectory *directory = [self.localService directoryWithPath:[details objectForKey:@"path"]];

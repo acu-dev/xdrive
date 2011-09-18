@@ -39,7 +39,7 @@
 		C3FC6C5C13BCB90B009FBAA3 /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C3FC6C5B13BCB90B009FBAA3 /* CoreGraphics.framework */; };
 		C3FC6C6213BCB90B009FBAA3 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = C3FC6C6013BCB90B009FBAA3 /* InfoPlist.strings */; };
 		C3FC6C6413BCB90B009FBAA3 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = C3FC6C6313BCB90B009FBAA3 /* main.m */; };
-		C3FC6C6813BCB90B009FBAA3 /* xDriveAppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = C3FC6C6713BCB90B009FBAA3 /* xDriveAppDelegate.m */; };
+		C3FC6C6813BCB90B009FBAA3 /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = C3FC6C6713BCB90B009FBAA3 /* AppDelegate.m */; };
 		C3FC6C6B13BCB90B009FBAA3 /* MainStoryboard_iPhone.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = C3FC6C6913BCB90B009FBAA3 /* MainStoryboard_iPhone.storyboard */; };
 		C3FC6C6E13BCB90B009FBAA3 /* MainStoryboard_iPad.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = C3FC6C6C13BCB90B009FBAA3 /* MainStoryboard_iPad.storyboard */; };
 /* End PBXBuildFile section */
@@ -117,8 +117,8 @@
 		C3FC6C6113BCB90B009FBAA3 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
 		C3FC6C6313BCB90B009FBAA3 /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
 		C3FC6C6513BCB90B009FBAA3 /* xDrive-Prefix.pch */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "xDrive-Prefix.pch"; sourceTree = "<group>"; };
-		C3FC6C6613BCB90B009FBAA3 /* xDriveAppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = xDriveAppDelegate.h; sourceTree = "<group>"; };
-		C3FC6C6713BCB90B009FBAA3 /* xDriveAppDelegate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = xDriveAppDelegate.m; sourceTree = "<group>"; };
+		C3FC6C6613BCB90B009FBAA3 /* AppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
+		C3FC6C6713BCB90B009FBAA3 /* AppDelegate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AppDelegate.m; sourceTree = "<group>"; };
 		C3FC6C6A13BCB90B009FBAA3 /* en */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = en; path = en.lproj/MainStoryboard_iPhone.storyboard; sourceTree = "<group>"; };
 		C3FC6C6D13BCB90B009FBAA3 /* en */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = en; path = en.lproj/MainStoryboard_iPad.storyboard; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -271,8 +271,8 @@
 			children = (
 				C328C428141A89C900D578ED /* images */,
 				C3527A371423CBFB00B830DF /* XDriveConfig.h */,
-				C3FC6C6613BCB90B009FBAA3 /* xDriveAppDelegate.h */,
-				C3FC6C6713BCB90B009FBAA3 /* xDriveAppDelegate.m */,
+				C3FC6C6613BCB90B009FBAA3 /* AppDelegate.h */,
+				C3FC6C6713BCB90B009FBAA3 /* AppDelegate.m */,
 				C3FC6C6913BCB90B009FBAA3 /* MainStoryboard_iPhone.storyboard */,
 				C3FC6C6C13BCB90B009FBAA3 /* MainStoryboard_iPad.storyboard */,
 				C3ECE29713C3BF2D004FF63F /* RootTabBarController.h */,
@@ -380,7 +380,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				C3FC6C6413BCB90B009FBAA3 /* main.m in Sources */,
-				C3FC6C6813BCB90B009FBAA3 /* xDriveAppDelegate.m in Sources */,
+				C3FC6C6813BCB90B009FBAA3 /* AppDelegate.m in Sources */,
 				C378433713BE36BB00F1793A /* XService.m in Sources */,
 				C3D9E88413C34D1A007D1A7C /* XServiceRemote.m in Sources */,
 				C3D9E88813C34D2B007D1A7C /* XServiceLocal.m in Sources */,

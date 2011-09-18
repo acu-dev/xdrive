@@ -17,14 +17,10 @@
 - (id)initWithServer:(XServer *)server;
 	// Saves the server to use for requests and initializes the requests storage
 
-// Server
-- (void)fetchServerVersion:(NSString *)host withTarget:(id)target action:(SEL)action;
-	// Gets the server's version
-- (void)fetchServerInfo:(NSString *)host withTarget:(id)target action:(SEL)action;
-	// Gets the server's info
+- (void)fetchServerInfoAtHost:(NSString *)host withTarget:(NSObject *)target action:(SEL)action;
+	// Gets the server's info. If host is nil the active server will be used.
 
-//- (void)fetchDefaultPath:(NSString *)path withTarget:(id)target action:(SEL)action;
-//- (void)fetchDirectoryContentsAtPath:(NSString *)path withTarget:(id)target action:(SEL)action;
-
+- (void)fetchDirectoryContentsAtPath:(NSString *)path withTarget:(id)target action:(SEL)action;
+	// Gets the directory contents for a path
 
 @end

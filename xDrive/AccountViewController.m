@@ -7,11 +7,11 @@
 //
 
 #import "AccountViewController.h"
+#import "XDriveConfig.h"
 #import "XService.h"
 
 
-
-@interface AccountViewController()
+@interface AccountViewController() <ServerStatusDelegate>
 
 @property (nonatomic, strong) ATMHud *hud;
 	// Heads up display for account validation messages
@@ -112,7 +112,7 @@
 	[[XService sharedXService] validateUsername:usernameField.text 
 									   password:passwordField.text 
 										forHost:serverURLField.text 
-							 withViewController:self];
+								   withDelegate:self];
 }
 
 - (void)updateValidateAccountStatus:(NSString *)status
@@ -123,17 +123,40 @@
 
 - (void)validateAccountFailedWithError:(NSError *)error
 {
-	if ([error code] == NSURLErrorUserCancelledAuthentication)
+	
+	
+	NSString *reason = nil;
+	
+	if (error)
 	{
-		// User cancelled auth
-		[hud setCaption:@"Unable to validate account."];
+		XDrvLog(@"Validate account failed: %@", [error description]);
+		
+		if ([error code] == NSURLErrorUserCancelledAuthentication)
+		{
+			// Authentication failed
+			reason = NSLocalizedStringFromTable(@"Authentication failed; verify username/password",
+												@"AccountViewController", 
+												@"Message displayed when authentication fails during server validation.");
+		}
+		else
+		{
+			// Something else went wrong
+			reason = NSLocalizedStringFromTable(@"Unable to connect to server",
+												@"AccountViewController", 
+												@"Message displayed when server validation failed.");
+		}
 	}
 	else
 	{
-		// Display error description
-		[hud setCaption:[error localizedDescription]];
+		// Version incompatible
+		XDrvLog(@"Validate account failed: Server version is incompatible");
+		NSString *msg = NSLocalizedStringFromTable(@"Server version is incompatible with this version of %@. Please check for updates.", 
+												   @"AccountViewController", 
+												   @"Message displayed when server version is incompatible.");
+		reason = [NSString stringWithFormat:msg, [XService appName]];
 	}
-	
+
+	[hud setCaption:reason];
 	[hud setActivity:NO];
 	[hud setImage:[UIImage imageNamed:@"x"]];
 	[self updateHudWithDelay];
@@ -240,6 +263,25 @@
 	
 	[tableView deselectRowAtIndexPath:indexPath animated:YES];
 	[self validateAccount];
+}
+
+
+
+#pragma mark - ServerStatusDelegate
+
+- (void)validateServerStatusUpdate:(NSString *)status
+{
+	
+}
+
+- (void)validateServerFailedWithError:(NSError *)error
+{
+	
+}
+
+- (void)validateServerFinishedWithSuccess
+{
+	
 }
 
 
