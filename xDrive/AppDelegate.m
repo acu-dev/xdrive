@@ -32,8 +32,7 @@
 		else
 		{
 			// Send to account view
-			//viewController = [storyboard instantiateViewControllerWithIdentifier:@"accountInfo"];
-			viewController = [storyboard instantiateInitialViewController];
+			viewController = [storyboard instantiateViewControllerWithIdentifier:@"accountInfo"];
 		}
 	}
 	else

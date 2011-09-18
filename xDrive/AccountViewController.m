@@ -115,67 +115,6 @@
 								   withDelegate:self];
 }
 
-- (void)updateValidateAccountStatus:(NSString *)status
-{
-	[hud setCaption:status];
-	[hud update];
-}
-
-- (void)validateAccountFailedWithError:(NSError *)error
-{
-	
-	
-	NSString *reason = nil;
-	
-	if (error)
-	{
-		XDrvLog(@"Validate account failed: %@", [error description]);
-		
-		if ([error code] == NSURLErrorUserCancelledAuthentication)
-		{
-			// Authentication failed
-			reason = NSLocalizedStringFromTable(@"Authentication failed; verify username/password",
-												@"AccountViewController", 
-												@"Message displayed when authentication fails during server validation.");
-		}
-		else
-		{
-			// Something else went wrong
-			reason = NSLocalizedStringFromTable(@"Unable to connect to server",
-												@"AccountViewController", 
-												@"Message displayed when server validation failed.");
-		}
-	}
-	else
-	{
-		// Version incompatible
-		XDrvLog(@"Validate account failed: Server version is incompatible");
-		NSString *msg = NSLocalizedStringFromTable(@"Server version is incompatible with this version of %@. Please check for updates.", 
-												   @"AccountViewController", 
-												   @"Message displayed when server version is incompatible.");
-		reason = [NSString stringWithFormat:msg, [XService appName]];
-	}
-
-	[hud setCaption:reason];
-	[hud setActivity:NO];
-	[hud setImage:[UIImage imageNamed:@"x"]];
-	[self updateHudWithDelay];
-	
-	[self enableSignIn];
-}
-
-- (void)validateAccountSucceeded
-{
-	// Success!
-	[hud setActivity:NO];
-	[hud setImage:[UIImage imageNamed:@"check"]];
-	[hud setCaption:@"Success!"];
-	[self updateHudWithDelay];
-	
-	// Hide view after hud hides
-	//[self performSelector:@selector(dismissAccountInfo) withObject:nil afterDelay:2.0];
-}
-
 
 
 #pragma mark - Utils
@@ -271,17 +210,61 @@
 
 - (void)validateServerStatusUpdate:(NSString *)status
 {
-	
+	[hud setCaption:status];
+	[hud update];
 }
 
 - (void)validateServerFailedWithError:(NSError *)error
 {
+	NSString *reason = nil;
 	
+	if (error)
+	{
+		XDrvLog(@"Validate account failed: %@", [error description]);
+		
+		if ([error code] == NSURLErrorUserCancelledAuthentication)
+		{
+			// Authentication failed
+			reason = NSLocalizedStringFromTable(@"Authentication failed; verify username/password",
+												@"AccountViewController", 
+												@"Message displayed when authentication fails during server validation.");
+		}
+		else
+		{
+			// Something else went wrong
+			reason = NSLocalizedStringFromTable(@"Unable to connect to server",
+												@"AccountViewController", 
+												@"Message displayed when server validation failed.");
+		}
+	}
+	else
+	{
+		// Version incompatible
+		XDrvLog(@"Validate account failed: Server version is incompatible");
+		NSString *msg = NSLocalizedStringFromTable(@"Server version is incompatible with this version of %@. Please check for updates.", 
+												   @"AccountViewController", 
+												   @"Message displayed when server version is incompatible.");
+		reason = [NSString stringWithFormat:msg, [XService appName]];
+	}
+	
+	[hud setCaption:reason];
+	[hud setActivity:NO];
+	[hud setImage:[UIImage imageNamed:@"x"]];
+	[self updateHudWithDelay];
+	
+	[self enableSignIn];
 }
 
 - (void)validateServerFinishedWithSuccess
 {
+	// Success!
+	[hud setActivity:NO];
+	[hud setImage:[UIImage imageNamed:@"check"]];
+	[hud setCaption:@"Success!"];
+	[self updateHudWithDelay];
 	
+	// Hide view after hud hides
+	//[self performSelector:@selector(dismissAccountInfo) withObject:nil afterDelay:2.0];
 }
 
 

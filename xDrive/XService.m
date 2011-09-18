@@ -32,14 +32,14 @@
 - (void)saveServerWithDetails:(NSDictionary *)details;
 	// Takes received server info and saves a server object with the details.
 
-- (void)fetchDefaultPaths:(NSDictionary *)pathDetails;
+- (void)fetchDefaultPaths:(NSArray *)pathDetails;
 	// Fires off a request to get the directory contentes for each default path.
 
 - (void)receiveDefaultPath:(NSObject *)result;
 	// Evaluates and handles the result from each default path request.
 
 
-- (void)saveValidatedCredential;
+- (void)saveCredentialWithUsername:(NSString *)user password:(NSString *)pass;
 - (void)removeAllCredentialsForProtectionSpace:(NSURLProtectionSpace *)protectionSpace;
 - (NSURLProtectionSpace *)protectionSpace;
 - (NSURLCredential *)storedCredentialForProtectionSpace:(NSURLProtectionSpace *)protectionSpace withUser:(NSString *)user;
@@ -130,11 +130,11 @@ static XService *sharedXService;
 	[self removeAllCredentialsForProtectionSpace:protectionSpace];*/
 	
 	serverStatusDelegate = delegate;
-	validateCredential = [NSURLCredential credentialWithUser:username password:password persistence:NSURLCredentialPersistenceNone];
+	validateCredential = [NSURLCredential credentialWithUser:username password:password persistence:NSURLCredentialPersistencePermanent];
 	[self.remoteService fetchServerInfoAtHost:host withTarget:self action:@selector(receiveServerInfoResult:)];
 }
 
-- (void)validateServerInfoWithDelegate:(id<ServerStatusDelegate>)delegate
+- (void)validateServerWithDelegate:(id<ServerStatusDelegate>)delegate
 {
 	[self.remoteService fetchServerInfoAtHost:nil withTarget:self action:@selector(receiveServerInfoResult:)];
 }
@@ -153,7 +153,7 @@ static XService *sharedXService;
 	
 	NSDictionary *versionInfo = [info objectForKey:@"versions"];
 	NSDictionary *serverInfo = [info objectForKey:@"server"];
-	NSDictionary *defaultPaths = [info objectForKey:@"defaultPaths"];
+	NSArray *defaultPaths = [info objectForKey:@"defaultPaths"];
 	
 	if (versionInfo)
 	{
@@ -179,8 +179,7 @@ static XService *sharedXService;
 	{
 		// Save server info
 		[serverStatusDelegate validateServerStatusUpdate:@"Reticulating splines..."];
-		[self saveServerWithDetails:serverInfo];
-		[self saveValidatedCredential];
+		[self saveServerWithDetails:info];
 		
 		if (defaultPaths)
 		{
@@ -240,7 +239,7 @@ static XService *sharedXService;
 	}
 }
 
-- (void)fetchDefaultPaths:(NSDictionary *)pathDetails
+- (void)fetchDefaultPaths:(NSArray *)pathDetails
 {
 	XDrvDebug(@"Fetching default paths...");
 
@@ -376,7 +375,7 @@ static XService *sharedXService;
 - (XDirectory *)directoryWithPath:(NSString *)path
 {
 	// Fire off remote directory fetch
-	//[remoteService fetchDirectoryContentsAtPath:path withTarget:self action:@selector(updateDirectoryDetails:)];
+	[self.remoteService fetchDirectoryContentsAtPath:path withTarget:self action:@selector(updateDirectoryDetails:)];
 	
 	// Return local directory object
 	return [self.localService directoryWithPath:path];
