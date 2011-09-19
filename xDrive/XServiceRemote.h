@@ -8,6 +8,9 @@
 
 #import "XServer.h"
 #import <CGNetUtils/CGNetUtils.h>
+@protocol XServiceRemoteDelegate;
+
+
 
 @interface XServiceRemote : NSObject
 
@@ -22,5 +25,8 @@
 
 - (void)fetchDirectoryContentsAtPath:(NSString *)path withTarget:(id)target action:(SEL)action;
 	// Gets the directory contents for a path
+
+- (void)downloadFileAtPath:(NSString *)path withDelegate:(id<XServiceRemoteDelegate>)delegate;
+	// Downloads a file at given url path and notifies delegate on events
 
 @end

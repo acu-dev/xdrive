@@ -7,11 +7,15 @@
 //
 
 #import "OpenFileViewController.h"
+#import "XDriveConfig.h"
+#import "XService.h"
 
 
 
-@interface OpenFileViewController()
+@interface OpenFileViewController() <XServiceRemoteDelegate>
 
+- (void)downloadFile;
+- (void)loadFile;
 
 @end
 
@@ -40,14 +44,6 @@
 
 #pragma mark - Initialization
 
-/*- (id)initWithFile:(XFile *)file
-{
-    self = [super init];
-    if (self) {
-		xFile = file;
-    }
-    return self;
-}*/
 
 - (void)didReceiveMemoryWarning
 {
@@ -59,35 +55,24 @@
 
 #pragma mark - View lifecycle
 
-/*- (void)loadView
-{
-	UIView *view = [[UIView alloc] initWithFrame:[UIScreen mainScreen].bounds];
-	view.backgroundColor = [UIColor scrollViewTexturedBackgroundColor];
-	
-	// Nav bar
-	UINavigationBar *navBar = [[UINavigationBar alloc] initWithFrame:CGRectMake(0, 0, view.frame.size.width, 44)];
-	navBar.topItem.title = xFile.name;
-	UIBarButtonItem *doneButton = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemDone target:self action:@selector(done:)];
-	navBar.topItem.rightBarButtonItem = doneButton;
-	[view addSubview:navBar];
-	
-	// Web view
-	UIWebView *webView = [[UIWebView alloc] initWithFrame:CGRectMake(0, 44, view.frame.size.width, view.frame.size.height - 44)];
-	//[view addSubview:webView];
-	
-	self.view = view;
-}*/
-
 - (void)viewDidLoad
 {
     [super viewDidLoad];
 	
 	self.title = xFile.name;
 	
-	NSLog(@"Loading %@ content at %@ into web view", xFile.type, xFile.path);
-	/*[webView loadData:[NSData dataWithContentsOfFile:xFile.path]
-			 MIMEType:xFile.type textEncodingName:@"utf-8" 
-			  baseURL:[NSURL URLWithString:xFile.path]];*/
+	XDrvDebug(@"File path: %@", [xFile localPath]);
+	if ([[NSFileManager defaultManager] fileExistsAtPath:[xFile localPath]])
+	{
+		// Display file
+		[self loadFile];
+	}
+	else
+	{
+		// Download file
+		XDrvDebug(@"File doesn't exist, need to download it");
+		[self downloadFile];
+	}
 }
 
 - (void)viewDidUnload
@@ -108,4 +93,50 @@
 	[self dismissModalViewControllerAnimated:YES];
 }
 
+
+# pragma mark - Download File
+
+- (void)downloadFile
+{
+	// Update view
+	
+	// Kick off download
+	[[XService sharedXService] downloadFile:xFile withDelegate:self];
+}
+
+- (void)loadFile
+{
+	XDrvDebug(@"Loading %@ content at %@ into web view", xFile.type, xFile.path);
+	[webView loadData:[NSData dataWithContentsOfFile:[xFile localPath]]
+			 MIMEType:xFile.type
+	 textEncodingName:@"utf-8" 
+			  baseURL:[NSURL URLWithString:[xFile localPath]]];
+}
+
+
+
+#pragma mark - XServiceRemoteDelegate
+
+- (void)connectionFinishedWithResult:(NSObject *)result
+{
+	XDrvLog(@"download finished with result: %@", result);
+	[XService moveFileAtPath:(NSString *)result toPath:[xFile localPath]];
+	[self loadFile];
+}
+
+- (void)connectionFailedWithError:(NSError *)error
+{
+	XDrvLog(@"Download failed: %@", [error description]);
+}
+
+- (void)connectionDownloadPercentUpdate:(int)percent
+{
+	XDrvLog(@"download percent: %i", percent);
+}
+
 @end
+
+
+
+
+

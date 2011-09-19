@@ -165,11 +165,12 @@
 	}
 	else if ([OpenFileViewController isFileViewable:(XFile *)entry])
 	{
+		XDrvDebug(@"Opening file entry: %@", [entry description]);
 		NSString *storyboardName = ([[UIDevice currentDevice] userInterfaceIdiom] == UIUserInterfaceIdiomPhone) ? @"MainStoryboard_iPhone" : @"MainStoryboard_iPad";
 		UIStoryboard *storyboard = [UIStoryboard storyboardWithName:storyboardName bundle:nil];
 		UINavigationController *navController = [storyboard instantiateViewControllerWithIdentifier:@"openFile"];
 		OpenFileViewController *viewController = (OpenFileViewController *)navController.topViewController;
-		viewController.xFile = (XFile *)entry;
+		[viewController setXFile:(XFile *)entry];
 		[self.navigationController presentModalViewController:navController animated:YES];
 	}
 }

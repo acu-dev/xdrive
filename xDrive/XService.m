@@ -110,6 +110,32 @@ static XService *sharedXService;
 	return [[[NSBundle mainBundle] infoDictionary] objectForKey:@"CFBundleDisplayName"];
 }
 
++ (NSString *)appDocuments
+{
+	return [NSHomeDirectory() stringByAppendingPathComponent:@"Documents"];
+}
+
+
+
+#pragma mark - File handling
+
++ (void)moveFileAtPath:(NSString *)oldFilePath toPath:(NSString *)newFilePath
+{
+	NSError *error = nil;
+	
+	//[newFilePath componentsSeparatedByString:@"/"];
+	
+	// Create destination directory
+	
+	
+	
+	[[NSFileManager defaultManager] moveItemAtPath:oldFilePath toPath:newFilePath error:&error];
+	if (error)
+	{
+		XDrvLog(@"Problem moving file: %@", error);
+	}
+}
+
 
 
 #pragma mark - Server
@@ -117,6 +143,11 @@ static XService *sharedXService;
 - (XServer *)activeServer
 {
 	return [self.localService activeServer];
+}
+
+- (NSString *)activeServerDocumentPath
+{
+	return [[XService appDocuments] stringByAppendingPathComponent:[self activeServer].hostname];
 }
 
 - (void)validateUsername:(NSString *)username password:(NSString *)password forHost:(NSString *)host withDelegate:(id<ServerStatusDelegate>)delegate
@@ -401,9 +432,16 @@ static XService *sharedXService;
 		
 		XEntry *entry = nil;
 		if ([[entryFromJson objectForKey:@"type"] isEqualToString:@"folder"])
+		{
 			entry = [self.localService directoryWithPath:[entryFromJson objectForKey:@"path"]];
+		}
 		else
-			entry = [self.localService fileWithPath:[entryFromJson objectForKey:@"path"]];
+		{
+			XFile *file = [self.localService fileWithPath:[entryFromJson objectForKey:@"path"]];
+			file.type = [entryFromJson objectForKey:@"type"];
+			file.size = [entryFromJson objectForKey:@"size"];
+			entry = file;
+		}
 		entry.parent = directory;
 		[remoteEntries addObject:entry];
 	}
@@ -430,6 +468,15 @@ static XService *sharedXService;
 	}
 	
 	return directory;
+}
+
+
+
+#pragma mark - File
+
+- (void)downloadFile:(XFile *)file withDelegate:(id<XServiceRemoteDelegate>)delegate;
+{
+	[self.remoteService downloadFileAtPath:file.path withDelegate:delegate];
 }
 
 

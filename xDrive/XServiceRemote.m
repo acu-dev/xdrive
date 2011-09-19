@@ -90,6 +90,14 @@ static NSString *serviceInfoPath = @"/info";
 			serviceBase];
 }
 
+- (NSString *)serverUrlString
+{
+	return [NSString stringWithFormat:@"%@://%@:%i",
+			activeServer.protocol,
+			activeServer.hostname,
+			[activeServer.port intValue]];
+}
+
 - (void)fetchJSONAtURL:(NSString *)url withTarget:(id)target action:(SEL)action
 {
 	// Create connection
@@ -126,6 +134,29 @@ static NSString *serviceInfoPath = @"/info";
 
 
 
+#pragma mark - Downloads
+
+- (void)downloadFileAtPath:(NSString *)path withDelegate:(id<XServiceRemoteDelegate>)delegate
+{
+	NSString *absolutePath = [[self serverUrlString] stringByAppendingString:[path stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding]];
+	XDrvLog(@"absolute path: %@", absolutePath);
+	
+	// Create connection
+	CGConnection *connection = [[CGNet utils] getFileAtURL:[NSURL URLWithString:absolutePath] withDelegate:self];
+	
+	// Save connection info
+	NSDictionary *request = [[NSDictionary alloc] initWithObjectsAndKeys:
+							 delegate, @"delegate",
+							 connection, @"connection",
+							 nil];
+	[requests setObject:request forKey:[connection description]];
+	
+	// Start request
+	[connection start];
+}
+
+
+
 #pragma mark - CGConnectionDelegate
 
 - (void)cgConnection:(CGConnection *)connection finishedWithResult:(id)result
@@ -134,14 +165,23 @@ static NSString *serviceInfoPath = @"/info";
 	NSDictionary *request = [requests objectForKey:[connection description]];
 	if (!request)
 	{
-		NSLog(@"- Error: Unable to find details for connection: %@; nothing to do", [connection description]);
+		XDrvLog(@"- Error: Unable to find details for connection: %@; nothing to do", [connection description]);
 		return;
 	}
 	
-	// Send results off to request's target
-	id target = [request objectForKey:@"targetObject"];
-	SEL action = NSSelectorFromString([request objectForKey:@"selectorString"]);
-	[target performSelector:action withObject:result];
+	if ([connection isKindOfClass:[CGJSONConnection class]])
+	{
+		// Send results off to request's target
+		id target = [request objectForKey:@"targetObject"];
+		SEL action = NSSelectorFromString([request objectForKey:@"selectorString"]);
+		[target performSelector:action withObject:result];
+	}
+	else
+	{
+		// Send event off to delegate
+		id<XServiceRemoteDelegate> delegate = [request objectForKey:@"delegate"];
+		[delegate connectionFinishedWithResult:result];
+	}
 	
 	// Clean up request
 	request = nil;
@@ -154,21 +194,64 @@ static NSString *serviceInfoPath = @"/info";
 	NSDictionary *request = [requests objectForKey:[connection description]];
 	if (!request)
 	{
-		NSLog(@"- Error: Unable to find details for connection: %@; nothing to do", [connection description]);
+		XDrvLog(@"- Error: Unable to find details for connection: %@; nothing to do", [connection description]);
 		return;
 	}
 	
-	// Send results off to request's target
-	id target = [request objectForKey:@"targetObject"];
-	SEL action = NSSelectorFromString([request objectForKey:@"selectorString"]);
-	[target performSelector:action withObject:error];
+	if ([connection isKindOfClass:[CGJSONConnection class]])
+	{
+		// Send results off to request's target
+		id target = [request objectForKey:@"targetObject"];
+		SEL action = NSSelectorFromString([request objectForKey:@"selectorString"]);
+		[target performSelector:action withObject:error];
+	}
+	else
+	{
+		// Send event off to delegate
+		id<XServiceRemoteDelegate> delegate = [request objectForKey:@"delegate"];
+		[delegate connectionFailedWithError:error];
+	}
 	
 	// Clean up request
 	request = nil;
 	[requests removeObjectForKey:[connection description]];
 }
 
-
+- (void)cgConnection:(CGConnection *)connection didReceiveData:(long long)receivedDataBytes 
+  totalReceivedBytes:(long long)totalReceivedBytes expectedTotalBytes:(long long)expectedTotalBytes
+{
+	// Get request details
+	NSDictionary *request = [requests objectForKey:[connection description]];
+	if (!request)
+	{
+		XDrvLog(@"- Error: Unable to find details for connection: %@; nothing to do", [connection description]);
+		return;
+	}
+	
+	// Calculate percent of file downloaded
+	int percent = lroundf(((float)totalReceivedBytes / (float)expectedTotalBytes) * 100);
+	XDrvDebug(@"Download file percent done: %i%%", percent);
+	
+	id<XServiceRemoteDelegate> delegate = [request objectForKey:@"delegate"];
+	if ([delegate respondsToSelector:@selector(connectionDownloadPercentUpdate:)])
+	{
+		// Send event off to delegate
+		[delegate connectionDownloadPercentUpdate:percent];
+	}
+}
 
 
 @end
+
+
+
+
+
+
+
+
+
+
+
+
+

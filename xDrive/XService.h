@@ -11,6 +11,7 @@
 #import "XServiceRemote.h"
 #import "XServer.h"
 @protocol ServerStatusDelegate;
+@protocol XFileDownloadDelegate;
 
 
 
@@ -35,8 +36,17 @@
 + (NSString *)appName;
 	// Display name of the app as defined in the Info plist
 
++ (NSString *)appDocuments;
+	// Path of the Documents directory in the app's sandbox
+
++ (void)moveFileAtPath:(NSString *)oldFilePath toPath:(NSString *)newFilePath;
+	// Moves a file from one location to another
+
 - (XServer *)activeServer;
 	// Accessor for the server object saved in db (nil if none saved)
+
+- (NSString *)activeServerDocumentPath;
+	// Path for files to be stored
 
 - (void)validateUsername:(NSString *)username password:(NSString *)password forHost:(NSString *)host withDelegate:(id<ServerStatusDelegate>)delegate;
 	// Saves user/pass as a temporary credential and sends request for the server's version info
@@ -47,8 +57,12 @@
 
 
 
-// Directory entries
+
 - (XDirectory *)directoryWithPath:(NSString *)path;
+	// Gets a directory object at given path. Fires off remote fetch in background
+	// and if necessary, directory contents are updated.
+
+- (void)downloadFile:(XFile *)file withDelegate:(id<XServiceRemoteDelegate>)delegate;
 
 @end
 
@@ -77,3 +91,36 @@ typedef enum _ServerStatus{
 - (void)serverStatusChanged:(ServerStatus)serverStatus;
 
 @end
+
+
+
+
+@protocol XServiceRemoteDelegate <NSObject>
+
+- (void)connectionFinishedWithResult:(NSObject *)result;
+	// Connection finished
+
+- (void)connectionFailedWithError:(NSError *)error;
+	// Connection failed
+
+@optional
+
+- (void)connectionDownloadPercentUpdate:(int)percent;
+	// Provides an updated percentage of the file downloaded so the view can update (e.g. progress bar)
+
+@end
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
