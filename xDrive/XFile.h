@@ -14,4 +14,6 @@
 @property (nonatomic, retain) NSString * size;
 @property (nonatomic, retain) NSString * type;
 
+- (NSString *)extension;
+
 @end

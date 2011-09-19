@@ -11,10 +11,14 @@
 
 @interface OpenFileViewController : UIViewController
 
-@property (nonatomic, strong) IBOutlet UINavigationBar *navBar;
+@property (nonatomic, strong) XFile *xFile;
+	// The file object to download if needed and display
+
 @property (nonatomic, strong) IBOutlet UIWebView *webView;
 
-- (id)initWithFile:(XFile *)file;
++ (BOOL)isFileViewable:(XFile *)file;
+
+//- (id)initWithFile:(XFile *)file;
 
 - (IBAction)done:(id)sender;
 

@@ -14,4 +14,9 @@
 @dynamic size;
 @dynamic type;
 
+- (NSString *)extension
+{
+	return [[self.name componentsSeparatedByString:@"."] lastObject];
+}
+
 @end

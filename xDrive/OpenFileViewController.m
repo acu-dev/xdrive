@@ -8,24 +8,46 @@
 
 #import "OpenFileViewController.h"
 
+
+
+@interface OpenFileViewController()
+
+
+@end
+
+
+
 @implementation OpenFileViewController
 
 
-@synthesize navBar;
+@synthesize xFile;
 @synthesize webView;
+
+
+
++ (BOOL)isFileViewable:(XFile *)file
+{
+	NSArray *supportedFileExtensions = [NSArray arrayWithObjects:@"pdf",
+										@"pages", @"numbers", @"key",
+										@"doc",	@"xls", @"ppt",
+										@"txt",	@"rtf",	@"html",
+										@"jpg",	@"jpeg", @"png",
+										nil];
+	return ([supportedFileExtensions containsObject:[file extension]]);
+}
 
 
 
 #pragma mark - Initialization
 
-- (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
+/*- (id)initWithFile:(XFile *)file
 {
-    self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
+    self = [super init];
     if (self) {
-        // Custom initialization
+		xFile = file;
     }
     return self;
-}
+}*/
 
 - (void)didReceiveMemoryWarning
 {
@@ -37,13 +59,36 @@
 
 #pragma mark - View lifecycle
 
-/*
-// Implement viewDidLoad to do additional setup after loading the view, typically from a nib.
+/*- (void)loadView
+{
+	UIView *view = [[UIView alloc] initWithFrame:[UIScreen mainScreen].bounds];
+	view.backgroundColor = [UIColor scrollViewTexturedBackgroundColor];
+	
+	// Nav bar
+	UINavigationBar *navBar = [[UINavigationBar alloc] initWithFrame:CGRectMake(0, 0, view.frame.size.width, 44)];
+	navBar.topItem.title = xFile.name;
+	UIBarButtonItem *doneButton = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemDone target:self action:@selector(done:)];
+	navBar.topItem.rightBarButtonItem = doneButton;
+	[view addSubview:navBar];
+	
+	// Web view
+	UIWebView *webView = [[UIWebView alloc] initWithFrame:CGRectMake(0, 44, view.frame.size.width, view.frame.size.height - 44)];
+	//[view addSubview:webView];
+	
+	self.view = view;
+}*/
+
 - (void)viewDidLoad
 {
     [super viewDidLoad];
+	
+	self.title = xFile.name;
+	
+	NSLog(@"Loading %@ content at %@ into web view", xFile.type, xFile.path);
+	/*[webView loadData:[NSData dataWithContentsOfFile:xFile.path]
+			 MIMEType:xFile.type textEncodingName:@"utf-8" 
+			  baseURL:[NSURL URLWithString:xFile.path]];*/
 }
-*/
 
 - (void)viewDidUnload
 {
@@ -55,6 +100,12 @@
 - (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation
 {
     return YES;
+}
+
+
+- (void)done:(id)sender
+{
+	[self dismissModalViewControllerAnimated:YES];
 }
 
 @end

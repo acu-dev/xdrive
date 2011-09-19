@@ -8,6 +8,8 @@
 
 #import "DirectoryContentsViewController.h"
 #import "XService.h"
+#import "XDriveConfig.h"
+#import "OpenFileViewController.h"
 
 
 @interface DirectoryContentsViewController ()
@@ -134,14 +136,6 @@
     return cell;
 }
 
-/*
-// Override to support conditional editing of the table view.
-- (BOOL)tableView:(UITableView *)tableView canEditRowAtIndexPath:(NSIndexPath *)indexPath
-{
-    // Return NO if you do not want the specified item to be editable.
-    return YES;
-}
-*/
 
 /*
 // Override to support editing the table view.
@@ -157,21 +151,6 @@
 }
 */
 
-/*
-// Override to support rearranging the table view.
-- (void)tableView:(UITableView *)tableView moveRowAtIndexPath:(NSIndexPath *)fromIndexPath toIndexPath:(NSIndexPath *)toIndexPath
-{
-}
-*/
-
-/*
-// Override to support conditional rearranging of the table view.
-- (BOOL)tableView:(UITableView *)tableView canMoveRowAtIndexPath:(NSIndexPath *)indexPath
-{
-    // Return NO if you do not want the item to be re-orderable.
-    return YES;
-}
-*/
 
 #pragma mark - Table view delegate
 
@@ -183,6 +162,15 @@
 		XDirectory *updatedDir = [[XService sharedXService] directoryWithPath:entry.path];
 		DirectoryContentsViewController *viewController = [[DirectoryContentsViewController alloc] initWithDirectory:updatedDir];
 		[self.navigationController pushViewController:viewController animated:YES];
+	}
+	else if ([OpenFileViewController isFileViewable:(XFile *)entry])
+	{
+		NSString *storyboardName = ([[UIDevice currentDevice] userInterfaceIdiom] == UIUserInterfaceIdiomPhone) ? @"MainStoryboard_iPhone" : @"MainStoryboard_iPad";
+		UIStoryboard *storyboard = [UIStoryboard storyboardWithName:storyboardName bundle:nil];
+		UINavigationController *navController = [storyboard instantiateViewControllerWithIdentifier:@"openFile"];
+		OpenFileViewController *viewController = (OpenFileViewController *)navController.topViewController;
+		viewController.xFile = (XFile *)entry;
+		[self.navigationController presentModalViewController:navController animated:YES];
 	}
 }
 
