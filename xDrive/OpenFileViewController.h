@@ -12,13 +12,21 @@
 @interface OpenFileViewController : UIViewController
 
 @property (nonatomic, strong) XFile *xFile;
-	// The file object to download if needed and display
+	// File object to download if needed and display
 
 @property (nonatomic, strong) IBOutlet UIWebView *webView;
+	// View to load file content in
+
+@property (nonatomic, strong) IBOutlet UIView *downloadView;
+	// View to show file download progress
+
+@property (nonatomic, strong) IBOutlet UILabel *downloadFileNameLabel;
+	// Label for file name
+
+@property (nonatomic, strong) IBOutlet UIProgressView *downloadProgressView;
+	// Progress bar to show percentage of file downloaded
 
 + (BOOL)isFileViewable:(XFile *)file;
-
-//- (id)initWithFile:(XFile *)file;
 
 - (IBAction)done:(id)sender;
 

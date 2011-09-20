@@ -26,6 +26,9 @@
 
 @synthesize xFile;
 @synthesize webView;
+@synthesize downloadView;
+@synthesize downloadFileNameLabel;
+@synthesize downloadProgressView;
 
 
 
@@ -64,11 +67,18 @@
 	XDrvDebug(@"File path: %@", [xFile localPath]);
 	if ([[NSFileManager defaultManager] fileExistsAtPath:[xFile localPath]])
 	{
+		// Hide download view
+		downloadView.hidden = YES;
+		
 		// Display file
 		[self loadFile];
 	}
 	else
 	{
+		// Hide webview and show download indicator
+		[webView setAlpha:0];
+		downloadFileNameLabel.text = xFile.name;
+		
 		// Download file
 		XDrvDebug(@"File doesn't exist, need to download it");
 		[self downloadFile];
@@ -98,8 +108,6 @@
 
 - (void)downloadFile
 {
-	// Update view
-	
 	// Kick off download
 	[[XService sharedXService] downloadFile:xFile withDelegate:self];
 }
@@ -120,8 +128,22 @@
 - (void)connectionFinishedWithResult:(NSObject *)result
 {
 	XDrvLog(@"download finished with result: %@", result);
+	
+	// Move file to permanent home
 	[XService moveFileAtPath:(NSString *)result toPath:[xFile localPath]];
+	
+	// Load file
 	[self loadFile];
+	
+	// Reveal webview
+	[UIView animateWithDuration:1.0 
+					 animations:^(void){
+						 [webView setAlpha:1.0];
+					 }
+					 completion:^(BOOL finished){
+						 downloadView.hidden = YES;
+					 }];
+	
 }
 
 - (void)connectionFailedWithError:(NSError *)error
@@ -129,9 +151,9 @@
 	XDrvLog(@"Download failed: %@", [error description]);
 }
 
-- (void)connectionDownloadPercentUpdate:(int)percent
+- (void)connectionDownloadPercentUpdate:(float)percent
 {
-	XDrvLog(@"download percent: %i", percent);
+	[downloadProgressView setProgress:percent animated:YES];
 }
 
 @end

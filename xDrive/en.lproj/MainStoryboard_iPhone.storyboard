@@ -43,6 +43,25 @@
                         <rect key="frame" x="0.0" y="64" width="320" height="416"/>
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                         <subviews>
+                            <view contentMode="scaleToFill" id="H24-cy-fLZ">
+                                <rect key="frame" x="0.0" y="0.0" width="320" height="416"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <subviews>
+                                    <progressView opaque="NO" contentMode="scaleToFill" id="JLX-cM-1HG">
+                                        <rect key="frame" x="60" y="238" width="200" height="9"/>
+                                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                    </progressView>
+                                    <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" text="File Name" textAlignment="center" lineBreakMode="middleTruncation" numberOfLines="2" minimumFontSize="10" id="h2j-Te-flo">
+                                        <rect key="frame" x="20" y="145" width="280" height="55"/>
+                                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                        <fontDescription key="fontDescription" type="boldSystem" pointSize="20"/>
+                                        <color key="textColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="calibratedRGB"/>
+                                        <nil key="highlightedColor"/>
+                                        <color key="shadowColor" white="0.66666666666666663" alpha="1" colorSpace="calibratedWhite"/>
+                                    </label>
+                                </subviews>
+                                <color key="backgroundColor" cocoaTouchSystemColor="viewFlipsideBackgroundColor"/>
+                            </view>
                             <webView contentMode="center" scalesPageToFit="YES" id="Lbj-Le-8GX">
                                 <rect key="frame" x="0.0" y="0.0" width="320" height="416"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMinX="YES" widthSizable="YES" flexibleMaxX="YES" flexibleMinY="YES" heightSizable="YES" flexibleMaxY="YES"/>
@@ -52,13 +71,16 @@
                         <color key="backgroundColor" cocoaTouchSystemColor="scrollViewTexturedBackgroundColor"/>
                     </view>
                     <navigationItem key="navigationItem" title="File Name" id="aF7-gc-DRg">
-                        <barButtonItem key="rightBarButtonItem" systemItem="done" id="BzT-zd-5mA">
+                        <barButtonItem key="rightBarButtonItem" style="plain" systemItem="done" id="BzT-zd-5mA">
                             <connections>
                                 <action selector="done:" destination="m2V-yS-yfv" id="otc-h7-Ujt"/>
                             </connections>
                         </barButtonItem>
                     </navigationItem>
                     <connections>
+                        <outlet property="downloadFileNameLabel" destination="h2j-Te-flo" id="ePI-04-HoB"/>
+                        <outlet property="downloadProgressView" destination="JLX-cM-1HG" id="FaJ-Oh-bzc"/>
+                        <outlet property="downloadView" destination="H24-cy-fLZ" id="EJ0-tI-jIV"/>
                         <outlet property="webView" destination="Lbj-Le-8GX" id="mVY-F3-Qzb"/>
                     </connections>
                 </viewController>
@@ -237,6 +259,9 @@
             <source key="sourceIdentifier" type="project" relativePath="./Classes/OpenFileViewController.h"/>
             <relationships>
                 <relationship kind="action" name="done:"/>
+                <relationship kind="outlet" name="downloadFileNameLabel" candidateClass="UILabel"/>
+                <relationship kind="outlet" name="downloadProgressView" candidateClass="UIProgressView"/>
+                <relationship kind="outlet" name="downloadView" candidateClass="UIView"/>
                 <relationship kind="outlet" name="webView" candidateClass="UIWebView"/>
             </relationships>
         </class>
