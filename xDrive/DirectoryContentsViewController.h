@@ -14,6 +14,6 @@
 @property (strong, nonatomic) NSFetchedResultsController *fetchedResultsController;
 @property (strong, nonatomic) NSManagedObjectContext *managedObjectContext;
 
-- (id)initWithDirectory:(XDirectory *)dir;
+//- (id)initWithDirectory:(XDirectory *)dir;
 
 @end

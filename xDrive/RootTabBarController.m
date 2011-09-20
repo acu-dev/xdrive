@@ -43,25 +43,25 @@
 - (void)initTabItems
 {
 	NSMutableArray *viewControllers = [[NSMutableArray alloc] init];
+	NSString *storyboardName = ([[UIDevice currentDevice] userInterfaceIdiom] == UIUserInterfaceIdiomPhone) ? @"MainStoryboard_iPhone" : @"MainStoryboard_iPad";
+	UIStoryboard *storyboard = [UIStoryboard storyboardWithName:storyboardName bundle:nil];
 	
 	// Create nav controller for each default path
 	for (XDefaultPath *defaultPath in [[XService sharedXService] activeServer].defaultPaths) {
-		DirectoryNavigationController *navController = [[DirectoryNavigationController alloc] initWithRootPath:defaultPath.path];
+		
+		DirectoryNavigationController *navController = [storyboard instantiateViewControllerWithIdentifier:@"directoryNav"];
+		[navController setRootPath:defaultPath.path];
 		[navController setTitle:defaultPath.name];
 		[viewControllers addObject:navController];
 	}
 	
 	// Root browser
-	DirectoryNavigationController *rootBrowser = [[DirectoryNavigationController alloc] initWithRootPath:@"/"];
+	DirectoryNavigationController *rootBrowser = [storyboard instantiateViewControllerWithIdentifier:@"directoryNav"];
+	[rootBrowser setRootPath:@"/"];
 	[viewControllers addObject:rootBrowser];
 	
 	// Init tab items
 	self.viewControllers = viewControllers;
-	
-	/*XDirectory *dir = [[XService sharedXService] directoryWithPath:@"Home"];
-	for (XEntry *entry in dir.contents) {
-		NSLog(@"Name: %@ Path: %@", entry.name, entry.path);
-	}*/
 }
 
 @end

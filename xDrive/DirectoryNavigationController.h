@@ -10,7 +10,9 @@
 
 @interface DirectoryNavigationController : UINavigationController
 
-- (id)initWithRootPath:(NSString *)path;
-- (id)initWithDirectory:(XDirectory *)directory;
+@property (nonatomic, strong) NSString *rootPath;
+
+//- (id)initWithRootPath:(NSString *)path;
+//- (id)initWithDirectory:(XDirectory *)directory;
 
 @end

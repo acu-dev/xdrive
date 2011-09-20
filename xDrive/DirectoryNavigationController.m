@@ -12,7 +12,17 @@
 
 @implementation DirectoryNavigationController
 
-- (id)initWithRootPath:(NSString *)path
+@synthesize rootPath;
+
+- (void)setRootPath:(NSString *)path
+{
+	self.title = @"Browser";
+	rootPath = path;
+	XDirectory *directory = [[XService sharedXService] directoryWithPath:rootPath];
+	[(DirectoryContentsViewController *)self.topViewController setDirectory:directory];
+}
+
+/*- (id)initWithRootPath:(NSString *)path
 {
 	XDirectory *directory = [[XService sharedXService] directoryWithPath:path];
     return [self initWithDirectory:directory];
@@ -27,7 +37,7 @@
     }
     
     return self;
-}
+}*/
 
 - (void)setTitle:(NSString *)title
 {

@@ -23,7 +23,7 @@
 @synthesize fetchedResultsController = __fetchedResultsController;
 @synthesize managedObjectContext;
 
-- (id)initWithDirectory:(XDirectory *)dir
+/*- (id)initWithDirectory:(XDirectory *)dir
 {
     self = [super initWithStyle:UITableViewStylePlain];
     if (self) {
@@ -36,6 +36,17 @@
 			self.title = directory.name;
     }
     return self;
+}*/
+
+- (void)setDirectory:(XDirectory *)dir
+{
+	directory = dir;
+	managedObjectContext = [[XService sharedXService] localService].managedObjectContext;
+	
+	if (!directory.name || [directory.name isEqualToString:@""] || [directory.name isEqualToString:@"/"])
+		self.title = @"Browser";
+	else
+		self.title = directory.name;
 }
 
 - (void)didReceiveMemoryWarning
@@ -88,8 +99,7 @@
 
 - (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation
 {
-    // Return YES for supported orientations
-    return (interfaceOrientation == UIInterfaceOrientationPortrait);
+    return YES;
 }
 
 #pragma mark - Cell customization
@@ -124,8 +134,37 @@
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    static NSString *CellIdentifier = @"Cell";
+	XEntry *entry = [self.fetchedResultsController objectAtIndexPath:indexPath];
+	
+	NSString *cellIdentifier = nil;
+	if ([entry isKindOfClass:[XDirectory class]])
+	{
+		// Directory
+		cellIdentifier = @"DirCell";
+	}
+	else if ([OpenFileViewController isFileViewable:(XFile *)entry])
+	{
+		// Readable file
+		cellIdentifier = @"ReadFileCell";
+	}
+	else
+	{
+		// Non-readable file
+		cellIdentifier = @"NonReadFileCell";
+	}
+	
+	UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:cellIdentifier];
+	cell.textLabel.text = entry.name;
+	
+	if ([entry isKindOfClass:[XFile class]])
+	{
+		cell.detailTextLabel.text = ((XFile *)entry).size;
+	}
+	
     
+	return cell;
+	
+	/*
     UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:CellIdentifier];
     if (cell == nil) {
         cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:CellIdentifier];
@@ -133,7 +172,7 @@
 	
 	// Configure the cell.
 	[self configureCell:cell atIndexPath:indexPath];
-    return cell;
+    return cell;*/
 }
 
 
@@ -160,7 +199,10 @@
 	if ([entry isKindOfClass:[XDirectory class]])
 	{
 		XDirectory *updatedDir = [[XService sharedXService] directoryWithPath:entry.path];
-		DirectoryContentsViewController *viewController = [[DirectoryContentsViewController alloc] initWithDirectory:updatedDir];
+		NSString *storyboardName = ([[UIDevice currentDevice] userInterfaceIdiom] == UIUserInterfaceIdiomPhone) ? @"MainStoryboard_iPhone" : @"MainStoryboard_iPad";
+		UIStoryboard *storyboard = [UIStoryboard storyboardWithName:storyboardName bundle:nil];
+		DirectoryContentsViewController *viewController = [storyboard instantiateViewControllerWithIdentifier:@"directoryContents"];
+		[viewController setDirectory:updatedDir];
 		[self.navigationController pushViewController:viewController animated:YES];
 	}
 	else if ([OpenFileViewController isFileViewable:(XFile *)entry])
