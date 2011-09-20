@@ -172,6 +172,7 @@
 		OpenFileViewController *viewController = (OpenFileViewController *)navController.topViewController;
 		[viewController setXFile:(XFile *)entry];
 		[self.navigationController presentModalViewController:navController animated:YES];
+		//[self.navigationController pushViewController:viewController animated:YES];
 	}
 }
 

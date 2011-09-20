@@ -122,13 +122,25 @@ static XService *sharedXService;
 + (void)moveFileAtPath:(NSString *)oldFilePath toPath:(NSString *)newFilePath
 {
 	NSError *error = nil;
-	
-	//[newFilePath componentsSeparatedByString:@"/"];
-	
+
 	// Create destination directory
+	NSString *destinationDirPath = [newFilePath stringByDeletingLastPathComponent];
+	BOOL dirExists = [[NSFileManager defaultManager] createDirectoryAtPath:destinationDirPath 
+											   withIntermediateDirectories:YES 
+																attributes:nil 
+																	 error:&error];
+	if (error)
+	{
+		XDrvLog(@"Problem creating destination directory: %@", error);
+	}
+	if (!dirExists)
+	{
+		XDrvLog(@"Unable to move file - destination dir does not exist: %@", destinationDirPath);
+		return;
+	}
 	
-	
-	
+	// Move file
+	error = nil;
 	[[NSFileManager defaultManager] moveItemAtPath:oldFilePath toPath:newFilePath error:&error];
 	if (error)
 	{
