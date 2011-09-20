@@ -59,7 +59,7 @@
 {
     [super viewDidLoad];
 	
-	self.title = xFile.name;
+	self.title = [xFile.name stringByDeletingPathExtension];
 	
 	XDrvDebug(@"File path: %@", [xFile localPath]);
 	if ([[NSFileManager defaultManager] fileExistsAtPath:[xFile localPath]])
