@@ -163,16 +163,6 @@
 	
     
 	return cell;
-	
-	/*
-    UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:CellIdentifier];
-    if (cell == nil) {
-        cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:CellIdentifier];
-    }
-	
-	// Configure the cell.
-	[self configureCell:cell atIndexPath:indexPath];
-    return cell;*/
 }
 
 
@@ -214,7 +204,6 @@
 		OpenFileViewController *viewController = (OpenFileViewController *)navController.topViewController;
 		[viewController setXFile:(XFile *)entry];
 		[self.navigationController presentModalViewController:navController animated:YES];
-		//[self.navigationController pushViewController:viewController animated:YES];
 	}
 }
 
