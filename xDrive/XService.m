@@ -121,6 +121,7 @@ static XService *sharedXService;
 
 + (void)moveFileAtPath:(NSString *)oldFilePath toPath:(NSString *)newFilePath
 {
+	XDrvDebug(@"Moving file from path: %@ to path: %@", oldFilePath, newFilePath);
 	NSError *error = nil;
 
 	// Create destination directory
