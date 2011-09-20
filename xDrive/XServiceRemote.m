@@ -229,8 +229,8 @@ static NSString *serviceInfoPath = @"/info";
 	}
 	
 	// Calculate percent of file downloaded
-	int percent = lroundf(((float)totalReceivedBytes / (float)expectedTotalBytes) * 100);
-	XDrvDebug(@"Download file percent done: %i%%", percent);
+	float percent = (float)totalReceivedBytes / (float)expectedTotalBytes;
+	XDrvDebug(@"Download file percent done: %f", percent);
 	
 	id<XServiceRemoteDelegate> delegate = [request objectForKey:@"delegate"];
 	if ([delegate respondsToSelector:@selector(connectionDownloadPercentUpdate:)])

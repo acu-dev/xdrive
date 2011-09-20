@@ -105,7 +105,7 @@ typedef enum _ServerStatus{
 
 @optional
 
-- (void)connectionDownloadPercentUpdate:(int)percent;
+- (void)connectionDownloadPercentUpdate:(float)percent;
 	// Provides an updated percentage of the file downloaded so the view can update (e.g. progress bar)
 
 @end
