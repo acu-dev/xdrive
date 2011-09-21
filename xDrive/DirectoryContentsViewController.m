@@ -12,31 +12,21 @@
 #import "OpenFileViewController.h"
 
 
+
 @interface DirectoryContentsViewController ()
 - (void)configureCell:(UITableViewCell *)cell atIndexPath:(NSIndexPath *)indexPath;
 @end
 
 
+
 @implementation DirectoryContentsViewController
+
 
 @synthesize directory;
 @synthesize fetchedResultsController = __fetchedResultsController;
 @synthesize managedObjectContext;
 
-/*- (id)initWithDirectory:(XDirectory *)dir
-{
-    self = [super initWithStyle:UITableViewStylePlain];
-    if (self) {
-		directory = dir;
-		managedObjectContext = [[XService sharedXService] localService].managedObjectContext;
-		
-		if (!directory.name || [directory.name isEqualToString:@""] || [directory.name isEqualToString:@"/"])
-			self.title = @"Browser";
-		else
-			self.title = directory.name;
-    }
-    return self;
-}*/
+
 
 - (void)setDirectory:(XDirectory *)dir
 {
@@ -102,6 +92,8 @@
     return YES;
 }
 
+
+
 #pragma mark - Cell customization
 
 - (void)configureCell:(UITableViewCell *)cell atIndexPath:(NSIndexPath *)indexPath
@@ -118,6 +110,8 @@
 		cell.selectionStyle = UITableViewCellSelectionStyleNone;
 	}
 }
+
+
 
 #pragma mark - Table view data source
 
