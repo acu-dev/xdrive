@@ -34,6 +34,7 @@
 		C3224771142A38CA005F7C48 /* file.richtext.png in Resources */ = {isa = PBXBuildFile; fileRef = C3224766142A38CA005F7C48 /* file.richtext.png */; };
 		C3224772142A38CA005F7C48 /* file.text.png in Resources */ = {isa = PBXBuildFile; fileRef = C3224767142A38CA005F7C48 /* file.text.png */; };
 		C3224773142A38CA005F7C48 /* file.video.png in Resources */ = {isa = PBXBuildFile; fileRef = C3224768142A38CA005F7C48 /* file.video.png */; };
+		C3224776142A3EC8005F7C48 /* FileUtils.m in Sources */ = {isa = PBXBuildFile; fileRef = C3224775142A3EC8005F7C48 /* FileUtils.m */; };
 		C328C42B141A89C900D578ED /* check.png in Resources */ = {isa = PBXBuildFile; fileRef = C328C429141A89C900D578ED /* check.png */; };
 		C328C42C141A89C900D578ED /* x.png in Resources */ = {isa = PBXBuildFile; fileRef = C328C42A141A89C900D578ED /* x.png */; };
 		C351746E13C390B30078E361 /* AccountViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = C351746D13C390B30078E361 /* AccountViewController.m */; };
@@ -117,6 +118,8 @@
 		C3224766142A38CA005F7C48 /* file.richtext.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = file.richtext.png; sourceTree = "<group>"; };
 		C3224767142A38CA005F7C48 /* file.text.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = file.text.png; sourceTree = "<group>"; };
 		C3224768142A38CA005F7C48 /* file.video.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = file.video.png; sourceTree = "<group>"; };
+		C3224774142A3EC8005F7C48 /* FileUtils.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FileUtils.h; sourceTree = "<group>"; };
+		C3224775142A3EC8005F7C48 /* FileUtils.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FileUtils.m; sourceTree = "<group>"; };
 		C328C429141A89C900D578ED /* check.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = check.png; sourceTree = "<group>"; };
 		C328C42A141A89C900D578ED /* x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = x.png; sourceTree = "<group>"; };
 		C351746C13C390B30078E361 /* AccountViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AccountViewController.h; sourceTree = "<group>"; };
@@ -208,6 +211,8 @@
 			children = (
 				A9C34FCA1426668400E3BC3C /* OpenFileViewController.h */,
 				A9C34FCB1426668400E3BC3C /* OpenFileViewController.m */,
+				C3224774142A3EC8005F7C48 /* FileUtils.h */,
+				C3224775142A3EC8005F7C48 /* FileUtils.m */,
 			);
 			name = "File Info";
 			sourceTree = "<group>";
@@ -508,6 +513,7 @@
 				C3E6E0C113DE06E100EA014B /* xDrive.xcdatamodeld in Sources */,
 				A9C34FCC1426668400E3BC3C /* OpenFileViewController.m in Sources */,
 				A9AFCE2514284E0E00E76E1A /* SettingsViewController.m in Sources */,
+				C3224776142A3EC8005F7C48 /* FileUtils.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
