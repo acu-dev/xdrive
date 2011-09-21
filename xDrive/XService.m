@@ -429,6 +429,13 @@ static XService *sharedXService;
 
 - (XDirectory *)updateDirectoryDetails:(NSDictionary *)details
 {
+	if ([details isKindOfClass:[NSError class]])
+	{
+		XDrvLog(@"Error updating directory details: %@", details);
+		return nil;
+	}
+	
+	
 	XDrvDebug(@"Updating directory details at path: %@", [details objectForKey:@"path"]);
 	
 	// Get directory
