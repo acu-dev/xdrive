@@ -8,6 +8,7 @@
 
 #import "XFile.h"
 #import "XService.h"
+#import "XDriveConfig.h"
 
 
 @implementation XFile

@@ -14,6 +14,7 @@
 @property (strong, nonatomic) NSFetchedResultsController *fetchedResultsController;
 @property (strong, nonatomic) NSManagedObjectContext *managedObjectContext;
 
-//- (id)initWithDirectory:(XDirectory *)dir;
+@property (nonatomic, strong) NSDictionary *iconTypes;
+	// Mapping of file mime-types to icon file names
 
 @end

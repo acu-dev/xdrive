@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>Icons</key>
+	<dict>
+		<key>default</key>
+		<string>file.default.png</string>
+		<key>folder</key>
+		<string>file.folder.png</string>
+		<key>audio</key>
+		<string>file.audio.png</string>
+		<key>video</key>
+		<string>file.video.png</string>
+		<key>image</key>
+		<string>file.image.png</string>
+		<key>text/html</key>
+		<string>file.html.png</string>
+		<key>text</key>
+		<string>file.text.png</string>
+		<key>text/richtext</key>
+		<string>file.richtext.png</string>
+		<key>application</key>
+		<string>file.default.png</string>
+		<key>application/octet-stream</key>
+		<string>file.application.png</string>
+		<key>application/msword</key>
+		<string>file.document.png</string>
+		<key>application/powerpoint</key>
+		<string>file.document.png</string>
+		<key>application/vnd.ms-excel</key>
+		<string>file.document.png</string>
+		<key>application/vnd.ms-word</key>
+		<string>file.document.png</string>
+		<key>application/vnd.ms-powerpoint</key>
+		<string>file.document.png</string>
+		<key>application/x-gtar</key>
+		<string>file.archive.png</string>
+		<key>application/x-gzip</key>
+		<string>file.archive.png</string>
+		<key>application/java-archive</key>
+		<string>file.archive.png</string>
+		<key>application/zip</key>
+		<string>file.archive.png</string>
+		<key>application/vnd.oasis.opendocument.chart</key>
+		<string>file.document.png</string>
+		<key>application/vnd.oasis.opendocument.formula</key>
+		<string>file.document.png</string>
+		<key>application/vnd.oasis.opendocument.graphics</key>
+		<string>file.document.png</string>
+		<key>application/vnd.oasis.opendocument.image</key>
+		<string>file.document.png</string>
+		<key>application/vnd.oasis.opendocument.text</key>
+		<string>file.document.png</string>
+		<key>application/vnd.oasis.opendocument.presentation</key>
+		<string>file.document.png</string>
+		<key>application/vnd.oasis.opendocument.spreadsheet</key>
+		<string>file.document.png</string>
+		<key>application/ogg</key>
+		<string>file.audio.png</string>
+		<key>application/pdf</key>
+		<string>file.document.png</string>
+		<key>application/rtf</key>
+		<string>file.richtext.png</string>
+	</dict>
+</dict>
+</plist>

@@ -14,7 +14,14 @@
 
 
 @interface DirectoryContentsViewController ()
+
 - (void)configureCell:(UITableViewCell *)cell atIndexPath:(NSIndexPath *)indexPath;
+- (void)configureCell:(UITableViewCell *)cell forEntry:(XEntry *)entry;
+	// Sylizes and fills in data for a specific cell
+
+- (UIImage *)iconForEntryType:(NSString *)entryType;
+	// Creates an icon image appropriate for the entry type
+
 @end
 
 
@@ -25,6 +32,7 @@
 @synthesize directory;
 @synthesize fetchedResultsController = __fetchedResultsController;
 @synthesize managedObjectContext;
+@synthesize iconTypes;
 
 
 
@@ -45,6 +53,7 @@
     [super didReceiveMemoryWarning];
     
     // Release any cached data, images, etc that aren't in use.
+	self.iconTypes = nil;
 }
 
 #pragma mark - View lifecycle
@@ -99,16 +108,55 @@
 - (void)configureCell:(UITableViewCell *)cell atIndexPath:(NSIndexPath *)indexPath
 {
     XEntry *entry = [self.fetchedResultsController objectAtIndexPath:indexPath];
-    cell.textLabel.text = entry.name;
-	if ([entry isKindOfClass:[XDirectory class]])
+    [self configureCell:cell forEntry:entry];
+}
+
+- (void)configureCell:(UITableViewCell *)cell forEntry:(XEntry *)entry
+{
+	cell.textLabel.text = entry.name;
+	
+	NSString *type = nil;
+	if ([entry isKindOfClass:[XFile class]])
 	{
-		// Directory
-		cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
+		cell.detailTextLabel.text = ((XFile *)entry).size;
+		type = ((XFile *)entry).type;
 	}
 	else
 	{
-		cell.selectionStyle = UITableViewCellSelectionStyleNone;
+		type = @"folder";
 	}
+	
+	cell.imageView.image = [self iconForEntryType:type];
+}
+
+- (UIImage *)iconForEntryType:(NSString *)entryType
+{
+	if (!iconTypes)
+	{
+		// Load icon mappings from plist
+		iconTypes = [[NSDictionary dictionaryWithContentsOfFile:[[NSBundle mainBundle] pathForResource:@"File-Types" ofType:@"plist"]] objectForKey:@"Icons"];
+	}
+	
+	// First check for exact match
+	NSString *iconName = [iconTypes objectForKey:entryType];
+	if (iconName)
+	{
+		XDrvDebug(@"Using icon named: %@", iconName);
+		return [UIImage imageNamed:iconName];
+	}
+
+	// Match type category
+	NSString *category = [[entryType componentsSeparatedByString:@"/"] objectAtIndex:0];
+	iconName = [iconTypes objectForKey:category];
+	if (iconName)
+	{
+		XDrvDebug(@"Using icon named: %@", iconName);
+		return [UIImage imageNamed:iconName];
+	}
+	
+	// Use default
+	XDrvDebug(@"Using default icon");
+	return [UIImage imageNamed:[iconTypes objectForKey:@"default"]];
 }
 
 
@@ -148,14 +196,7 @@
 	}
 	
 	UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:cellIdentifier];
-	cell.textLabel.text = entry.name;
-	
-	if ([entry isKindOfClass:[XFile class]])
-	{
-		cell.detailTextLabel.text = ((XFile *)entry).size;
-	}
-	
-    
+	[self configureCell:cell forEntry:entry];
 	return cell;
 }
 
@@ -180,11 +221,12 @@
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
 	XEntry *entry = [self.fetchedResultsController objectAtIndexPath:indexPath];
+	NSString *storyboardName = ([[UIDevice currentDevice] userInterfaceIdiom] == UIUserInterfaceIdiomPhone) ? @"MainStoryboard_iPhone" : @"MainStoryboard_iPad";
+	UIStoryboard *storyboard = [UIStoryboard storyboardWithName:storyboardName bundle:nil];
+	
 	if ([entry isKindOfClass:[XDirectory class]])
 	{
 		XDirectory *updatedDir = [[XService sharedXService] directoryWithPath:entry.path];
-		NSString *storyboardName = ([[UIDevice currentDevice] userInterfaceIdiom] == UIUserInterfaceIdiomPhone) ? @"MainStoryboard_iPhone" : @"MainStoryboard_iPad";
-		UIStoryboard *storyboard = [UIStoryboard storyboardWithName:storyboardName bundle:nil];
 		DirectoryContentsViewController *viewController = [storyboard instantiateViewControllerWithIdentifier:@"directoryContents"];
 		[viewController setDirectory:updatedDir];
 		[self.navigationController pushViewController:viewController animated:YES];
@@ -192,8 +234,6 @@
 	else if ([OpenFileViewController isFileViewable:(XFile *)entry])
 	{
 		XDrvDebug(@"Opening file entry: %@", [entry description]);
-		NSString *storyboardName = ([[UIDevice currentDevice] userInterfaceIdiom] == UIUserInterfaceIdiomPhone) ? @"MainStoryboard_iPhone" : @"MainStoryboard_iPad";
-		UIStoryboard *storyboard = [UIStoryboard storyboardWithName:storyboardName bundle:nil];
 		UINavigationController *navController = [storyboard instantiateViewControllerWithIdentifier:@"openFile"];
 		OpenFileViewController *viewController = (OpenFileViewController *)navController.topViewController;
 		[viewController setXFile:(XFile *)entry];
@@ -292,7 +332,8 @@
             break;
             
         case NSFetchedResultsChangeUpdate:
-            [self configureCell:[tableView cellForRowAtIndexPath:indexPath] atIndexPath:indexPath];
+            //[self configureCell:[tableView cellForRowAtIndexPath:indexPath] atIndexPath:indexPath];
+			[tableView cellForRowAtIndexPath:indexPath];
             break;
             
         case NSFetchedResultsChangeMove:
