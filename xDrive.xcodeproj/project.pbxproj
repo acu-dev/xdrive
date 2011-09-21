@@ -9,6 +9,7 @@
 /* Begin PBXBuildFile section */
 		A93E36AA13C5630600DE693D /* DirectoryContentsViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = A93E36A913C5630600DE693D /* DirectoryContentsViewController.m */; };
 		A978436C13C6876700120A94 /* DirectoryNavigationController.m in Sources */ = {isa = PBXBuildFile; fileRef = A978436B13C6876700120A94 /* DirectoryNavigationController.m */; };
+		A9AFCE2514284E0E00E76E1A /* SettingsViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = A9AFCE2414284E0D00E76E1A /* SettingsViewController.m */; };
 		A9C34FCC1426668400E3BC3C /* OpenFileViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = A9C34FCB1426668400E3BC3C /* OpenFileViewController.m */; };
 		C30580341418207400E49727 /* README.md in Resources */ = {isa = PBXBuildFile; fileRef = C30580331418207400E49727 /* README.md */; };
 		C328C42B141A89C900D578ED /* check.png in Resources */ = {isa = PBXBuildFile; fileRef = C328C429141A89C900D578ED /* check.png */; };
@@ -67,6 +68,8 @@
 		A93E36A913C5630600DE693D /* DirectoryContentsViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DirectoryContentsViewController.m; sourceTree = "<group>"; };
 		A978436A13C6876700120A94 /* DirectoryNavigationController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DirectoryNavigationController.h; sourceTree = "<group>"; };
 		A978436B13C6876700120A94 /* DirectoryNavigationController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DirectoryNavigationController.m; sourceTree = "<group>"; };
+		A9AFCE2314284E0D00E76E1A /* SettingsViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SettingsViewController.h; sourceTree = "<group>"; };
+		A9AFCE2414284E0D00E76E1A /* SettingsViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SettingsViewController.m; sourceTree = "<group>"; };
 		A9C34FCA1426668400E3BC3C /* OpenFileViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OpenFileViewController.h; sourceTree = "<group>"; };
 		A9C34FCB1426668400E3BC3C /* OpenFileViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OpenFileViewController.m; sourceTree = "<group>"; };
 		C30580331418207400E49727 /* README.md */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = README.md; sourceTree = "<group>"; };
@@ -289,6 +292,8 @@
 				C3FC6C6C13BCB90B009FBAA3 /* MainStoryboard_iPad.storyboard */,
 				C3ECE29713C3BF2D004FF63F /* RootTabBarController.h */,
 				C3ECE29813C3BF2D004FF63F /* RootTabBarController.m */,
+				A9AFCE2314284E0D00E76E1A /* SettingsViewController.h */,
+				A9AFCE2414284E0D00E76E1A /* SettingsViewController.m */,
 				A978436813C6847300120A94 /* Directory Contents */,
 				A9C34FC9142665CA00E3BC3C /* File Info */,
 				C351747013C393690078E361 /* Account */,
@@ -414,6 +419,7 @@
 				C3E6E0BE13DE010A00EA014B /* XDefaultPath.m in Sources */,
 				C3E6E0C113DE06E100EA014B /* xDrive.xcdatamodeld in Sources */,
 				A9C34FCC1426668400E3BC3C /* OpenFileViewController.m in Sources */,
+				A9AFCE2514284E0E00E76E1A /* SettingsViewController.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
