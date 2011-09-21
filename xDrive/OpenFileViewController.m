@@ -149,6 +149,12 @@
 - (void)connectionFailedWithError:(NSError *)error
 {
 	XDrvLog(@"Download failed: %@", [error description]);
+	
+	NSString *title = NSLocalizedStringFromTable(@"Unable to download file", 
+												 @"XDrive", 
+												 @"Title of alert displayed when server returned an error while trying to download file.");
+	UIAlertView *alert = [[UIAlertView alloc] initWithTitle:title message:[error localizedDescription] delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil];
+	[alert show];
 }
 
 - (void)connectionDownloadPercentUpdate:(float)percent
