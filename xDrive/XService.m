@@ -35,12 +35,6 @@
 - (void)saveServerWithDetails:(NSDictionary *)details;
 	// Takes received server info and saves a server object with the details.
 
-- (void)fetchDefaultPaths:(NSArray *)pathDetails;
-	// Fires off a request to get the directory contentes for each default path.
-
-- (void)receiveDefaultPath:(NSObject *)result;
-	// Evaluates and handles the result from each default path request.
-
 
 - (void)saveCredentialWithUsername:(NSString *)user password:(NSString *)pass;
 - (void)removeAllCredentialsForProtectionSpace:(NSURLProtectionSpace *)protectionSpace;
@@ -227,7 +221,6 @@ static XService *sharedXService;
 		
 		if (defaultPaths)
 		{
-			//[self fetchDefaultPaths:defaultPaths];
 			defaultPathController = [[XDefaultPathController alloc] init];
 			[defaultPathController fetchDefaultPaths:defaultPaths withDelegate:serverStatusDelegate];
 		}
@@ -279,60 +272,6 @@ static XService *sharedXService;
 	{
 		// Handle error
 		XDrvLog(@"Error: unable to save context after adding new server - %@", [error localizedDescription]);
-	}
-}
-
-- (void)fetchDefaultPaths:(NSArray *)pathDetails
-{
-	XDrvDebug(@"Fetching default paths...");
-
-	// Counter to decrement as fetches return
-	fetchingDefaultPaths = [pathDetails count] + 1;
-	
-	// Fire off directory request for root path
-	[self.remoteService fetchDirectoryContentsAtPath:@"/" withTarget:self action:@selector(receiveDefaultPath:)];
-	
-	// Fire off directory request for each default path
-	for (NSDictionary *defaultPath in pathDetails)
-	{
-		[self.remoteService fetchDirectoryContentsAtPath:[defaultPath objectForKey:@"path"] withTarget:self action:@selector(receiveDefaultPath:)];
-	}
-}
-
-- (void)receiveDefaultPath:(NSObject *)result
-{
-	// Decrement counter
-	fetchingDefaultPaths--;
-	
-	if (!result || [result isKindOfClass:[NSError class]])
-	{
-		XDrvLog(@"Error: No data found for default path; server not configured correctly");
-		return;
-	}
-	
-	// Create directory
-	NSDictionary *details = (NSDictionary *)result;
-	XDirectory *directory = [self updateDirectoryDetails:details];
-	
-	// Find the default path object for the directory
-	for (XDefaultPath *defaultPath in [self activeServer].defaultPaths)
-	{
-		if ([directory.path isEqualToString:defaultPath.path])
-		{
-			// Associate directory with default path
-			defaultPath.directory = directory;
-			NSError *error = nil;
-			if (![[self.localService managedObjectContext] save:&error])
-			{
-				XDrvLog(@"Error: Unable to attach directory with path %@ to default path", directory.path);
-			}
-		}
-	}
-
-	if (!fetchingDefaultPaths)
-	{
-		// All done getting default paths; notify delegate
-		[serverStatusDelegate validateServerFinishedWithSuccess];
 	}
 }
 
