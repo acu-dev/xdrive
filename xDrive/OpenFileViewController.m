@@ -39,6 +39,8 @@
 										@"doc",	@"xls", @"ppt",
 										@"txt",	@"rtf",	@"html",
 										@"jpg",	@"jpeg", @"png",
+										@"m4v", @"mov", @"mp4",
+										@"mp3", @"wav", @"m4a",
 										nil];
 	return ([supportedFileExtensions containsObject:[file extension]]);
 }
@@ -115,10 +117,13 @@
 - (void)loadFile
 {
 	XDrvDebug(@"Loading %@ content at %@ into web view", xFile.type, xFile.path);
-	[webView loadData:[NSData dataWithContentsOfFile:[xFile localPath]]
+	/*[webView loadData:[NSData dataWithContentsOfFile:[xFile localPath]]
 			 MIMEType:xFile.type
 	 textEncodingName:@"utf-8" 
-			  baseURL:[NSURL URLWithString:[xFile localPath]]];
+			  baseURL:[NSURL URLWithString:[xFile localPath]]];*/
+	
+    NSURLRequest *request = [NSURLRequest requestWithURL:[NSURL fileURLWithPath:[xFile localPath]]];
+    [webView loadRequest:request];
 }
 
 
