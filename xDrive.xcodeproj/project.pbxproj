@@ -40,6 +40,10 @@
 		C351746E13C390B30078E361 /* AccountViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = C351746D13C390B30078E361 /* AccountViewController.m */; };
 		C354ABE0141932E600E88410 /* libCGNetUtils.a in Frameworks */ = {isa = PBXBuildFile; fileRef = C354ABDC1419327A00E88410 /* libCGNetUtils.a */; };
 		C354ABE2141932F000E88410 /* Security.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C354ABE1141932F000E88410 /* Security.framework */; };
+		C374294E142B91400043A9C8 /* clock.png in Resources */ = {isa = PBXBuildFile; fileRef = C374294A142B91400043A9C8 /* clock.png */; };
+		C374294F142B91400043A9C8 /* eye.png in Resources */ = {isa = PBXBuildFile; fileRef = C374294B142B91400043A9C8 /* eye.png */; };
+		C3742950142B91400043A9C8 /* gear.png in Resources */ = {isa = PBXBuildFile; fileRef = C374294C142B91400043A9C8 /* gear.png */; };
+		C3742951142B91400043A9C8 /* magnify.png in Resources */ = {isa = PBXBuildFile; fileRef = C374294D142B91400043A9C8 /* magnify.png */; };
 		C378433713BE36BB00F1793A /* XService.m in Sources */ = {isa = PBXBuildFile; fileRef = C378433613BE36BB00F1793A /* XService.m */; };
 		C378433913BE45B800F1793A /* CoreData.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C378433813BE45B800F1793A /* CoreData.framework */; };
 		C3C9A9C213D9D61B003B5E91 /* AudioToolbox.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C3C9A9C113D9D61B003B5E91 /* AudioToolbox.framework */; };
@@ -126,6 +130,10 @@
 		C3527A371423CBFB00B830DF /* XDriveConfig.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = XDriveConfig.h; sourceTree = "<group>"; };
 		C354ABD41419327A00E88410 /* CGNetUtils.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = CGNetUtils.xcodeproj; path = CGNetUtils/CGNetUtils.xcodeproj; sourceTree = "<group>"; };
 		C354ABE1141932F000E88410 /* Security.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Security.framework; path = System/Library/Frameworks/Security.framework; sourceTree = SDKROOT; };
+		C374294A142B91400043A9C8 /* clock.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = clock.png; sourceTree = "<group>"; };
+		C374294B142B91400043A9C8 /* eye.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = eye.png; sourceTree = "<group>"; };
+		C374294C142B91400043A9C8 /* gear.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = gear.png; sourceTree = "<group>"; };
+		C374294D142B91400043A9C8 /* magnify.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = magnify.png; sourceTree = "<group>"; };
 		C378433513BE36BB00F1793A /* XService.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = XService.h; sourceTree = "<group>"; };
 		C378433613BE36BB00F1793A /* XService.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = XService.m; sourceTree = "<group>"; };
 		C378433813BE45B800F1793A /* CoreData.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreData.framework; path = System/Library/Frameworks/CoreData.framework; sourceTree = SDKROOT; };
@@ -217,6 +225,12 @@
 		C328C428141A89C900D578ED /* images */ = {
 			isa = PBXGroup;
 			children = (
+				C374294A142B91400043A9C8 /* clock.png */,
+				C374294B142B91400043A9C8 /* eye.png */,
+				C374294C142B91400043A9C8 /* gear.png */,
+				C374294D142B91400043A9C8 /* magnify.png */,
+				C328C429141A89C900D578ED /* check.png */,
+				C328C42A141A89C900D578ED /* x.png */,
 				C322475E142A38C8005F7C48 /* file.application.png */,
 				C322475F142A38C8005F7C48 /* file.archive.png */,
 				C3224760142A38C9005F7C48 /* file.audio.png */,
@@ -239,8 +253,6 @@
 				C3224750142A339C005F7C48 /* file.richtext@2x.png */,
 				C3224751142A339C005F7C48 /* file.text@2x.png */,
 				C3224752142A339C005F7C48 /* file.video@2x.png */,
-				C328C429141A89C900D578ED /* check.png */,
-				C328C42A141A89C900D578ED /* x.png */,
 			);
 			path = images;
 			sourceTree = "<group>";
@@ -479,6 +491,10 @@
 				C3224772142A38CA005F7C48 /* file.text.png in Resources */,
 				C3224773142A38CA005F7C48 /* file.video.png in Resources */,
 				C3224778142A402B005F7C48 /* File-Types.plist in Resources */,
+				C374294E142B91400043A9C8 /* clock.png in Resources */,
+				C374294F142B91400043A9C8 /* eye.png in Resources */,
+				C3742950142B91400043A9C8 /* gear.png in Resources */,
+				C3742951142B91400043A9C8 /* magnify.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
