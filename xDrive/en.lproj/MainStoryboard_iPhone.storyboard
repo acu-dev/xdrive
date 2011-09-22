@@ -45,15 +45,15 @@
                         <subviews>
                             <view contentMode="scaleToFill" id="H24-cy-fLZ">
                                 <rect key="frame" x="0.0" y="0.0" width="320" height="416"/>
-                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                 <subviews>
                                     <progressView opaque="NO" contentMode="scaleToFill" id="JLX-cM-1HG">
                                         <rect key="frame" x="60" y="238" width="200" height="9"/>
-                                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                        <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMinY="YES" flexibleMaxY="YES"/>
                                     </progressView>
                                     <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" text="File Name" textAlignment="center" lineBreakMode="middleTruncation" numberOfLines="2" minimumFontSize="10" id="h2j-Te-flo">
                                         <rect key="frame" x="20" y="145" width="280" height="55"/>
-                                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                        <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMinY="YES" flexibleMaxY="YES"/>
                                         <fontDescription key="fontDescription" type="boldSystem" pointSize="20"/>
                                         <color key="textColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="calibratedRGB"/>
                                         <nil key="highlightedColor"/>
