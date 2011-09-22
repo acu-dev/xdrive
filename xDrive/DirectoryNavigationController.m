@@ -16,28 +16,11 @@
 
 - (void)setRootPath:(NSString *)path
 {
-	self.title = @"Browser";
+	self.title = @"Browse";
 	rootPath = path;
 	XDirectory *directory = [[XService sharedXService] directoryWithPath:rootPath];
 	[(DirectoryContentsViewController *)self.topViewController setDirectory:directory];
 }
-
-/*- (id)initWithRootPath:(NSString *)path
-{
-	XDirectory *directory = [[XService sharedXService] directoryWithPath:path];
-    return [self initWithDirectory:directory];
-}
-
-- (id)initWithDirectory:(XDirectory *)directory
-{
-	DirectoryContentsViewController *rootViewController = [[DirectoryContentsViewController alloc] initWithDirectory:directory];
-	self = [super initWithRootViewController:rootViewController];
-    if (self) {
-		self.title = @"Browser";
-    }
-    
-    return self;
-}*/
 
 - (void)setTitle:(NSString *)title
 {
