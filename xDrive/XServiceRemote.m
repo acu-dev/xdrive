@@ -27,6 +27,7 @@
 	// details from the active server are used.
 		
 - (void)fetchJSONAtURL:(NSString *)url withTarget:(id)target action:(SEL)action;
+- (void)fetchJSONAtURL:(NSString *)url withDelegate:(id<XServiceRemoteDelegate>)delegate;
 	// Creates the connection and saves the target/action in the requests dictionary
 	// to be used when the connection returns.
 
@@ -115,6 +116,22 @@ static NSString *serviceInfoPath = @"/info";
 	[connection start];
 }
 
+- (void)fetchJSONAtURL:(NSString *)url withDelegate:(id<XServiceRemoteDelegate>)delegate
+{
+	// Create connection
+	CGConnection *connection = [[CGNet utils] getJSONAtURL:[NSURL URLWithString:url] withDelegate:self];
+	
+	// Save connection info
+	NSDictionary *request = [[NSDictionary alloc] initWithObjectsAndKeys:
+							 delegate, @"delegate",
+							 connection, @"connection",
+							 nil];
+	[requests setObject:request forKey:[connection description]];
+	
+	// Start request
+	[connection start];
+}
+
 
 
 #pragma mark - Fetches
@@ -132,6 +149,13 @@ static NSString *serviceInfoPath = @"/info";
 	[self fetchJSONAtURL:directoryService withTarget:target action:action];
 }
 
+- (void)fetchDirectoryContentsAtPath:(NSString *)path withDelegate:(id<XServiceRemoteDelegate>)delegate
+{
+	NSString *encodedPath = [path stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
+	NSString *directoryService = [[self serviceUrlString] stringByAppendingFormat:@"/directory/?path=%@", encodedPath];
+	[self fetchJSONAtURL:directoryService withDelegate:delegate];
+}
+
 
 
 #pragma mark - Downloads
@@ -139,10 +163,15 @@ static NSString *serviceInfoPath = @"/info";
 - (void)downloadFileAtPath:(NSString *)path withDelegate:(id<XServiceRemoteDelegate>)delegate
 {
 	NSString *absolutePath = [[self serverUrlString] stringByAppendingString:[path stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding]];
-	XDrvLog(@"absolute path: %@", absolutePath);
+	[self downloadFileAtAbsolutePath:absolutePath withDelegate:delegate];
+}
+
+- (void)downloadFileAtAbsolutePath:(NSString *)path withDelegate:(id<XServiceRemoteDelegate>)delegate
+{
+	XDrvDebug(@"Downloading file at path: %@", path); 
 	
 	// Create connection
-	CGConnection *connection = [[CGNet utils] getFileAtURL:[NSURL URLWithString:absolutePath] withDelegate:self];
+	CGConnection *connection = [[CGNet utils] getFileAtURL:[NSURL URLWithString:path] withDelegate:self];
 	
 	// Save connection info
 	NSDictionary *request = [[NSDictionary alloc] initWithObjectsAndKeys:
@@ -169,18 +198,18 @@ static NSString *serviceInfoPath = @"/info";
 		return;
 	}
 	
-	if ([connection isKindOfClass:[CGJSONConnection class]])
+	id<XServiceRemoteDelegate> delegate = [request objectForKey:@"delegate"];
+	if (delegate)
+	{
+		// Send event off to delegate
+		[delegate connectionFinishedWithResult:result];
+	}
+	else
 	{
 		// Send results off to request's target
 		id target = [request objectForKey:@"targetObject"];
 		SEL action = NSSelectorFromString([request objectForKey:@"selectorString"]);
 		[target performSelector:action withObject:result];
-	}
-	else
-	{
-		// Send event off to delegate
-		id<XServiceRemoteDelegate> delegate = [request objectForKey:@"delegate"];
-		[delegate connectionFinishedWithResult:result];
 	}
 	
 	// Clean up request
@@ -198,18 +227,18 @@ static NSString *serviceInfoPath = @"/info";
 		return;
 	}
 	
-	if ([connection isKindOfClass:[CGJSONConnection class]])
+	id<XServiceRemoteDelegate> delegate = [request objectForKey:@"delegate"];
+	if (delegate)
+	{
+		// Send event off to delegate
+		[delegate connectionFailedWithError:error];
+	}
+	else
 	{
 		// Send results off to request's target
 		id target = [request objectForKey:@"targetObject"];
 		SEL action = NSSelectorFromString([request objectForKey:@"selectorString"]);
 		[target performSelector:action withObject:error];
-	}
-	else
-	{
-		// Send event off to delegate
-		id<XServiceRemoteDelegate> delegate = [request objectForKey:@"delegate"];
-		[delegate connectionFailedWithError:error];
 	}
 	
 	// Clean up request

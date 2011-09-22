@@ -62,6 +62,9 @@
 	// Gets a directory object at given path. Fires off remote fetch in background
 	// and if necessary, directory contents are updated.
 
+- (XDirectory *)updateDirectoryDetails:(NSDictionary *)details;
+	// Updates directory contents with passed data
+
 - (void)downloadFile:(XFile *)file withDelegate:(id<XServiceRemoteDelegate>)delegate;
 
 @end

@@ -24,9 +24,11 @@
 	// Gets the server's info. If host is nil the active server will be used.
 
 - (void)fetchDirectoryContentsAtPath:(NSString *)path withTarget:(id)target action:(SEL)action;
+- (void)fetchDirectoryContentsAtPath:(NSString *)path withDelegate:(id<XServiceRemoteDelegate>)delegate;
 	// Gets the directory contents for a path
 
 - (void)downloadFileAtPath:(NSString *)path withDelegate:(id<XServiceRemoteDelegate>)delegate;
+- (void)downloadFileAtAbsolutePath:(NSString *)path withDelegate:(id<XServiceRemoteDelegate>)delegate;
 	// Downloads a file at given url path and notifies delegate on events
 
 @end

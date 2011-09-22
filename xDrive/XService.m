@@ -9,6 +9,7 @@
 #import "XService.h"
 #import "XDriveConfig.h"
 #import "XDefaultPath.h"
+#import "XDefaultPathController.h"
 #import <CGNetUtils/CGNetUtils.h>
 
 
@@ -18,6 +19,8 @@
 
 @property (nonatomic, strong) NSURLCredential *validateCredential;
 	// Credential used when validating server info.
+
+@property (nonatomic, strong) XDefaultPathController *defaultPathController;
 
 @property (nonatomic, assign) int fetchingDefaultPaths;
 	// Counter that gets decremented as default path fetches return.
@@ -44,9 +47,6 @@
 - (NSURLProtectionSpace *)protectionSpace;
 - (NSURLCredential *)storedCredentialForProtectionSpace:(NSURLProtectionSpace *)protectionSpace withUser:(NSString *)user;
 
-// Directory
-- (XDirectory *)updateDirectoryDetails:(NSDictionary *)details;
-
 @end
 
 
@@ -65,6 +65,7 @@ static XService *sharedXService;
 @synthesize serverStatusDelegate;
 @synthesize validateCredential;
 @synthesize fetchingDefaultPaths;
+@synthesize defaultPathController;
 
 
 #pragma mark - Initialization
@@ -222,12 +223,13 @@ static XService *sharedXService;
 	if (![self activeServer])
 	{
 		// Save server info
-		[serverStatusDelegate validateServerStatusUpdate:@"Reticulating splines..."];
 		[self saveServerWithDetails:info];
 		
 		if (defaultPaths)
 		{
-			[self fetchDefaultPaths:defaultPaths];
+			//[self fetchDefaultPaths:defaultPaths];
+			defaultPathController = [[XDefaultPathController alloc] init];
+			[defaultPathController fetchDefaultPaths:defaultPaths withDelegate:serverStatusDelegate];
 		}
 	}
 	else
@@ -239,11 +241,6 @@ static XService *sharedXService;
 - (BOOL)isServerVersionCompatible:(NSString *)version
 {
 	return ([version isEqualToString:[XService appVersion]]);
-	/*if ([version isEqualToString:[XService appVersion]])
-	 return YES;
-	 
-	 else
-	 return NO;*/
 }
 
 - (void)saveServerWithDetails:(NSDictionary *)details

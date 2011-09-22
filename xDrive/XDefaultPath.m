@@ -3,7 +3,7 @@
 //  xDrive
 //
 //  Created by Chris Gibbs on 7/25/11.
-//  Copyright (c) 2011 __MyCompanyName__. All rights reserved.
+//  Copyright (c) 2011 Abilene Christian University. All rights reserved.
 //
 
 #import "XDefaultPath.h"
@@ -12,8 +12,10 @@
 
 
 @implementation XDefaultPath
+
 @dynamic name;
 @dynamic path;
+@dynamic icon;
 @dynamic server;
 @dynamic directory;
 

@@ -46,6 +46,7 @@
 		C3742951142B91400043A9C8 /* magnify.png in Resources */ = {isa = PBXBuildFile; fileRef = C374294D142B91400043A9C8 /* magnify.png */; };
 		C378433713BE36BB00F1793A /* XService.m in Sources */ = {isa = PBXBuildFile; fileRef = C378433613BE36BB00F1793A /* XService.m */; };
 		C378433913BE45B800F1793A /* CoreData.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C378433813BE45B800F1793A /* CoreData.framework */; };
+		C3B63B81142B94C100152C8A /* XDefaultPathController.m in Sources */ = {isa = PBXBuildFile; fileRef = C3B63B80142B94C100152C8A /* XDefaultPathController.m */; };
 		C3C9A9C213D9D61B003B5E91 /* AudioToolbox.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C3C9A9C113D9D61B003B5E91 /* AudioToolbox.framework */; };
 		C3C9A9C513D9D62F003B5E91 /* QuartzCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C3C9A9C413D9D62F003B5E91 /* QuartzCore.framework */; };
 		C3CF9CE813D9D54D003F21D1 /* ATMHud.m in Sources */ = {isa = PBXBuildFile; fileRef = C3CF9CDC13D9D54D003F21D1 /* ATMHud.m */; };
@@ -137,6 +138,8 @@
 		C378433513BE36BB00F1793A /* XService.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = XService.h; sourceTree = "<group>"; };
 		C378433613BE36BB00F1793A /* XService.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = XService.m; sourceTree = "<group>"; };
 		C378433813BE45B800F1793A /* CoreData.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreData.framework; path = System/Library/Frameworks/CoreData.framework; sourceTree = SDKROOT; };
+		C3B63B7F142B94C100152C8A /* XDefaultPathController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = XDefaultPathController.h; sourceTree = "<group>"; };
+		C3B63B80142B94C100152C8A /* XDefaultPathController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = XDefaultPathController.m; sourceTree = "<group>"; };
 		C3C9A9C113D9D61B003B5E91 /* AudioToolbox.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AudioToolbox.framework; path = System/Library/Frameworks/AudioToolbox.framework; sourceTree = SDKROOT; };
 		C3C9A9C413D9D62F003B5E91 /* QuartzCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = QuartzCore.framework; path = System/Library/Frameworks/QuartzCore.framework; sourceTree = SDKROOT; };
 		C3CF9CDB13D9D54D003F21D1 /* ATMHud.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ATMHud.h; sourceTree = "<group>"; };
@@ -285,6 +288,8 @@
 				C3D9E88713C34D2B007D1A7C /* XServiceLocal.m */,
 				C3D9E88213C34D1A007D1A7C /* XServiceRemote.h */,
 				C3D9E88313C34D1A007D1A7C /* XServiceRemote.m */,
+				C3B63B7F142B94C100152C8A /* XDefaultPathController.h */,
+				C3B63B80142B94C100152C8A /* XDefaultPathController.m */,
 			);
 			name = Model;
 			sourceTree = "<group>";
@@ -528,6 +533,7 @@
 				C3E6E0C113DE06E100EA014B /* xDrive.xcdatamodeld in Sources */,
 				A9C34FCC1426668400E3BC3C /* OpenFileViewController.m in Sources */,
 				A9AFCE2514284E0E00E76E1A /* SettingsViewController.m in Sources */,
+				C3B63B81142B94C100152C8A /* XDefaultPathController.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
