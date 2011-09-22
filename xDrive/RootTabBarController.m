@@ -10,6 +10,7 @@
 #import "DirectoryNavigationController.h"
 #import "XService.h"
 #import "XDefaultPath.h"
+#import "XDriveConfig.h"
 
 
 @interface RootTabBarController()
@@ -47,9 +48,10 @@
 	UIStoryboard *storyboard = [UIStoryboard storyboardWithName:storyboardName bundle:nil];
 	
 	// Create nav controller for each default path
-	for (XDefaultPath *defaultPath in [[XService sharedXService] activeServer].defaultPaths) {
-		
+	for (XDefaultPath *defaultPath in [[XService sharedXService] activeServer].defaultPaths)
+	{
 		DirectoryNavigationController *navController = [storyboard instantiateViewControllerWithIdentifier:@"directoryNav"];
+		navController.tabBarItem.image = [UIImage imageWithContentsOfFile:defaultPath.icon];
 		[navController setRootPath:defaultPath.path];
 		[navController setTitle:defaultPath.name];
 		[viewControllers addObject:navController];
@@ -57,6 +59,7 @@
 	
 	// Root browser
 	DirectoryNavigationController *rootBrowser = [storyboard instantiateViewControllerWithIdentifier:@"directoryNav"];
+	rootBrowser.tabBarItem.image = [UIImage imageNamed:@"eye.png"];
 	[rootBrowser setRootPath:@"/"];
 	[viewControllers addObject:rootBrowser];
 	

@@ -23,7 +23,7 @@
 @property (nonatomic, assign) int activeFetchCount;
 	// Counter that gets decremented when fetches return
 
-@property (nonatomic, assign) NSMutableDictionary *iconToPathMap;
+@property (nonatomic, strong) NSMutableDictionary *iconToPathMap;
 	// Map of icon file names and the paths they go to
 
 - (void)receiveDefaultPathDetails:(NSDictionary *)details;
@@ -56,6 +56,7 @@
 {
 	pathDetails = defaultPaths;
 	serverStatusDelegate = delegate;
+	iconToPathMap = [[NSMutableDictionary alloc] init];
 	[serverStatusDelegate validateServerStatusUpdate:@"Downloading defaults..."];
 	
 	// Fire off directory request for root path
@@ -103,6 +104,9 @@
 	// Create directory
 	XDirectory *directory = [[XService sharedXService] updateDirectoryDetails:details];
 	
+	if ([directory.path isEqualToString:@"/"])
+		return;
+	
 	// Associate directory with default path
 	XDefaultPath *defaultPath = [self defaultPathWithPath:directory.path];
 	defaultPath.directory = directory;
@@ -142,7 +146,8 @@
 - (XDefaultPath *)defaultPathWithPath:(NSString *)path
 {
 	XDefaultPath *defaultPath = nil;
-	for (XDefaultPath *dPath in [[XService sharedXService] activeServer].defaultPaths)
+	NSSet *defaultPaths = [[XService sharedXService] activeServer].defaultPaths;
+	for (XDefaultPath *dPath in defaultPaths)
 	{
 		if ([dPath.path isEqualToString:path])
 		{
