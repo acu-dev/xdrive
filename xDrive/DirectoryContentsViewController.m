@@ -42,7 +42,7 @@
 	managedObjectContext = [[XService sharedXService] localService].managedObjectContext;
 	
 	if (!directory.name || [directory.name isEqualToString:@""] || [directory.name isEqualToString:@"/"])
-		self.title = @"Browser";
+		self.title = @"Browse";
 	else
 		self.title = directory.name;
 }
