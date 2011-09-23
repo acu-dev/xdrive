@@ -278,15 +278,6 @@
 			path = images;
 			sourceTree = "<group>";
 		};
-		C351747013C393690078E361 /* Account */ = {
-			isa = PBXGroup;
-			children = (
-				C351746C13C390B30078E361 /* AccountViewController.h */,
-				C351746D13C390B30078E361 /* AccountViewController.m */,
-			);
-			name = Account;
-			sourceTree = "<group>";
-		};
 		C354ABD51419327A00E88410 /* Products */ = {
 			isa = PBXGroup;
 			children = (
@@ -317,6 +308,8 @@
 			children = (
 				C3AAF63B142CED6C002BC5C8 /* SettingsViewController.h */,
 				C3AAF63C142CED6C002BC5C8 /* SettingsViewController.m */,
+				C351746C13C390B30078E361 /* AccountViewController.h */,
+				C351746D13C390B30078E361 /* AccountViewController.m */,
 			);
 			name = Settings;
 			sourceTree = "<group>";
@@ -417,7 +410,6 @@
 				C3AAF63F142CFC88002BC5C8 /* Recent */,
 				A978436813C6847300120A94 /* Directory Contents */,
 				A9C34FC9142665CA00E3BC3C /* File Info */,
-				C351747013C393690078E361 /* Account */,
 				C378433A13BE475200F1793A /* Model */,
 				C3FC6C5E13BCB90B009FBAA3 /* Supporting Files */,
 			);

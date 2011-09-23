@@ -16,6 +16,8 @@
 @property (nonatomic, strong) ATMHud *hud;
 	// Heads up display for account validation messages
 
+@property (nonatomic, strong) UITextField *serverURLField, *usernameField, *passwordField;
+
 - (void)validateAccount;
 	// Kicks off a connection to the server with the given info
 
@@ -39,9 +41,8 @@
 @synthesize hud;
 
 // Public ivars
+@synthesize saveButton;
 @synthesize serverURLField, usernameField, passwordField;
-@synthesize signInLabel;
-@synthesize signInCell;
 
 
 
@@ -81,8 +82,6 @@
 	self.serverURLField = nil;
 	self.usernameField = nil;
 	self.passwordField = nil;
-	self.signInLabel = nil;
-	self.signInCell = nil;
 }
 
 - (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation
@@ -156,14 +155,14 @@
 
 - (void)enableSignIn
 {
-	signInLabel.textColor = [UIColor blackColor];
-	signInCell.selectionStyle = UITableViewCellSelectionStyleBlue;
+	//signInLabel.textColor = [UIColor blackColor];
+	//signInCell.selectionStyle = UITableViewCellSelectionStyleBlue;
 }
 
 - (void)disableSignIn
 {
-	signInLabel.textColor = [UIColor grayColor];
-	signInCell.selectionStyle = UITableViewCellSelectionStyleNone;
+	//signInLabel.textColor = [UIColor grayColor];
+	//signInCell.selectionStyle = UITableViewCellSelectionStyleNone;
 }
 
 

@@ -13,11 +13,11 @@
 
 @interface AccountViewController : UITableViewController <UITextFieldDelegate>
 
-@property (nonatomic, strong) IBOutlet UITextField *serverURLField, *usernameField, *passwordField;
-@property (nonatomic, strong) IBOutlet UILabel *signInLabel;
-@property (nonatomic, strong) IBOutlet UITableViewCell *signInCell;
+@property (nonatomic, strong) IBOutlet UIBarButtonItem *saveButton;
 
 - (IBAction)textFieldValueChanged:(id)sender;
 	// Checks if the form is now valid/invalid and enables/disables the sign in
+
+- (IBAction)save:(id)sender;
 
 @end
