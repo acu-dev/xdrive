@@ -2,14 +2,13 @@
 //  SettingsViewController.h
 //  xDrive
 //
-//  Created by Chris Gibbs on 9/19/11.
+//  Created by Chris Gibbs on 9/23/11.
 //  Copyright (c) 2011 Abilene Christian University. All rights reserved.
 //
 
-#import <UIKit/UIKit.h>
+@interface SettingsViewController : UITableViewController
 
-@interface SettingsViewController : UIViewController
+@property (nonatomic, strong) IBOutlet UILabel *accountLabel, *storageMaxLabel, *storageUsageLabel, *versionLabel;
 
-- (IBAction)reset:(id)sender;
 
 @end

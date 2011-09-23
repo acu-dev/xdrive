@@ -13,6 +13,7 @@
 #import "XDriveConfig.h"
 
 
+
 @interface RootTabBarController()
 - (void)initTabItems;
 @end
@@ -62,6 +63,16 @@
 	rootBrowser.tabBarItem.image = [UIImage imageNamed:@"eye.png"];
 	[rootBrowser setRootPath:@"/"];
 	[viewControllers addObject:rootBrowser];
+	
+	// Settings
+	UINavigationController *settingsNavController = [storyboard instantiateViewControllerWithIdentifier:@"settingsNav"];
+	settingsNavController.tabBarItem.image = [UIImage imageNamed:@"gear.png"];
+	[viewControllers addObject:settingsNavController];
+	
+	// Recent
+	UINavigationController *recentNavController = [storyboard instantiateViewControllerWithIdentifier:@"recentNav"];
+	recentNavController.tabBarItem.image = [UIImage imageNamed:@"clock.png"];
+	[viewControllers addObject:recentNavController];
 	
 	// Init tab items
 	self.viewControllers = viewControllers;

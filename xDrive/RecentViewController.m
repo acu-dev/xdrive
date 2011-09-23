@@ -1,25 +1,15 @@
 //
-//  SettingsViewController.m
+//  RecentViewController.m
 //  xDrive
 //
 //  Created by Chris Gibbs on 9/23/11.
 //  Copyright (c) 2011 Abilene Christian University. All rights reserved.
 //
 
-#import "SettingsViewController.h"
-#import "XDriveConfig.h"
-#import "XService.h"
+#import "RecentViewController.h"
 
 
-
-@implementation SettingsViewController
-
-
-@synthesize accountLabel, storageMaxLabel, storageUsageLabel, versionLabel;
-
-
-
-#pragma mark - Initialization
+@implementation RecentViewController
 
 - (id)initWithStyle:(UITableViewStyle)style
 {
@@ -61,8 +51,6 @@
 - (void)viewWillAppear:(BOOL)animated
 {
     [super viewWillAppear:animated];
-	
-	versionLabel.text = [XService appVersion];
 }
 
 - (void)viewDidAppear:(BOOL)animated

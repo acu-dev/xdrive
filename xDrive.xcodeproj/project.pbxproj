@@ -9,7 +9,6 @@
 /* Begin PBXBuildFile section */
 		A93E36AA13C5630600DE693D /* DirectoryContentsViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = A93E36A913C5630600DE693D /* DirectoryContentsViewController.m */; };
 		A978436C13C6876700120A94 /* DirectoryNavigationController.m in Sources */ = {isa = PBXBuildFile; fileRef = A978436B13C6876700120A94 /* DirectoryNavigationController.m */; };
-		A9AFCE2514284E0E00E76E1A /* SettingsViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = A9AFCE2414284E0D00E76E1A /* SettingsViewController.m */; };
 		A9C34FCC1426668400E3BC3C /* OpenFileViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = A9C34FCB1426668400E3BC3C /* OpenFileViewController.m */; };
 		C30580341418207400E49727 /* README.md in Resources */ = {isa = PBXBuildFile; fileRef = C30580331418207400E49727 /* README.md */; };
 		C3224753142A339C005F7C48 /* file.application@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = C3224748142A339C005F7C48 /* file.application@2x.png */; };
@@ -48,6 +47,8 @@
 		C3742951142B91400043A9C8 /* magnify.png in Resources */ = {isa = PBXBuildFile; fileRef = C374294D142B91400043A9C8 /* magnify.png */; };
 		C378433713BE36BB00F1793A /* XService.m in Sources */ = {isa = PBXBuildFile; fileRef = C378433613BE36BB00F1793A /* XService.m */; };
 		C378433913BE45B800F1793A /* CoreData.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C378433813BE45B800F1793A /* CoreData.framework */; };
+		C3AAF63D142CED6C002BC5C8 /* SettingsViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = C3AAF63C142CED6C002BC5C8 /* SettingsViewController.m */; };
+		C3AAF642142CFCC1002BC5C8 /* RecentViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = C3AAF641142CFCC1002BC5C8 /* RecentViewController.m */; };
 		C3B63B81142B94C100152C8A /* XDefaultPathController.m in Sources */ = {isa = PBXBuildFile; fileRef = C3B63B80142B94C100152C8A /* XDefaultPathController.m */; };
 		C3C9A9C213D9D61B003B5E91 /* AudioToolbox.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C3C9A9C113D9D61B003B5E91 /* AudioToolbox.framework */; };
 		C3C9A9C513D9D62F003B5E91 /* QuartzCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C3C9A9C413D9D62F003B5E91 /* QuartzCore.framework */; };
@@ -98,8 +99,6 @@
 		A93E36A913C5630600DE693D /* DirectoryContentsViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DirectoryContentsViewController.m; sourceTree = "<group>"; };
 		A978436A13C6876700120A94 /* DirectoryNavigationController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DirectoryNavigationController.h; sourceTree = "<group>"; };
 		A978436B13C6876700120A94 /* DirectoryNavigationController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DirectoryNavigationController.m; sourceTree = "<group>"; };
-		A9AFCE2314284E0D00E76E1A /* SettingsViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SettingsViewController.h; sourceTree = "<group>"; };
-		A9AFCE2414284E0D00E76E1A /* SettingsViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SettingsViewController.m; sourceTree = "<group>"; };
 		A9C34FCA1426668400E3BC3C /* OpenFileViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OpenFileViewController.h; sourceTree = "<group>"; };
 		A9C34FCB1426668400E3BC3C /* OpenFileViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OpenFileViewController.m; sourceTree = "<group>"; };
 		C30580331418207400E49727 /* README.md */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = README.md; sourceTree = "<group>"; };
@@ -142,6 +141,10 @@
 		C378433513BE36BB00F1793A /* XService.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = XService.h; sourceTree = "<group>"; };
 		C378433613BE36BB00F1793A /* XService.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = XService.m; sourceTree = "<group>"; };
 		C378433813BE45B800F1793A /* CoreData.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreData.framework; path = System/Library/Frameworks/CoreData.framework; sourceTree = SDKROOT; };
+		C3AAF63B142CED6C002BC5C8 /* SettingsViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SettingsViewController.h; sourceTree = "<group>"; };
+		C3AAF63C142CED6C002BC5C8 /* SettingsViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SettingsViewController.m; sourceTree = "<group>"; };
+		C3AAF640142CFCC1002BC5C8 /* RecentViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RecentViewController.h; sourceTree = "<group>"; };
+		C3AAF641142CFCC1002BC5C8 /* RecentViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RecentViewController.m; sourceTree = "<group>"; };
 		C3B63B7F142B94C100152C8A /* XDefaultPathController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = XDefaultPathController.h; sourceTree = "<group>"; };
 		C3B63B80142B94C100152C8A /* XDefaultPathController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = XDefaultPathController.m; sourceTree = "<group>"; };
 		C3C9A9C113D9D61B003B5E91 /* AudioToolbox.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AudioToolbox.framework; path = System/Library/Frameworks/AudioToolbox.framework; sourceTree = SDKROOT; };
@@ -300,6 +303,24 @@
 			name = Model;
 			sourceTree = "<group>";
 		};
+		C3AAF63E142CF948002BC5C8 /* Settings */ = {
+			isa = PBXGroup;
+			children = (
+				C3AAF63B142CED6C002BC5C8 /* SettingsViewController.h */,
+				C3AAF63C142CED6C002BC5C8 /* SettingsViewController.m */,
+			);
+			name = Settings;
+			sourceTree = "<group>";
+		};
+		C3AAF63F142CFC88002BC5C8 /* Recent */ = {
+			isa = PBXGroup;
+			children = (
+				C3AAF640142CFCC1002BC5C8 /* RecentViewController.h */,
+				C3AAF641142CFCC1002BC5C8 /* RecentViewController.m */,
+			);
+			name = Recent;
+			sourceTree = "<group>";
+		};
 		C3CF9CDA13D9D54D003F21D1 /* ATMHud */ = {
 			isa = PBXGroup;
 			children = (
@@ -383,8 +404,8 @@
 				C3FC6C6C13BCB90B009FBAA3 /* MainStoryboard_iPad.storyboard */,
 				C3ECE29713C3BF2D004FF63F /* RootTabBarController.h */,
 				C3ECE29813C3BF2D004FF63F /* RootTabBarController.m */,
-				A9AFCE2314284E0D00E76E1A /* SettingsViewController.h */,
-				A9AFCE2414284E0D00E76E1A /* SettingsViewController.m */,
+				C3AAF63E142CF948002BC5C8 /* Settings */,
+				C3AAF63F142CFC88002BC5C8 /* Recent */,
 				A978436813C6847300120A94 /* Directory Contents */,
 				A9C34FC9142665CA00E3BC3C /* File Info */,
 				C351747013C393690078E361 /* Account */,
@@ -540,8 +561,9 @@
 				C3E6E0BE13DE010A00EA014B /* XDefaultPath.m in Sources */,
 				C3E6E0C113DE06E100EA014B /* xDrive.xcdatamodeld in Sources */,
 				A9C34FCC1426668400E3BC3C /* OpenFileViewController.m in Sources */,
-				A9AFCE2514284E0E00E76E1A /* SettingsViewController.m in Sources */,
 				C3B63B81142B94C100152C8A /* XDefaultPathController.m in Sources */,
+				C3AAF63D142CED6C002BC5C8 /* SettingsViewController.m in Sources */,
+				C3AAF642142CFCC1002BC5C8 /* RecentViewController.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
