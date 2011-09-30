@@ -19,7 +19,7 @@
                     </tabBar>
                 </tabBarController>
             </objects>
-            <point key="canvasLocation" x="160" y="-281"/>
+            <point key="canvasLocation" x="-16" y="-923"/>
         </scene>
         <scene sceneID="XcR-h2-3yI">
             <objects>
@@ -44,7 +44,7 @@
                     <navigationItem key="navigationItem" id="lsv-hG-lqs"/>
                 </viewController>
             </objects>
-            <point key="canvasLocation" x="1096" y="652"/>
+            <point key="canvasLocation" x="937" y="664"/>
         </scene>
         <scene sceneID="VO8-I8-BDk">
             <objects>
@@ -58,7 +58,7 @@
                     </connections>
                 </navigationController>
             </objects>
-            <point key="canvasLocation" x="1096" y="1278"/>
+            <point key="canvasLocation" x="1360" y="-268"/>
         </scene>
         <scene sceneID="PJI-bt-McC">
             <objects>
@@ -110,7 +110,7 @@
                     </connections>
                 </viewController>
             </objects>
-            <point key="canvasLocation" x="1569" y="1278"/>
+            <point key="canvasLocation" x="1833" y="-268"/>
         </scene>
         <scene sceneID="kkQ-al-qFB">
             <objects>
@@ -125,7 +125,7 @@
                     </connections>
                 </navigationController>
             </objects>
-            <point key="canvasLocation" x="150" y="368"/>
+            <point key="canvasLocation" x="-9" y="380"/>
         </scene>
         <scene sceneID="XDG-37-qIn">
             <objects>
@@ -303,7 +303,7 @@
                     </connections>
                 </tableViewController>
             </objects>
-            <point key="canvasLocation" x="617" y="368"/>
+            <point key="canvasLocation" x="458" y="380"/>
         </scene>
         <scene sceneID="7vu-FT-Bpf">
             <objects>
@@ -422,7 +422,7 @@
                     <navigationItem key="navigationItem" title="Local Storage" id="A20-NO-I7e"/>
                 </tableViewController>
             </objects>
-            <point key="canvasLocation" x="1487" y="368"/>
+            <point key="canvasLocation" x="1328" y="380"/>
         </scene>
         <scene sceneID="J1T-Yk-Soj">
             <objects>
@@ -436,7 +436,7 @@
                     </connections>
                 </navigationController>
             </objects>
-            <point key="canvasLocation" x="38" y="1078"/>
+            <point key="canvasLocation" x="-16" y="-268"/>
         </scene>
         <scene sceneID="6RX-sY-Z4q">
             <objects>
@@ -536,7 +536,77 @@
                     <navigationItem key="navigationItem" title="Directory" id="VMY-8W-Zef"/>
                 </tableViewController>
             </objects>
-            <point key="canvasLocation" x="458" y="1078"/>
+            <point key="canvasLocation" x="458" y="-268"/>
+        </scene>
+        <scene sceneID="FmR-YP-TOR">
+            <objects>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="2ej-2X-8x1" userLabel="First Responder" sceneMemberID="firstResponder"/>
+                <navigationController definesPresentationContext="YES" id="xDc-aw-Pwi" sceneMemberID="viewController">
+                    <navigationBar key="navigationBar" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" id="Q67-w9-auc">
+                        <autoresizingMask key="autoresizingMask"/>
+                    </navigationBar>
+                    <connections>
+                        <segue destination="iMk-ai-oj1" kind="relationship" relationship="rootViewController" id="1kz-NJ-kWc"/>
+                    </connections>
+                </navigationController>
+            </objects>
+            <point key="canvasLocation" x="415" y="-923"/>
+        </scene>
+        <scene sceneID="Y30-99-QBO">
+            <objects>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="86m-3P-yEN" userLabel="First Responder" sceneMemberID="firstResponder"/>
+                <viewController id="iMk-ai-oj1" sceneMemberID="viewController">
+                    <view key="view" contentMode="scaleToFill" id="yXf-ag-txk">
+                        <rect key="frame" x="0.0" y="64" width="320" height="416"/>
+                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                        <subviews>
+                            <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" placeholder="files.example.com" minimumFontSize="17" id="LRq-h4-2Y5">
+                                <rect key="frame" x="75" y="107" width="225" height="31"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                                <textInputTraits key="textInputTraits"/>
+                            </textField>
+                            <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" text="Enter the URL of a Xythos WFS system you wish to connect to." textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="0" minimumFontSize="10" id="eor-HX-B2M">
+                                <rect key="frame" x="20" y="46" width="280" height="39"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="15"/>
+                                <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
+                                <nil key="highlightedColor"/>
+                            </label>
+                            <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" text="https://" lineBreakMode="tailTruncation" minimumFontSize="10" id="tzo-Ul-hxs">
+                                <rect key="frame" x="20" y="112" width="55" height="21"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
+                                <nil key="highlightedColor"/>
+                            </label>
+                        </subviews>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                    </view>
+                    <navigationItem key="navigationItem" title="Setup (1 of 3)" id="d4c-JI-2pc">
+                        <barButtonItem key="rightBarButtonItem" title="Next" style="done" id="aBf-1Q-Ga8">
+                            <connections>
+                                <segue destination="I8e-0b-Wne" kind="push" id="avV-0X-Omh"/>
+                            </connections>
+                        </barButtonItem>
+                    </navigationItem>
+                </viewController>
+            </objects>
+            <point key="canvasLocation" x="869" y="-923"/>
+        </scene>
+        <scene sceneID="nlU-Ng-xcj">
+            <objects>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="nns-m9-nVG" userLabel="First Responder" sceneMemberID="firstResponder"/>
+                <viewController id="I8e-0b-Wne" sceneMemberID="viewController">
+                    <view key="view" contentMode="scaleToFill" id="OQh-WD-GI2">
+                        <rect key="frame" x="0.0" y="64" width="320" height="416"/>
+                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
+                    </view>
+                    <navigationItem key="navigationItem" title="Setup (2 of 3)" id="L5U-ov-wuW"/>
+                </viewController>
+            </objects>
+            <point key="canvasLocation" x="1314" y="-923"/>
         </scene>
         <scene sceneID="K6V-Pt-acq">
             <objects>
@@ -551,7 +621,7 @@
                     </connections>
                 </navigationController>
             </objects>
-            <point key="canvasLocation" x="160" y="-938"/>
+            <point key="canvasLocation" x="-9" y="1046"/>
         </scene>
         <scene sceneID="2Gs-tF-DK0">
             <objects>
@@ -651,7 +721,7 @@
                     <navigationItem key="navigationItem" title="Recently Viewed" id="b6C-mu-wmf"/>
                 </tableViewController>
             </objects>
-            <point key="canvasLocation" x="627" y="-938"/>
+            <point key="canvasLocation" x="458" y="1046"/>
         </scene>
         <scene sceneID="88">
             <objects>
@@ -706,7 +776,7 @@
                     </connections>
                 </tableViewController>
             </objects>
-            <point key="canvasLocation" x="1096" y="9"/>
+            <point key="canvasLocation" x="937" y="21"/>
         </scene>
     </scenes>
     <resources>
@@ -761,6 +831,6 @@
         <simulatedScreenMetrics key="destination"/>
     </simulatedMetricsContainer>
     <inferredMetricsTieBreakers>
-        <segue reference="myG-9S-VIy"/>
+        <segue reference="9jn-tu-KBl"/>
     </inferredMetricsTieBreakers>
 </document>
