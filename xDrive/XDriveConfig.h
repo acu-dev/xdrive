@@ -24,6 +24,26 @@ static NSString *defaultServiceBasepath = @"/xservice";
 	// If defined, will log INFO & DEBUG type messages to the console.
 	// Useful in examining data as it moves around.
 
+
+
+
+
+@interface XDriveConfig : NSObject
+
++ (BOOL)shouldResetApp;
++ (void)setAccountUsername:(NSString *)username;
++ (void)setAccountServer:(NSString *)server;
+
+@end
+
+
+
+
+
+
+
+
+
 //
 // Log Macro
 //

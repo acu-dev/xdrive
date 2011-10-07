@@ -51,6 +51,8 @@
 		C3848B71142D0EDA009F55FC /* clock@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = C3848B6E142D0EDA009F55FC /* clock@2x.png */; };
 		C3848B72142D0EDA009F55FC /* gear@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = C3848B6F142D0EDA009F55FC /* gear@2x.png */; };
 		C3848B73142D0EDA009F55FC /* magnify@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = C3848B70142D0EDA009F55FC /* magnify@2x.png */; };
+		C3877011143F790B00E3CE8E /* Settings.bundle in Resources */ = {isa = PBXBuildFile; fileRef = C3877010143F790B00E3CE8E /* Settings.bundle */; };
+		C3877013143F850F00E3CE8E /* XDriveConfig.m in Sources */ = {isa = PBXBuildFile; fileRef = C3877012143F850F00E3CE8E /* XDriveConfig.m */; };
 		C3AAF63D142CED6C002BC5C8 /* SettingsViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = C3AAF63C142CED6C002BC5C8 /* SettingsViewController.m */; };
 		C3AAF642142CFCC1002BC5C8 /* RecentViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = C3AAF641142CFCC1002BC5C8 /* RecentViewController.m */; };
 		C3B63B81142B94C100152C8A /* XDefaultPathController.m in Sources */ = {isa = PBXBuildFile; fileRef = C3B63B80142B94C100152C8A /* XDefaultPathController.m */; };
@@ -150,6 +152,8 @@
 		C3848B6E142D0EDA009F55FC /* clock@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "clock@2x.png"; sourceTree = "<group>"; };
 		C3848B6F142D0EDA009F55FC /* gear@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "gear@2x.png"; sourceTree = "<group>"; };
 		C3848B70142D0EDA009F55FC /* magnify@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "magnify@2x.png"; sourceTree = "<group>"; };
+		C3877010143F790B00E3CE8E /* Settings.bundle */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.plug-in"; path = Settings.bundle; sourceTree = "<group>"; };
+		C3877012143F850F00E3CE8E /* XDriveConfig.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = XDriveConfig.m; sourceTree = "<group>"; };
 		C3AAF63B142CED6C002BC5C8 /* SettingsViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SettingsViewController.h; sourceTree = "<group>"; };
 		C3AAF63C142CED6C002BC5C8 /* SettingsViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SettingsViewController.m; sourceTree = "<group>"; };
 		C3AAF640142CFCC1002BC5C8 /* RecentViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RecentViewController.h; sourceTree = "<group>"; };
@@ -403,8 +407,9 @@
 		C3FC6C5D13BCB90B009FBAA3 /* xDrive */ = {
 			isa = PBXGroup;
 			children = (
-				C328C428141A89C900D578ED /* images */,
+				C3877010143F790B00E3CE8E /* Settings.bundle */,
 				C3527A371423CBFB00B830DF /* XDriveConfig.h */,
+				C3877012143F850F00E3CE8E /* XDriveConfig.m */,
 				C3FC6C6613BCB90B009FBAA3 /* AppDelegate.h */,
 				C3FC6C6713BCB90B009FBAA3 /* AppDelegate.m */,
 				C3FC6C6913BCB90B009FBAA3 /* MainStoryboard_iPhone.storyboard */,
@@ -416,6 +421,7 @@
 				A978436813C6847300120A94 /* Directory Contents */,
 				A9C34FC9142665CA00E3BC3C /* File Info */,
 				C378433A13BE475200F1793A /* Model */,
+				C328C428141A89C900D578ED /* images */,
 				C3FC6C5E13BCB90B009FBAA3 /* Supporting Files */,
 			);
 			path = xDrive;
@@ -538,6 +544,7 @@
 				C3848B71142D0EDA009F55FC /* clock@2x.png in Resources */,
 				C3848B72142D0EDA009F55FC /* gear@2x.png in Resources */,
 				C3848B73142D0EDA009F55FC /* magnify@2x.png in Resources */,
+				C3877011143F790B00E3CE8E /* Settings.bundle in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -574,6 +581,7 @@
 				C3AAF63D142CED6C002BC5C8 /* SettingsViewController.m in Sources */,
 				C3AAF642142CFCC1002BC5C8 /* RecentViewController.m in Sources */,
 				C33F001B1436526900B236B5 /* LocalStorageViewController.m in Sources */,
+				C3877013143F850F00E3CE8E /* XDriveConfig.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
