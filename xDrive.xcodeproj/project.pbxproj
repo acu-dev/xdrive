@@ -53,6 +53,11 @@
 		C3848B73142D0EDA009F55FC /* magnify@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = C3848B70142D0EDA009F55FC /* magnify@2x.png */; };
 		C3877011143F790B00E3CE8E /* Settings.bundle in Resources */ = {isa = PBXBuildFile; fileRef = C3877010143F790B00E3CE8E /* Settings.bundle */; };
 		C3877013143F850F00E3CE8E /* XDriveConfig.m in Sources */ = {isa = PBXBuildFile; fileRef = C3877012143F850F00E3CE8E /* XDriveConfig.m */; };
+		C3877016143F8E3F00E3CE8E /* setup-bg.png in Resources */ = {isa = PBXBuildFile; fileRef = C3877014143F8E3F00E3CE8E /* setup-bg.png */; };
+		C3877017143F8E3F00E3CE8E /* setup-bg@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = C3877015143F8E3F00E3CE8E /* setup-bg@2x.png */; };
+		C387701B143F99BF00E3CE8E /* SetupController.m in Sources */ = {isa = PBXBuildFile; fileRef = C387701A143F99BF00E3CE8E /* SetupController.m */; };
+		C3877021143F9A1F00E3CE8E /* SetupFormViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = C3877020143F9A1F00E3CE8E /* SetupFormViewController.m */; };
+		C387702A143F9E5A00E3CE8E /* SetupInitViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = C3877029143F9E5A00E3CE8E /* SetupInitViewController.m */; };
 		C3AAF63D142CED6C002BC5C8 /* SettingsViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = C3AAF63C142CED6C002BC5C8 /* SettingsViewController.m */; };
 		C3AAF642142CFCC1002BC5C8 /* RecentViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = C3AAF641142CFCC1002BC5C8 /* RecentViewController.m */; };
 		C3B63B81142B94C100152C8A /* XDefaultPathController.m in Sources */ = {isa = PBXBuildFile; fileRef = C3B63B80142B94C100152C8A /* XDefaultPathController.m */; };
@@ -154,6 +159,14 @@
 		C3848B70142D0EDA009F55FC /* magnify@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "magnify@2x.png"; sourceTree = "<group>"; };
 		C3877010143F790B00E3CE8E /* Settings.bundle */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.plug-in"; path = Settings.bundle; sourceTree = "<group>"; };
 		C3877012143F850F00E3CE8E /* XDriveConfig.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = XDriveConfig.m; sourceTree = "<group>"; };
+		C3877014143F8E3F00E3CE8E /* setup-bg.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "setup-bg.png"; sourceTree = "<group>"; };
+		C3877015143F8E3F00E3CE8E /* setup-bg@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "setup-bg@2x.png"; sourceTree = "<group>"; };
+		C3877019143F99BF00E3CE8E /* SetupController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SetupController.h; sourceTree = "<group>"; };
+		C387701A143F99BF00E3CE8E /* SetupController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SetupController.m; sourceTree = "<group>"; };
+		C387701F143F9A1F00E3CE8E /* SetupFormViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SetupFormViewController.h; sourceTree = "<group>"; };
+		C3877020143F9A1F00E3CE8E /* SetupFormViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SetupFormViewController.m; sourceTree = "<group>"; };
+		C3877028143F9E5A00E3CE8E /* SetupInitViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SetupInitViewController.h; sourceTree = "<group>"; };
+		C3877029143F9E5A00E3CE8E /* SetupInitViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SetupInitViewController.m; sourceTree = "<group>"; };
 		C3AAF63B142CED6C002BC5C8 /* SettingsViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SettingsViewController.h; sourceTree = "<group>"; };
 		C3AAF63C142CED6C002BC5C8 /* SettingsViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SettingsViewController.m; sourceTree = "<group>"; };
 		C3AAF640142CFCC1002BC5C8 /* RecentViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RecentViewController.h; sourceTree = "<group>"; };
@@ -248,6 +261,8 @@
 		C328C428141A89C900D578ED /* images */ = {
 			isa = PBXGroup;
 			children = (
+				C3877014143F8E3F00E3CE8E /* setup-bg.png */,
+				C3877015143F8E3F00E3CE8E /* setup-bg@2x.png */,
 				C374294A142B91400043A9C8 /* clock.png */,
 				C3848B6E142D0EDA009F55FC /* clock@2x.png */,
 				C374294B142B91400043A9C8 /* eye.png */,
@@ -308,6 +323,19 @@
 				C3B63B80142B94C100152C8A /* XDefaultPathController.m */,
 			);
 			name = Model;
+			sourceTree = "<group>";
+		};
+		C3877018143F98EB00E3CE8E /* Setup */ = {
+			isa = PBXGroup;
+			children = (
+				C3877019143F99BF00E3CE8E /* SetupController.h */,
+				C387701A143F99BF00E3CE8E /* SetupController.m */,
+				C387701F143F9A1F00E3CE8E /* SetupFormViewController.h */,
+				C3877020143F9A1F00E3CE8E /* SetupFormViewController.m */,
+				C3877028143F9E5A00E3CE8E /* SetupInitViewController.h */,
+				C3877029143F9E5A00E3CE8E /* SetupInitViewController.m */,
+			);
+			name = Setup;
 			sourceTree = "<group>";
 		};
 		C3AAF63E142CF948002BC5C8 /* Settings */ = {
@@ -416,6 +444,7 @@
 				C3FC6C6C13BCB90B009FBAA3 /* MainStoryboard_iPad.storyboard */,
 				C3ECE29713C3BF2D004FF63F /* RootTabBarController.h */,
 				C3ECE29813C3BF2D004FF63F /* RootTabBarController.m */,
+				C3877018143F98EB00E3CE8E /* Setup */,
 				C3AAF63E142CF948002BC5C8 /* Settings */,
 				C3AAF63F142CFC88002BC5C8 /* Recent */,
 				A978436813C6847300120A94 /* Directory Contents */,
@@ -545,6 +574,8 @@
 				C3848B72142D0EDA009F55FC /* gear@2x.png in Resources */,
 				C3848B73142D0EDA009F55FC /* magnify@2x.png in Resources */,
 				C3877011143F790B00E3CE8E /* Settings.bundle in Resources */,
+				C3877016143F8E3F00E3CE8E /* setup-bg.png in Resources */,
+				C3877017143F8E3F00E3CE8E /* setup-bg@2x.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -582,6 +613,9 @@
 				C3AAF642142CFCC1002BC5C8 /* RecentViewController.m in Sources */,
 				C33F001B1436526900B236B5 /* LocalStorageViewController.m in Sources */,
 				C3877013143F850F00E3CE8E /* XDriveConfig.m in Sources */,
+				C387701B143F99BF00E3CE8E /* SetupController.m in Sources */,
+				C3877021143F9A1F00E3CE8E /* SetupFormViewController.m in Sources */,
+				C387702A143F9E5A00E3CE8E /* SetupInitViewController.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
