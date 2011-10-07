@@ -9,6 +9,11 @@
 #import "AccountViewController.h"
 #import "XDriveConfig.h"
 #import "XService.h"
+#import "ATMHud.h"
+
+//#import <CGNetUtils/CGNetUtils.h>
+
+
 
 
 @interface AccountViewController() <ServerStatusDelegate>
@@ -16,7 +21,7 @@
 @property (nonatomic, strong) ATMHud *hud;
 	// Heads up display for account validation messages
 
-@property (nonatomic, strong) UITextField *serverURLField, *usernameField, *passwordField;
+
 
 - (void)validateAccount;
 	// Kicks off a connection to the server with the given info
@@ -185,6 +190,49 @@
 	}
 	
 	return NO;
+}
+
+
+
+#pragma mark - Table view data source
+
+- (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView
+{
+    return 1;
+}
+
+- (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
+{
+    return 3;
+}
+
+- (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
+{
+    NSString *cellIdentifier = @"ServerCell";
+    if (indexPath.row == 1)
+		cellIdentifier = @"UserCell";
+	else if (indexPath.row == 2)
+		cellIdentifier = @"PassCell";
+	
+    UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:cellIdentifier];
+
+	UITextField *inputField = (UITextField *)[cell viewWithTag:2];
+	
+    switch (indexPath.row)
+	{
+		case 0:
+			inputField = serverURLField;
+			break;
+		case 1:
+			inputField = usernameField;
+			break;
+		case 2:
+		default:
+			inputField = passwordField;
+			break;
+	}
+    
+    return cell;
 }
 
 
