@@ -42,6 +42,8 @@
 		C351746E13C390B30078E361 /* AccountViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = C351746D13C390B30078E361 /* AccountViewController.m */; };
 		C354ABE0141932E600E88410 /* libCGNetUtils.a in Frameworks */ = {isa = PBXBuildFile; fileRef = C354ABDC1419327A00E88410 /* libCGNetUtils.a */; };
 		C354ABE2141932F000E88410 /* Security.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C354ABE1141932F000E88410 /* Security.framework */; };
+		C35B4C6E1444B27C007A61D3 /* button-bg.png in Resources */ = {isa = PBXBuildFile; fileRef = C35B4C6C1444B27C007A61D3 /* button-bg.png */; };
+		C35B4C6F1444B27C007A61D3 /* button-bg@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = C35B4C6D1444B27C007A61D3 /* button-bg@2x.png */; };
 		C374294E142B91400043A9C8 /* clock.png in Resources */ = {isa = PBXBuildFile; fileRef = C374294A142B91400043A9C8 /* clock.png */; };
 		C374294F142B91400043A9C8 /* eye.png in Resources */ = {isa = PBXBuildFile; fileRef = C374294B142B91400043A9C8 /* eye.png */; };
 		C3742950142B91400043A9C8 /* gear.png in Resources */ = {isa = PBXBuildFile; fileRef = C374294C142B91400043A9C8 /* gear.png */; };
@@ -55,9 +57,7 @@
 		C3877013143F850F00E3CE8E /* XDriveConfig.m in Sources */ = {isa = PBXBuildFile; fileRef = C3877012143F850F00E3CE8E /* XDriveConfig.m */; };
 		C3877016143F8E3F00E3CE8E /* setup-bg.png in Resources */ = {isa = PBXBuildFile; fileRef = C3877014143F8E3F00E3CE8E /* setup-bg.png */; };
 		C3877017143F8E3F00E3CE8E /* setup-bg@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = C3877015143F8E3F00E3CE8E /* setup-bg@2x.png */; };
-		C387701B143F99BF00E3CE8E /* SetupController.m in Sources */ = {isa = PBXBuildFile; fileRef = C387701A143F99BF00E3CE8E /* SetupController.m */; };
-		C3877021143F9A1F00E3CE8E /* SetupFormViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = C3877020143F9A1F00E3CE8E /* SetupFormViewController.m */; };
-		C387702A143F9E5A00E3CE8E /* SetupInitViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = C3877029143F9E5A00E3CE8E /* SetupInitViewController.m */; };
+		C3877021143F9A1F00E3CE8E /* SetupViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = C3877020143F9A1F00E3CE8E /* SetupViewController.m */; };
 		C3AAF63D142CED6C002BC5C8 /* SettingsViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = C3AAF63C142CED6C002BC5C8 /* SettingsViewController.m */; };
 		C3AAF642142CFCC1002BC5C8 /* RecentViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = C3AAF641142CFCC1002BC5C8 /* RecentViewController.m */; };
 		C3B63B81142B94C100152C8A /* XDefaultPathController.m in Sources */ = {isa = PBXBuildFile; fileRef = C3B63B80142B94C100152C8A /* XDefaultPathController.m */; };
@@ -147,6 +147,8 @@
 		C3527A371423CBFB00B830DF /* XDriveConfig.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = XDriveConfig.h; sourceTree = "<group>"; };
 		C354ABD41419327A00E88410 /* CGNetUtils.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = CGNetUtils.xcodeproj; path = CGNetUtils/CGNetUtils.xcodeproj; sourceTree = "<group>"; };
 		C354ABE1141932F000E88410 /* Security.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Security.framework; path = System/Library/Frameworks/Security.framework; sourceTree = SDKROOT; };
+		C35B4C6C1444B27C007A61D3 /* button-bg.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "button-bg.png"; sourceTree = "<group>"; };
+		C35B4C6D1444B27C007A61D3 /* button-bg@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "button-bg@2x.png"; sourceTree = "<group>"; };
 		C374294A142B91400043A9C8 /* clock.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = clock.png; sourceTree = "<group>"; };
 		C374294B142B91400043A9C8 /* eye.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = eye.png; sourceTree = "<group>"; };
 		C374294C142B91400043A9C8 /* gear.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = gear.png; sourceTree = "<group>"; };
@@ -161,12 +163,8 @@
 		C3877012143F850F00E3CE8E /* XDriveConfig.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = XDriveConfig.m; sourceTree = "<group>"; };
 		C3877014143F8E3F00E3CE8E /* setup-bg.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "setup-bg.png"; sourceTree = "<group>"; };
 		C3877015143F8E3F00E3CE8E /* setup-bg@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "setup-bg@2x.png"; sourceTree = "<group>"; };
-		C3877019143F99BF00E3CE8E /* SetupController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SetupController.h; sourceTree = "<group>"; };
-		C387701A143F99BF00E3CE8E /* SetupController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SetupController.m; sourceTree = "<group>"; };
-		C387701F143F9A1F00E3CE8E /* SetupFormViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SetupFormViewController.h; sourceTree = "<group>"; };
-		C3877020143F9A1F00E3CE8E /* SetupFormViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SetupFormViewController.m; sourceTree = "<group>"; };
-		C3877028143F9E5A00E3CE8E /* SetupInitViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SetupInitViewController.h; sourceTree = "<group>"; };
-		C3877029143F9E5A00E3CE8E /* SetupInitViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SetupInitViewController.m; sourceTree = "<group>"; };
+		C387701F143F9A1F00E3CE8E /* SetupViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SetupViewController.h; sourceTree = "<group>"; };
+		C3877020143F9A1F00E3CE8E /* SetupViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SetupViewController.m; sourceTree = "<group>"; };
 		C3AAF63B142CED6C002BC5C8 /* SettingsViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SettingsViewController.h; sourceTree = "<group>"; };
 		C3AAF63C142CED6C002BC5C8 /* SettingsViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SettingsViewController.m; sourceTree = "<group>"; };
 		C3AAF640142CFCC1002BC5C8 /* RecentViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RecentViewController.h; sourceTree = "<group>"; };
@@ -261,6 +259,8 @@
 		C328C428141A89C900D578ED /* images */ = {
 			isa = PBXGroup;
 			children = (
+				C35B4C6C1444B27C007A61D3 /* button-bg.png */,
+				C35B4C6D1444B27C007A61D3 /* button-bg@2x.png */,
 				C3877014143F8E3F00E3CE8E /* setup-bg.png */,
 				C3877015143F8E3F00E3CE8E /* setup-bg@2x.png */,
 				C374294A142B91400043A9C8 /* clock.png */,
@@ -328,12 +328,8 @@
 		C3877018143F98EB00E3CE8E /* Setup */ = {
 			isa = PBXGroup;
 			children = (
-				C3877019143F99BF00E3CE8E /* SetupController.h */,
-				C387701A143F99BF00E3CE8E /* SetupController.m */,
-				C387701F143F9A1F00E3CE8E /* SetupFormViewController.h */,
-				C3877020143F9A1F00E3CE8E /* SetupFormViewController.m */,
-				C3877028143F9E5A00E3CE8E /* SetupInitViewController.h */,
-				C3877029143F9E5A00E3CE8E /* SetupInitViewController.m */,
+				C387701F143F9A1F00E3CE8E /* SetupViewController.h */,
+				C3877020143F9A1F00E3CE8E /* SetupViewController.m */,
 			);
 			name = Setup;
 			sourceTree = "<group>";
@@ -576,6 +572,8 @@
 				C3877011143F790B00E3CE8E /* Settings.bundle in Resources */,
 				C3877016143F8E3F00E3CE8E /* setup-bg.png in Resources */,
 				C3877017143F8E3F00E3CE8E /* setup-bg@2x.png in Resources */,
+				C35B4C6E1444B27C007A61D3 /* button-bg.png in Resources */,
+				C35B4C6F1444B27C007A61D3 /* button-bg@2x.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -613,9 +611,7 @@
 				C3AAF642142CFCC1002BC5C8 /* RecentViewController.m in Sources */,
 				C33F001B1436526900B236B5 /* LocalStorageViewController.m in Sources */,
 				C3877013143F850F00E3CE8E /* XDriveConfig.m in Sources */,
-				C387701B143F99BF00E3CE8E /* SetupController.m in Sources */,
-				C3877021143F9A1F00E3CE8E /* SetupFormViewController.m in Sources */,
-				C387702A143F9E5A00E3CE8E /* SetupInitViewController.m in Sources */,
+				C3877021143F9A1F00E3CE8E /* SetupViewController.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
