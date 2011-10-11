@@ -66,7 +66,6 @@ static int FormDefaultYPosIpadLandscape = 33;
 - (void)viewDidLoad
 {
     [super viewDidLoad];
-	NSLog(@"viewDidLoad");
 	
 	// Style BG
 	[[UIApplication sharedApplication] setStatusBarStyle:UIStatusBarStyleBlackOpaque];
@@ -80,7 +79,6 @@ static int FormDefaultYPosIpadLandscape = 33;
 	// Register to get notified when keyboard appears/disappears
 	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(keyboardWillShow:) name:UIKeyboardWillShowNotification object:nil];
 	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(keyboardWillHide:) name:UIKeyboardWillHideNotification object:nil];
-	//[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(orientationDidChange:) name:UIDeviceOrientationDidChangeNotification object:nil];
 }
 
 - (void)viewDidUnload
@@ -106,11 +104,9 @@ static int FormDefaultYPosIpadLandscape = 33;
 
 - (void)willRotateToInterfaceOrientation:(UIInterfaceOrientation)toInterfaceOrientation duration:(NSTimeInterval)duration
 {
-	//[super willRotateToInterfaceOrientation:toInterfaceOrientation duration:duration];
+	[super willRotateToInterfaceOrientation:toInterfaceOrientation duration:duration];
 	
-	NSLog(@"will rotate");
-	
-	// Set view to new interface position
+	// Set view to position for new interface
 	CGRect newFrame = centeringView.frame;
 	newFrame.origin.y = [self calculateYPositionForCenteringViewInOrientation:toInterfaceOrientation];
 	centeringView.frame = newFrame;
@@ -120,9 +116,7 @@ static int FormDefaultYPosIpadLandscape = 33;
 
 - (void)didRotateFromInterfaceOrientation:(UIInterfaceOrientation)fromInterfaceOrientation
 {
-	//[super didRotateFromInterfaceOrientation:fromInterfaceOrientation];
-	
-	NSLog(@"did rotate");
+	[super didRotateFromInterfaceOrientation:fromInterfaceOrientation];
 	isRotating = NO;
 }
 
@@ -213,8 +207,6 @@ static int FormDefaultYPosIpadLandscape = 33;
 	if (isRotating) return;
 	isKeyboardVisible = YES;
 	
-	NSLog(@"keyboard will show");
-
 	// Move the centering view
 	CGRect newFrame = centeringView.frame;
 	newFrame.origin.y = [self calculateYPositionForCenteringViewInOrientation:self.interfaceOrientation];
@@ -228,19 +220,12 @@ static int FormDefaultYPosIpadLandscape = 33;
 	if (isRotating) return;
 	isKeyboardVisible = NO;
 	
-	NSLog(@"keyboard will hide");
-	
 	// Move the centering view
 	CGRect newFrame = centeringView.frame;
 	newFrame.origin.y = [self calculateYPositionForCenteringViewInOrientation:self.interfaceOrientation];
 	[UIView animateWithDuration:0.3 animations:^(void){
 		centeringView.frame = newFrame;
 	}];
-}
-
--(void) orientationDidChange:(NSNotification *)note
-{
-	NSLog(@"orientation changed");
 }
 
 
