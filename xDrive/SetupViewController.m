@@ -9,10 +9,44 @@
 #import "SetupViewController.h"
 #import <QuartzCore/QuartzCore.h>
 
+
+
+static int VisibleHeightIphonePortrait = 460;
+static int VisibleHeightIphoneLandscape = 300;
+static int VisibleHeightIpadPortrait = 1004;
+static int VisibleHeightIpadLandscape = 748;
+static int KeyboardHeightIphonePortrait = 216;
+static int KeyboardHeightIphoneLandscape = 162;
+static int KeyboardHeightIpadPortrait = 216;
+static int KeyboardHeightIpadLandscape = 162;
+
+
+static int FormDefaultYPosIphonePortrait = 66;
+static int FormDefaultYPosIphoneLandscape = 33;
+static int FormDefaultYPosIpadPortrait = 66;
+static int FormDefaultYPosIpadLandscape = 33;
+
+
+@interface SetupViewController()
+
+@property (nonatomic, assign) BOOL isKeyboardVisible, isRotating;
+
+- (int)calculateYPositionForCenteringViewInOrientation:(UIInterfaceOrientation)interfaceOrientation;
+- (int)defaultFormYPositionForOrientation:(UIInterfaceOrientation)orientation;
+- (int)visibleHeightForOrientation:(UIInterfaceOrientation)orientation;
+- (int)keyboardHeightForOrientation:(UIInterfaceOrientation)orientation;
+
+@end
+
+
+
+
 @implementation SetupViewController
 
+@synthesize isKeyboardVisible, isRotating;
 
 @synthesize bgImageView;
+@synthesize centeringView;
 @synthesize serverField, usernameField, passwordField;
 @synthesize loginButton;
 
@@ -32,13 +66,21 @@
 - (void)viewDidLoad
 {
     [super viewDidLoad];
+	NSLog(@"viewDidLoad");
 	
+	// Style BG
 	[[UIApplication sharedApplication] setStatusBarStyle:UIStatusBarStyleBlackOpaque];
-	
 	bgImageView.layer.cornerRadius = 5;
 	bgImageView.layer.masksToBounds = YES;
+	
+	// Button images
 	[loginButton setBackgroundImage:[[UIImage imageNamed:@"button-bg.png"] stretchableImageWithLeftCapWidth:8 topCapHeight:0] forState:UIControlStateNormal];
 	[loginButton setBackgroundImage:[[UIImage imageNamed:@"button-bg.png"] stretchableImageWithLeftCapWidth:8 topCapHeight:0] forState:UIControlStateHighlighted];
+	
+	// Register to get notified when keyboard appears/disappears
+	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(keyboardWillShow:) name:UIKeyboardWillShowNotification object:nil];
+	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(keyboardWillHide:) name:UIKeyboardWillHideNotification object:nil];
+	//[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(orientationDidChange:) name:UIDeviceOrientationDidChangeNotification object:nil];
 }
 
 - (void)viewDidUnload
@@ -47,13 +89,44 @@
     // Release any retained subviews of the main view.
     // e.g. self.myOutlet = nil;
 	
+	[[NSNotificationCenter defaultCenter] removeObserver:self];
+	
+	self.bgImageView = nil;
+	self.centeringView = nil;
 	self.serverField = nil;
+	self.usernameField = nil;
+	self.passwordField = nil;
+	self.loginButton = nil;
 }
 
 - (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation
 {
     return YES;
 }
+
+- (void)willRotateToInterfaceOrientation:(UIInterfaceOrientation)toInterfaceOrientation duration:(NSTimeInterval)duration
+{
+	//[super willRotateToInterfaceOrientation:toInterfaceOrientation duration:duration];
+	
+	NSLog(@"will rotate");
+	
+	// Set view to new interface position
+	CGRect newFrame = centeringView.frame;
+	newFrame.origin.y = [self calculateYPositionForCenteringViewInOrientation:toInterfaceOrientation];
+	centeringView.frame = newFrame;
+	
+	isRotating = YES;
+}
+
+- (void)didRotateFromInterfaceOrientation:(UIInterfaceOrientation)fromInterfaceOrientation
+{
+	//[super didRotateFromInterfaceOrientation:fromInterfaceOrientation];
+	
+	NSLog(@"did rotate");
+	isRotating = NO;
+}
+
+
 
 
 
@@ -66,4 +139,124 @@
 	[passwordField resignFirstResponder];
 }
 
+
+
+#pragma mark - Center Form
+
+- (int)calculateYPositionForCenteringViewInOrientation:(UIInterfaceOrientation)interfaceOrientation
+{
+	int newY = [self defaultFormYPositionForOrientation:interfaceOrientation];
+	if (isKeyboardVisible)
+	{
+		int visibleHeight = [self visibleHeightForOrientation:interfaceOrientation] - [self keyboardHeightForOrientation:interfaceOrientation];
+		newY = visibleHeight - centeringView.frame.size.height;
+		if (newY > 1)
+			newY = newY / 2;
+	}
+	return newY;
+}
+
+- (int)defaultFormYPositionForOrientation:(UIInterfaceOrientation)orientation
+{
+	int yPos = 0;
+	if ([[UIDevice currentDevice] userInterfaceIdiom] == UIUserInterfaceIdiomPhone)
+	{
+		yPos = (orientation == UIInterfaceOrientationPortrait || 
+				orientation == UIInterfaceOrientationPortraitUpsideDown) ? FormDefaultYPosIphonePortrait : FormDefaultYPosIphoneLandscape;
+	}
+	else
+	{
+		yPos = (orientation == UIInterfaceOrientationPortrait || 
+				orientation == UIInterfaceOrientationPortraitUpsideDown) ? FormDefaultYPosIpadPortrait : FormDefaultYPosIpadLandscape;
+	}
+	return yPos;
+}
+
+- (int)keyboardHeightForOrientation:(UIInterfaceOrientation)orientation
+{
+	int height = 0;
+	
+	if ([[UIDevice currentDevice] userInterfaceIdiom] == UIUserInterfaceIdiomPhone)
+	{
+		height = (orientation == UIInterfaceOrientationPortrait || 
+				  orientation == UIInterfaceOrientationPortraitUpsideDown) ? KeyboardHeightIphonePortrait : KeyboardHeightIphoneLandscape;
+	}
+	else
+	{
+		height = (orientation == UIInterfaceOrientationPortrait || 
+				  orientation == UIInterfaceOrientationPortraitUpsideDown) ? KeyboardHeightIpadPortrait : KeyboardHeightIpadLandscape;
+	}
+	return height;
+}
+
+- (int)visibleHeightForOrientation:(UIInterfaceOrientation)orientation
+{
+	int height = 0;
+	
+	if ([[UIDevice currentDevice] userInterfaceIdiom] == UIUserInterfaceIdiomPhone)
+	{
+		height = (orientation == UIInterfaceOrientationPortrait || 
+				  orientation == UIInterfaceOrientationPortraitUpsideDown) ? VisibleHeightIphonePortrait : VisibleHeightIphoneLandscape;
+	}
+	else
+	{
+		height = (orientation == UIInterfaceOrientationPortrait || 
+				  orientation == UIInterfaceOrientationPortraitUpsideDown) ? VisibleHeightIpadPortrait : VisibleHeightIpadLandscape;
+	}
+	return height;
+}
+
+
+
+-(void) keyboardWillShow:(NSNotification *)note
+{
+	if (isRotating) return;
+	isKeyboardVisible = YES;
+	
+	NSLog(@"keyboard will show");
+
+	// Move the centering view
+	CGRect newFrame = centeringView.frame;
+	newFrame.origin.y = [self calculateYPositionForCenteringViewInOrientation:self.interfaceOrientation];
+	[UIView animateWithDuration:0.3 animations:^(void){
+		centeringView.frame = newFrame;
+	}];
+}
+
+-(void) keyboardWillHide:(NSNotification *)note
+{
+	if (isRotating) return;
+	isKeyboardVisible = NO;
+	
+	NSLog(@"keyboard will hide");
+	
+	// Move the centering view
+	CGRect newFrame = centeringView.frame;
+	newFrame.origin.y = [self calculateYPositionForCenteringViewInOrientation:self.interfaceOrientation];
+	[UIView animateWithDuration:0.3 animations:^(void){
+		centeringView.frame = newFrame;
+	}];
+}
+
+-(void) orientationDidChange:(NSNotification *)note
+{
+	NSLog(@"orientation changed");
+}
+
+
+
+#pragma mark - UITextFieldDelegate
+
+
+
+
 @end
+
+
+
+
+
+
+
+
+
