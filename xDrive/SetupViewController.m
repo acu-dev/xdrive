@@ -6,8 +6,11 @@
 //  Copyright (c) 2011 Abilene Christian University. All rights reserved.
 //
 
-#import "SetupViewController.h"
 #import <QuartzCore/QuartzCore.h>
+#import "SetupViewController.h"
+#import "XDriveConfig.h"
+#import "XService.h"
+#import "ATMHud.h"
 
 
 
@@ -27,14 +30,28 @@ static int FormDefaultYPosIpadPortrait = 270;
 static int FormDefaultYPosIpadLandscape = 166;
 
 
-@interface SetupViewController()
+@interface SetupViewController() <ServerStatusDelegate>
 
 @property (nonatomic, assign) BOOL isKeyboardVisible, isRotating;
+
+@property (nonatomic, strong) ATMHud *hud;
+	// Heads up display for account validation messages
 
 - (int)calculateYPositionForCenteringViewInOrientation:(UIInterfaceOrientation)interfaceOrientation;
 - (int)defaultFormYPositionForOrientation:(UIInterfaceOrientation)orientation;
 - (int)visibleHeightForOrientation:(UIInterfaceOrientation)orientation;
 - (int)keyboardHeightForOrientation:(UIInterfaceOrientation)orientation;
+	// Calculates the correct Y position for the login form based on the device orientation
+	// and whether or not the keyboard is showing.
+
+- (BOOL)isFormValid;
+	// Evaluates the user, pass, and server text fields for valid data
+
+- (void)validateAccount;
+	// Asks XService to validate the account credentials.
+
+- (void)dismissSetup;
+	// Executes the transition to the app's root view. Called after setup is complete.
 
 @end
 
@@ -44,11 +61,13 @@ static int FormDefaultYPosIpadLandscape = 166;
 @implementation SetupViewController
 
 @synthesize isKeyboardVisible, isRotating;
+@synthesize hud;
 
 @synthesize bgImageView;
 @synthesize centeringView;
 @synthesize serverField, usernameField, passwordField;
 @synthesize loginButton;
+@synthesize activityIndicator;
 
 
 
@@ -79,6 +98,10 @@ static int FormDefaultYPosIpadLandscape = 166;
 	// Register to get notified when keyboard appears/disappears
 	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(keyboardWillShow:) name:UIKeyboardWillShowNotification object:nil];
 	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(keyboardWillHide:) name:UIKeyboardWillHideNotification object:nil];
+	
+	// Create hud to display messages
+	hud = [[ATMHud alloc] initWithDelegate:self];
+	[self.view addSubview:hud.view];
 }
 
 - (void)viewDidUnload
@@ -95,6 +118,8 @@ static int FormDefaultYPosIpadLandscape = 166;
 	self.usernameField = nil;
 	self.passwordField = nil;
 	self.loginButton = nil;
+	self.activityIndicator = nil;
+	self.hud = nil;
 }
 
 - (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation
@@ -131,6 +156,20 @@ static int FormDefaultYPosIpadLandscape = 166;
 	[serverField resignFirstResponder];
 	[usernameField resignFirstResponder];
 	[passwordField resignFirstResponder];
+}
+
+- (IBAction)login:(id)sender
+{
+	if ([self isFormValid])
+	{
+		[self validateAccount];
+	}
+	else
+	{
+		[hud setCaption:@"Invalid Credentials"];
+		[hud show];
+		[hud hideAfter:2];
+	}
 }
 
 
@@ -200,8 +239,6 @@ static int FormDefaultYPosIpadLandscape = 166;
 	return height;
 }
 
-
-
 -(void) keyboardWillShow:(NSNotification *)note
 {
 	if (isRotating) return;
@@ -232,7 +269,126 @@ static int FormDefaultYPosIpadLandscape = 166;
 
 #pragma mark - UITextFieldDelegate
 
+- (BOOL)textFieldShouldReturn:(UITextField *)textField
+{
+	if (textField == serverField)
+	{
+		[usernameField becomeFirstResponder];
+	}
+	else if (textField == usernameField)
+	{
+		[passwordField becomeFirstResponder];
+	}
+	else if ([self isFormValid])
+	{
+		[self validateAccount];
+	}
+	
+	return NO;
+}
 
+
+
+#pragma mark - Login
+
+- (void)validateAccount
+{
+	loginButton.enabled = NO;
+	[self dismissKeyboard:self];
+	
+	// Show activity
+	[self validateServerStatusUpdate:@"Connecting to server..."];
+	[activityIndicator startAnimating];
+	activityIndicator.hidden = NO;
+	
+	// Ask XService to validate account
+	[[XService sharedXService] validateUsername:usernameField.text 
+									   password:passwordField.text 
+										forHost:serverField.text 
+								   withDelegate:self];
+}
+
+- (BOOL)isFormValid
+{
+	if (!serverField.text || !usernameField.text || !passwordField.text)
+		return NO;
+	
+	if ([serverField.text isEqualToString:@""] || [usernameField.text isEqualToString:@""] || [passwordField.text isEqualToString:@""])
+		return NO;
+	
+	return YES;
+}
+
+- (void)dismissSetup
+{
+	[self performSegueWithIdentifier:@"DismissSetupView" sender:self];
+}
+
+
+
+#pragma mark - ServerStatusDelegate
+
+- (void)validateServerStatusUpdate:(NSString *)status
+{
+	if (!status)
+		status = @"Login";
+	
+	[loginButton setTitle:status forState:UIControlStateNormal];
+}
+
+- (void)validateServerFailedWithError:(NSError *)error
+{
+	NSString *reason = nil;
+	
+	if (error)
+	{
+		XDrvLog(@"Validate account failed: %@", [error description]);
+		
+		if ([error code] == NSURLErrorUserCancelledAuthentication)
+		{
+			// Authentication failed
+			reason = NSLocalizedStringFromTable(@"Authentication failed; verify username/password",
+												@"AccountViewController", 
+												@"Message displayed when authentication fails during server validation.");
+		}
+		else
+		{
+			// Something else went wrong
+			reason = NSLocalizedStringFromTable(@"Unable to connect to server",
+												@"AccountViewController", 
+												@"Message displayed when server validation failed.");
+		}
+	}
+	else
+	{
+		// Version incompatible
+		XDrvLog(@"Validate account failed: Server version is incompatible");
+		NSString *msg = NSLocalizedStringFromTable(@"Server version is incompatible with this version of %@. Please check for updates.", 
+												   @"AccountViewController", 
+												   @"Message displayed when server version is incompatible.");
+		reason = [NSString stringWithFormat:msg, [XService appName]];
+	}
+		
+	[self validateServerStatusUpdate:nil];
+	[activityIndicator stopAnimating];
+	activityIndicator.hidden = YES;
+	loginButton.enabled = YES;
+	
+	[hud setCaption:reason];
+	[hud show];
+	[hud hideAfter:3];
+}
+
+- (void)validateServerFinishedWithSuccess
+{
+	// Success!
+	[self validateServerStatusUpdate:@"Success!"];
+	[activityIndicator stopAnimating];
+	activityIndicator.hidden = YES;
+	
+	// Hide view after hud hides
+	[self performSelector:@selector(dismissSetup) withObject:nil afterDelay:2.0];
+}
 
 
 @end

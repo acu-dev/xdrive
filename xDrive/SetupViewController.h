@@ -12,7 +12,9 @@
 @property (nonatomic, strong) IBOutlet UIView *centeringView;
 @property (nonatomic, strong) IBOutlet UITextField *serverField, *usernameField, *passwordField;
 @property (nonatomic, strong) IBOutlet UIButton *loginButton;
+@property (nonatomic, strong) IBOutlet UIActivityIndicatorView *activityIndicator;
 
 - (IBAction)dismissKeyboard:(id)sender;
+- (IBAction)login:(id)sender;
 
 @end

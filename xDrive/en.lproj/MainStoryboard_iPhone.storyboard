@@ -19,7 +19,7 @@
                     </tabBar>
                 </tabBarController>
             </objects>
-            <point key="canvasLocation" x="-16" y="-923"/>
+            <point key="canvasLocation" x="458" y="-923"/>
         </scene>
         <scene sceneID="XcR-h2-3yI">
             <objects>
@@ -569,18 +569,27 @@
                                         <autoresizingMask key="autoresizingMask" flexibleMinX="YES" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                         <fontDescription key="fontDescription" type="system" pointSize="14"/>
                                         <textInputTraits key="textInputTraits" autocorrectionType="no" keyboardType="URL" returnKeyType="next" enablesReturnKeyAutomatically="YES"/>
+                                        <connections>
+                                            <outlet property="delegate" destination="iMk-ai-oj1" id="SrM-fu-6Yp"/>
+                                        </connections>
                                     </textField>
                                     <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" placeholder="Username" minimumFontSize="17" clearButtonMode="whileEditing" id="3JH-kd-L0s">
                                         <rect key="frame" x="20" y="103" width="130" height="31"/>
                                         <autoresizingMask key="autoresizingMask" flexibleMinX="YES" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                         <fontDescription key="fontDescription" type="system" pointSize="14"/>
                                         <textInputTraits key="textInputTraits" autocorrectionType="no" returnKeyType="next" enablesReturnKeyAutomatically="YES"/>
+                                        <connections>
+                                            <outlet property="delegate" destination="iMk-ai-oj1" id="zOT-SO-CWN"/>
+                                        </connections>
                                     </textField>
                                     <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" placeholder="Password" minimumFontSize="17" id="laj-XC-JMS">
                                         <rect key="frame" x="170" y="103" width="130" height="31"/>
                                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                         <fontDescription key="fontDescription" type="system" pointSize="14"/>
                                         <textInputTraits key="textInputTraits" returnKeyType="go" enablesReturnKeyAutomatically="YES" secureTextEntry="YES"/>
+                                        <connections>
+                                            <outlet property="delegate" destination="iMk-ai-oj1" id="2Tx-HB-A0D"/>
+                                        </connections>
                                     </textField>
                                     <button opaque="NO" contentMode="center" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" id="XSs-gj-rWH">
                                         <rect key="frame" x="17" y="142" width="286" height="41"/>
@@ -593,7 +602,14 @@
                                         <state key="highlighted">
                                             <color key="titleColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                         </state>
+                                        <connections>
+                                            <action selector="login:" destination="iMk-ai-oj1" eventType="touchUpInside" id="uhm-sD-7BY"/>
+                                        </connections>
                                     </button>
+                                    <activityIndicatorView hidden="YES" opaque="NO" contentMode="scaleToFill" style="gray" id="S1Z-1U-kg1">
+                                        <rect key="frame" x="265" y="152" width="20" height="20"/>
+                                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                    </activityIndicatorView>
                                 </subviews>
                                 <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                                 <gestureRecognizers/>
@@ -607,12 +623,14 @@
                     </view>
                     <simulatedStatusBarMetrics key="simulatedStatusBarMetrics" statusBarStyle="blackTranslucent"/>
                     <connections>
+                        <outlet property="activityIndicator" destination="S1Z-1U-kg1" id="fky-M4-IaM"/>
                         <outlet property="bgImageView" destination="MPj-00-iMn" id="Gsv-sd-fVc"/>
                         <outlet property="centeringView" destination="FAP-uA-aAv" id="hp0-FQ-OTk"/>
                         <outlet property="loginButton" destination="XSs-gj-rWH" id="iD5-Yv-P1s"/>
                         <outlet property="passwordField" destination="laj-XC-JMS" id="c9V-xN-tIe"/>
                         <outlet property="serverField" destination="HUm-KK-J4m" id="I9d-sQ-d2L"/>
                         <outlet property="usernameField" destination="3JH-kd-L0s" id="HnI-Hh-ROT"/>
+                        <segue destination="4" kind="modal" identifier="DismissSetupView" modalTransitionStyle="flipHorizontal" id="mcE-e0-Bdf"/>
                     </connections>
                 </viewController>
                 <tapGestureRecognizer id="MxV-74-nbt">
@@ -621,7 +639,7 @@
                     </connections>
                 </tapGestureRecognizer>
             </objects>
-            <point key="canvasLocation" x="452" y="-923"/>
+            <point key="canvasLocation" x="-16" y="-923"/>
         </scene>
         <scene sceneID="K6V-Pt-acq">
             <objects>
@@ -907,6 +925,8 @@
             <source key="sourceIdentifier" type="project" relativePath="./Classes/SetupViewController.h"/>
             <relationships>
                 <relationship kind="action" name="dismissKeyboard:"/>
+                <relationship kind="action" name="login:"/>
+                <relationship kind="outlet" name="activityIndicator" candidateClass="UIActivityIndicatorView"/>
                 <relationship kind="outlet" name="bgImageView" candidateClass="UIImageView"/>
                 <relationship kind="outlet" name="centeringView" candidateClass="UIView"/>
                 <relationship kind="outlet" name="loginButton" candidateClass="UIButton"/>
