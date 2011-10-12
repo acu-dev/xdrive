@@ -58,6 +58,8 @@
 		C3877016143F8E3F00E3CE8E /* setup-bg.png in Resources */ = {isa = PBXBuildFile; fileRef = C3877014143F8E3F00E3CE8E /* setup-bg.png */; };
 		C3877017143F8E3F00E3CE8E /* setup-bg@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = C3877015143F8E3F00E3CE8E /* setup-bg@2x.png */; };
 		C3877021143F9A1F00E3CE8E /* SetupViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = C3877020143F9A1F00E3CE8E /* SetupViewController.m */; };
+		C388C9FE1445D88A0098E123 /* setup-bg-ipad.png in Resources */ = {isa = PBXBuildFile; fileRef = C388C9FD1445D88A0098E123 /* setup-bg-ipad.png */; };
+		C388CA001445DEF30098E123 /* button-bg-ipad.png in Resources */ = {isa = PBXBuildFile; fileRef = C388C9FF1445DEF30098E123 /* button-bg-ipad.png */; };
 		C3AAF63D142CED6C002BC5C8 /* SettingsViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = C3AAF63C142CED6C002BC5C8 /* SettingsViewController.m */; };
 		C3AAF642142CFCC1002BC5C8 /* RecentViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = C3AAF641142CFCC1002BC5C8 /* RecentViewController.m */; };
 		C3B63B81142B94C100152C8A /* XDefaultPathController.m in Sources */ = {isa = PBXBuildFile; fileRef = C3B63B80142B94C100152C8A /* XDefaultPathController.m */; };
@@ -165,6 +167,8 @@
 		C3877015143F8E3F00E3CE8E /* setup-bg@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "setup-bg@2x.png"; sourceTree = "<group>"; };
 		C387701F143F9A1F00E3CE8E /* SetupViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SetupViewController.h; sourceTree = "<group>"; };
 		C3877020143F9A1F00E3CE8E /* SetupViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SetupViewController.m; sourceTree = "<group>"; };
+		C388C9FD1445D88A0098E123 /* setup-bg-ipad.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "setup-bg-ipad.png"; sourceTree = "<group>"; };
+		C388C9FF1445DEF30098E123 /* button-bg-ipad.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "button-bg-ipad.png"; sourceTree = "<group>"; };
 		C3AAF63B142CED6C002BC5C8 /* SettingsViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SettingsViewController.h; sourceTree = "<group>"; };
 		C3AAF63C142CED6C002BC5C8 /* SettingsViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SettingsViewController.m; sourceTree = "<group>"; };
 		C3AAF640142CFCC1002BC5C8 /* RecentViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RecentViewController.h; sourceTree = "<group>"; };
@@ -259,10 +263,12 @@
 		C328C428141A89C900D578ED /* images */ = {
 			isa = PBXGroup;
 			children = (
+				C388C9FF1445DEF30098E123 /* button-bg-ipad.png */,
 				C35B4C6C1444B27C007A61D3 /* button-bg.png */,
 				C35B4C6D1444B27C007A61D3 /* button-bg@2x.png */,
 				C3877014143F8E3F00E3CE8E /* setup-bg.png */,
 				C3877015143F8E3F00E3CE8E /* setup-bg@2x.png */,
+				C388C9FD1445D88A0098E123 /* setup-bg-ipad.png */,
 				C374294A142B91400043A9C8 /* clock.png */,
 				C3848B6E142D0EDA009F55FC /* clock@2x.png */,
 				C374294B142B91400043A9C8 /* eye.png */,
@@ -574,6 +580,8 @@
 				C3877017143F8E3F00E3CE8E /* setup-bg@2x.png in Resources */,
 				C35B4C6E1444B27C007A61D3 /* button-bg.png in Resources */,
 				C35B4C6F1444B27C007A61D3 /* button-bg@2x.png in Resources */,
+				C388C9FE1445D88A0098E123 /* setup-bg-ipad.png in Resources */,
+				C388CA001445DEF30098E123 /* button-bg-ipad.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

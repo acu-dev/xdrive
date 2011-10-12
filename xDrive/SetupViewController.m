@@ -17,14 +17,14 @@ static int VisibleHeightIpadPortrait = 1004;
 static int VisibleHeightIpadLandscape = 748;
 static int KeyboardHeightIphonePortrait = 216;
 static int KeyboardHeightIphoneLandscape = 162;
-static int KeyboardHeightIpadPortrait = 216;
-static int KeyboardHeightIpadLandscape = 162;
+static int KeyboardHeightIpadPortrait = 263;
+static int KeyboardHeightIpadLandscape = 351;
 
 
 static int FormDefaultYPosIphonePortrait = 66;
 static int FormDefaultYPosIphoneLandscape = 33;
-static int FormDefaultYPosIpadPortrait = 66;
-static int FormDefaultYPosIpadLandscape = 33;
+static int FormDefaultYPosIpadPortrait = 270;
+static int FormDefaultYPosIpadLandscape = 166;
 
 
 @interface SetupViewController()

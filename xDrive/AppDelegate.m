@@ -31,7 +31,7 @@
 		}
 		else
 		{
-			// Send to account view
+			// Send to setup view
 			viewController = [storyboard instantiateViewControllerWithIdentifier:@"SetupView"];
 		}
 	}
@@ -39,15 +39,16 @@
 	{
 		// iPad
 		UIStoryboard *storyboard = [UIStoryboard storyboardWithName:@"MainStoryboard_iPad" bundle:nil];
-		viewController = [storyboard instantiateInitialViewController];
 				
 		if ([[XService sharedXService] activeServer])
 		{
 			// Send to root view
+			viewController = [storyboard instantiateInitialViewController];
 		}
 		else
 		{
-			// Send to account view
+			// Send to setup view
+			viewController = [storyboard instantiateViewControllerWithIdentifier:@"SetupView"];
 		}
 	}
 	
