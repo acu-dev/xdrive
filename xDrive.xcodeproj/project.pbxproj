@@ -39,6 +39,8 @@
 		C328C42C141A89C900D578ED /* x.png in Resources */ = {isa = PBXBuildFile; fileRef = C328C42A141A89C900D578ED /* x.png */; };
 		C32B4E21142BE8F900EEFD31 /* eye@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = C32B4E20142BE8F900EEFD31 /* eye@2x.png */; };
 		C33F001B1436526900B236B5 /* LocalStorageViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = C33F001A1436526900B236B5 /* LocalStorageViewController.m */; };
+		C346C850144784AA00D64F69 /* button-down-bg.png in Resources */ = {isa = PBXBuildFile; fileRef = C346C84E144784AA00D64F69 /* button-down-bg.png */; };
+		C346C851144784AA00D64F69 /* button-down-bg@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = C346C84F144784AA00D64F69 /* button-down-bg@2x.png */; };
 		C351746E13C390B30078E361 /* AccountViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = C351746D13C390B30078E361 /* AccountViewController.m */; };
 		C354ABE0141932E600E88410 /* libCGNetUtils.a in Frameworks */ = {isa = PBXBuildFile; fileRef = C354ABDC1419327A00E88410 /* libCGNetUtils.a */; };
 		C354ABE2141932F000E88410 /* Security.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C354ABE1141932F000E88410 /* Security.framework */; };
@@ -59,7 +61,6 @@
 		C3877017143F8E3F00E3CE8E /* setup-bg@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = C3877015143F8E3F00E3CE8E /* setup-bg@2x.png */; };
 		C3877021143F9A1F00E3CE8E /* SetupViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = C3877020143F9A1F00E3CE8E /* SetupViewController.m */; };
 		C388C9FE1445D88A0098E123 /* setup-bg-ipad.png in Resources */ = {isa = PBXBuildFile; fileRef = C388C9FD1445D88A0098E123 /* setup-bg-ipad.png */; };
-		C388CA001445DEF30098E123 /* button-bg-ipad.png in Resources */ = {isa = PBXBuildFile; fileRef = C388C9FF1445DEF30098E123 /* button-bg-ipad.png */; };
 		C3AAF63D142CED6C002BC5C8 /* SettingsViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = C3AAF63C142CED6C002BC5C8 /* SettingsViewController.m */; };
 		C3AAF642142CFCC1002BC5C8 /* RecentViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = C3AAF641142CFCC1002BC5C8 /* RecentViewController.m */; };
 		C3B63B81142B94C100152C8A /* XDefaultPathController.m in Sources */ = {isa = PBXBuildFile; fileRef = C3B63B80142B94C100152C8A /* XDefaultPathController.m */; };
@@ -144,6 +145,8 @@
 		C32B4E20142BE8F900EEFD31 /* eye@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "eye@2x.png"; sourceTree = "<group>"; };
 		C33F00191436526900B236B5 /* LocalStorageViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LocalStorageViewController.h; sourceTree = "<group>"; };
 		C33F001A1436526900B236B5 /* LocalStorageViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LocalStorageViewController.m; sourceTree = "<group>"; };
+		C346C84E144784AA00D64F69 /* button-down-bg.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "button-down-bg.png"; sourceTree = "<group>"; };
+		C346C84F144784AA00D64F69 /* button-down-bg@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "button-down-bg@2x.png"; sourceTree = "<group>"; };
 		C351746C13C390B30078E361 /* AccountViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AccountViewController.h; sourceTree = "<group>"; };
 		C351746D13C390B30078E361 /* AccountViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AccountViewController.m; sourceTree = "<group>"; };
 		C3527A371423CBFB00B830DF /* XDriveConfig.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = XDriveConfig.h; sourceTree = "<group>"; };
@@ -168,7 +171,6 @@
 		C387701F143F9A1F00E3CE8E /* SetupViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SetupViewController.h; sourceTree = "<group>"; };
 		C3877020143F9A1F00E3CE8E /* SetupViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SetupViewController.m; sourceTree = "<group>"; };
 		C388C9FD1445D88A0098E123 /* setup-bg-ipad.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "setup-bg-ipad.png"; sourceTree = "<group>"; };
-		C388C9FF1445DEF30098E123 /* button-bg-ipad.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "button-bg-ipad.png"; sourceTree = "<group>"; };
 		C3AAF63B142CED6C002BC5C8 /* SettingsViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SettingsViewController.h; sourceTree = "<group>"; };
 		C3AAF63C142CED6C002BC5C8 /* SettingsViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SettingsViewController.m; sourceTree = "<group>"; };
 		C3AAF640142CFCC1002BC5C8 /* RecentViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RecentViewController.h; sourceTree = "<group>"; };
@@ -263,9 +265,10 @@
 		C328C428141A89C900D578ED /* images */ = {
 			isa = PBXGroup;
 			children = (
-				C388C9FF1445DEF30098E123 /* button-bg-ipad.png */,
 				C35B4C6C1444B27C007A61D3 /* button-bg.png */,
 				C35B4C6D1444B27C007A61D3 /* button-bg@2x.png */,
+				C346C84E144784AA00D64F69 /* button-down-bg.png */,
+				C346C84F144784AA00D64F69 /* button-down-bg@2x.png */,
 				C3877014143F8E3F00E3CE8E /* setup-bg.png */,
 				C3877015143F8E3F00E3CE8E /* setup-bg@2x.png */,
 				C388C9FD1445D88A0098E123 /* setup-bg-ipad.png */,
@@ -581,7 +584,8 @@
 				C35B4C6E1444B27C007A61D3 /* button-bg.png in Resources */,
 				C35B4C6F1444B27C007A61D3 /* button-bg@2x.png in Resources */,
 				C388C9FE1445D88A0098E123 /* setup-bg-ipad.png in Resources */,
-				C388CA001445DEF30098E123 /* button-bg-ipad.png in Resources */,
+				C346C850144784AA00D64F69 /* button-down-bg.png in Resources */,
+				C346C851144784AA00D64F69 /* button-down-bg@2x.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
