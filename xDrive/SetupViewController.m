@@ -93,7 +93,7 @@ static int FormDefaultYPosIpadLandscape = 166;
 	
 	// Button images
 	[loginButton setBackgroundImage:[[UIImage imageNamed:@"button-bg.png"] stretchableImageWithLeftCapWidth:8 topCapHeight:0] forState:UIControlStateNormal];
-	[loginButton setBackgroundImage:[[UIImage imageNamed:@"button-bg.png"] stretchableImageWithLeftCapWidth:8 topCapHeight:0] forState:UIControlStateHighlighted];
+	[loginButton setBackgroundImage:[[UIImage imageNamed:@"button-down-bg.png"] stretchableImageWithLeftCapWidth:8 topCapHeight:0] forState:UIControlStateHighlighted];
 	
 	// Register to get notified when keyboard appears/disappears
 	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(keyboardWillShow:) name:UIKeyboardWillShowNotification object:nil];
@@ -160,13 +160,16 @@ static int FormDefaultYPosIpadLandscape = 166;
 
 - (IBAction)login:(id)sender
 {
+	[self dismissKeyboard:nil];
+	
 	if ([self isFormValid])
 	{
+		
 		[self validateAccount];
 	}
 	else
 	{
-		[hud setCaption:@"Invalid Credentials"];
+		[hud setCaption:@"OOPS! You have supplied an invalid login. Please try again."];
 		[hud show];
 		[hud hideAfter:2];
 	}
@@ -239,7 +242,7 @@ static int FormDefaultYPosIpadLandscape = 166;
 	return height;
 }
 
--(void) keyboardWillShow:(NSNotification *)note
+- (void)keyboardWillShow:(NSNotification *)note
 {
 	if (isRotating) return;
 	isKeyboardVisible = YES;
@@ -252,7 +255,7 @@ static int FormDefaultYPosIpadLandscape = 166;
 	}];
 }
 
--(void) keyboardWillHide:(NSNotification *)note
+- (void)keyboardWillHide:(NSNotification *)note
 {
 	if (isRotating) return;
 	isKeyboardVisible = NO;
@@ -263,6 +266,11 @@ static int FormDefaultYPosIpadLandscape = 166;
 	[UIView animateWithDuration:0.3 animations:^(void){
 		centeringView.frame = newFrame;
 	}];
+}
+
+- (void)updateHudPosition
+{
+	
 }
 
 
@@ -285,6 +293,19 @@ static int FormDefaultYPosIpadLandscape = 166;
 	}
 	
 	return NO;
+}
+
+
+
+#pragma mark - UIGestureRecognizerDelegate
+
+- (BOOL)gestureRecognizer:(UIGestureRecognizer *)gestureRecognizer shouldReceiveTouch:(UITouch *)touch
+{
+    if ([touch.view isKindOfClass:[UIButton class]])
+	{
+        return NO;
+    }
+    return YES;
 }
 
 
@@ -376,7 +397,7 @@ static int FormDefaultYPosIpadLandscape = 166;
 	
 	[hud setCaption:reason];
 	[hud show];
-	[hud hideAfter:3];
+	[hud hideAfter:2];
 }
 
 - (void)validateServerFinishedWithSuccess

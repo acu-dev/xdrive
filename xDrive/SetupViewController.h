@@ -6,7 +6,7 @@
 //  Copyright (c) 2011 Abilene Christian University. All rights reserved.
 //
 
-@interface SetupViewController : UIViewController <UITextFieldDelegate>
+@interface SetupViewController : UIViewController <UITextFieldDelegate, UIGestureRecognizerDelegate>
 
 @property (nonatomic, strong) IBOutlet UIImageView *bgImageView;
 @property (nonatomic, strong) IBOutlet UIView *centeringView;
