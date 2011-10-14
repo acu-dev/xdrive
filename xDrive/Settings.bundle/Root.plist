@@ -12,7 +12,7 @@
 			<key>Key</key>
 			<string>account_username</string>
 			<key>DefaultValue</key>
-			<string>Not configured</string>
+			<string>Set in xDrive</string>
 		</dict>
 		<dict>
 			<key>Type</key>
@@ -22,7 +22,7 @@
 			<key>Key</key>
 			<string>account_server</string>
 			<key>DefaultValue</key>
-			<string>Not configured</string>
+			<string>Set in xDrive</string>
 		</dict>
 		<dict>
 			<key>Type</key>
