@@ -7,6 +7,7 @@
 //
 
 #import "XService.h"
+#import "XFileUtils.h"
 #import "XDriveConfig.h"
 #import "XDefaultPath.h"
 #import "XDefaultPathController.h"
@@ -93,59 +94,6 @@ static XService *sharedXService;
 
 
 
-#pragma mark - App Info
-
-+ (NSString *)appVersion
-{
-	return [[[NSBundle mainBundle] infoDictionary] objectForKey:@"CFBundleVersion"];
-}
-
-+ (NSString *)appName
-{
-	return [[[NSBundle mainBundle] infoDictionary] objectForKey:@"CFBundleDisplayName"];
-}
-
-+ (NSString *)appDocuments
-{
-	return [NSHomeDirectory() stringByAppendingPathComponent:@"Documents"];
-}
-
-
-
-#pragma mark - File handling
-
-+ (void)moveFileAtPath:(NSString *)oldFilePath toPath:(NSString *)newFilePath
-{
-	XDrvDebug(@"Moving file from path: %@ to path: %@", oldFilePath, newFilePath);
-	NSError *error = nil;
-
-	// Create destination directory
-	NSString *destinationDirPath = [newFilePath stringByDeletingLastPathComponent];
-	BOOL dirExists = [[NSFileManager defaultManager] createDirectoryAtPath:destinationDirPath 
-											   withIntermediateDirectories:YES 
-																attributes:nil 
-																	 error:&error];
-	if (error)
-	{
-		XDrvLog(@"Problem creating destination directory: %@", error);
-	}
-	if (!dirExists)
-	{
-		XDrvLog(@"Unable to move file - destination dir does not exist: %@", destinationDirPath);
-		return;
-	}
-	
-	// Move file
-	error = nil;
-	[[NSFileManager defaultManager] moveItemAtPath:oldFilePath toPath:newFilePath error:&error];
-	if (error)
-	{
-		XDrvLog(@"Problem moving file: %@", error);
-	}
-}
-
-
-
 #pragma mark - Server
 
 - (XServer *)activeServer
@@ -155,7 +103,7 @@ static XService *sharedXService;
 
 - (NSString *)activeServerDocumentPath
 {
-	return [[XService appDocuments] stringByAppendingPathComponent:[self activeServer].hostname];
+	return [[XFileUtils appDocuments] stringByAppendingPathComponent:[self activeServer].hostname];
 }
 
 - (void)validateUsername:(NSString *)username password:(NSString *)password forHost:(NSString *)host withDelegate:(id<ServerStatusDelegate>)delegate
@@ -233,7 +181,7 @@ static XService *sharedXService;
 
 - (BOOL)isServerVersionCompatible:(NSString *)version
 {
-	return ([version isEqualToString:[XService appVersion]]);
+	return ([version isEqualToString:[XDriveConfig appVersion]]);
 }
 
 - (void)saveServerWithDetails:(NSDictionary *)details

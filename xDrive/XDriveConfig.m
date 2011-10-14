@@ -10,6 +10,22 @@
 
 @implementation XDriveConfig
 
+
+#pragma mark - App Info
+
++ (NSString *)appVersion
+{
+	return [[[NSBundle mainBundle] infoDictionary] objectForKey:@"CFBundleVersion"];
+}
+
++ (NSString *)appName
+{
+	return [[[NSBundle mainBundle] infoDictionary] objectForKey:@"CFBundleDisplayName"];
+}
+
+
+
+
 + (BOOL)shouldResetApp
 {
 	NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];

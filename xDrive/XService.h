@@ -30,18 +30,6 @@
 + (XService *)sharedXService;
 	// One XService to rule them all
 
-+ (NSString *)appVersion;
-	// Current version of the app as defined in the Info plist
-
-+ (NSString *)appName;
-	// Display name of the app as defined in the Info plist
-
-+ (NSString *)appDocuments;
-	// Path of the Documents directory in the app's sandbox
-
-+ (void)moveFileAtPath:(NSString *)oldFilePath toPath:(NSString *)newFilePath;
-	// Moves a file from one location to another
-
 - (XServer *)activeServer;
 	// Accessor for the server object saved in db (nil if none saved)
 

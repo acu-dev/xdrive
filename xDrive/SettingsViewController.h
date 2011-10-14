@@ -8,7 +8,6 @@
 
 @interface SettingsViewController : UITableViewController
 
-@property (nonatomic, strong) IBOutlet UILabel *accountLabel, *storageMaxLabel, *storageUsageLabel, *versionLabel;
 
 
 @end
