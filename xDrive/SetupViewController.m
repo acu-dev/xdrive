@@ -387,7 +387,7 @@ static int FormDefaultYPosIpadLandscape = 166;
 		NSString *msg = NSLocalizedStringFromTable(@"Server version is incompatible with this version of %@. Please check for updates.", 
 												   @"AccountViewController", 
 												   @"Message displayed when server version is incompatible.");
-		reason = [NSString stringWithFormat:msg, [XService appName]];
+		reason = [NSString stringWithFormat:msg, [XDriveConfig appName]];
 	}
 		
 	[self validateServerStatusUpdate:nil];

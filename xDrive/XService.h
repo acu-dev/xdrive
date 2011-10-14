@@ -30,30 +30,34 @@
 + (XService *)sharedXService;
 	// One XService to rule them all
 
-- (XServer *)activeServer;
-	// Accessor for the server object saved in db (nil if none saved)
-
-- (NSString *)activeServerDocumentPath;
-	// Path for files to be stored
-
-- (void)validateUsername:(NSString *)username password:(NSString *)password forHost:(NSString *)host withDelegate:(id<ServerStatusDelegate>)delegate;
-	// Saves user/pass as a temporary credential and sends request for the server's version info
-
-- (void)validateServerWithDelegate:(id<ServerStatusDelegate>)delegate;
-	// Sends request for the saved server's info
-
-
-
-
-
 - (XDirectory *)directoryWithPath:(NSString *)path;
 	// Gets a directory object at given path. Fires off remote fetch in background
 	// and if necessary, directory contents are updated.
 
 - (XDirectory *)updateDirectoryDetails:(NSDictionary *)details;
-	// Updates directory contents with passed data
+	// Updates directory contents with the passed details (Usually from the server).
 
 - (void)downloadFile:(XFile *)file withDelegate:(id<XServiceRemoteDelegate>)delegate;
+	// Downloads a file to a temp location and notifies the delegate.
+
+
+/**
+ *
+ *  Depricated (need to be replaced)
+ *
+ */
+
+- (XServer *)activeServer;
+// Accessor for the server object saved in db (nil if none saved)
+
+- (NSString *)activeServerDocumentPath;
+// Path for files to be stored
+
+- (void)validateUsername:(NSString *)username password:(NSString *)password forHost:(NSString *)host withDelegate:(id<ServerStatusDelegate>)delegate;
+// Saves user/pass as a temporary credential and sends request for the server's version info
+
+- (void)validateServerWithDelegate:(id<ServerStatusDelegate>)delegate;
+// Sends request for the saved server's info
 
 @end
 

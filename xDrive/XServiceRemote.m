@@ -142,6 +142,12 @@ static NSString *serviceInfoPath = @"/info";
 	[self fetchJSONAtURL:infoServiceURLString withTarget:target action:action];
 }
 
+- (void)fetchServerInfoAtHost:(NSString *)host withDelegate:(id<XServiceRemoteDelegate>)delegate
+{
+	NSString *infoServiceURLString = [[self serviceUrlStringForHost:host] stringByAppendingPathComponent:@"info"];
+	[self fetchJSONAtURL:infoServiceURLString withDelegate:delegate];
+}
+
 - (void)fetchDirectoryContentsAtPath:(NSString *)path withTarget:(id)target action:(SEL)action
 {
 	NSString *encodedPath = [path stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding];

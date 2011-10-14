@@ -8,7 +8,9 @@
 
 #import "OpenFileViewController.h"
 #import "XDriveConfig.h"
+#import "XFileUtils.h"
 #import "XService.h"
+
 
 
 
@@ -135,7 +137,7 @@
 	XDrvLog(@"download finished with result: %@", result);
 	
 	// Move file to permanent home
-	[XService moveFileAtPath:(NSString *)result toPath:[xFile localPath]];
+	[XFileUtils moveFileAtPath:(NSString *)result toPath:[xFile localPath]];
 	
 	// Load file
 	[self loadFile];
