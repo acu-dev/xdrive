@@ -18,14 +18,17 @@
 @property (nonatomic, strong) NSMutableDictionary *requests;
 	// Container for each request's connection info
 
-- (NSString *)serviceUrlString;
-	// Returns an absolute url to the saved server's service base path.
+- (NSString *)serverURLStringForHost:(NSString *)host;
+- (NSString *)serverURLString;
+	// Generates an absolute URL to the host using default protocol and port.
+	// If no host is passed and an activeServer is present, activeServer is used.
 
-- (NSString *)serviceUrlStringForHost:(NSString *)host;
-	// Generates an absolute url to the service base path of the passed host
+- (NSString *)serviceURLStringForHost:(NSString *)host;
+- (NSString *)serviceURLString;
+	// Generates an absolute URL to the service base path of the passed host
 	// (uses the default vars defined in XDriveConfig.h. If host is nil the
 	// details from the active server are used.
-		
+
 - (void)fetchJSONAtURL:(NSString *)url withTarget:(id)target action:(SEL)action;
 - (void)fetchJSONAtURL:(NSString *)url withDelegate:(id<XServiceRemoteDelegate>)delegate;
 	// Creates the connection and saves the target/action in the requests dictionary
@@ -62,41 +65,38 @@ static NSString *serviceInfoPath = @"/info";
 
 #pragma mark - Utils
 
-- (NSString *)serviceUrlString
+- (NSString *)serverURLStringForHost:(NSString *)host
 {
-	return [self serviceUrlStringForHost:nil];
-}
-
-- (NSString *)serviceUrlStringForHost:(NSString *)host
-{
-	int port = defaultServerPort;
 	NSString *protocol = defaultServerProtocol;
-	NSString *serviceBase = defaultServiceBasepath;
+	int port = defaultServerPort;
 	
 	if (activeServer)
 	{
 		protocol = activeServer.protocol;
-		host = activeServer.hostname;
 		port = [activeServer.port intValue];
-		serviceBase = activeServer.servicePath;
+		host = activeServer.hostname;
 	}
 	
 	if (!host)
 		return nil;
 	
-	return [NSString stringWithFormat:@"%@://%@:%i%@",
+	NSString *serverURL = [NSString stringWithFormat:@"%@://%@:%i",
 			protocol,
 			host,
-			port,
-			serviceBase];
+			port];
+	XDrvDebug(@"serverURL: %@", serverURL);
+	
+	return serverURL;
 }
 
-- (NSString *)serverUrlString
+- (NSString *)serverURLString
 {
-	return [NSString stringWithFormat:@"%@://%@:%i",
-			activeServer.protocol,
-			activeServer.hostname,
-			[activeServer.port intValue]];
+	return [self serverURLStringForHost:nil];
+}
+
+- (NSString *)serviceURLString
+{	
+	return [[[self serverURLString] stringByAppendingString:activeServer.context] stringByAppendingString:activeServer.servicePath];
 }
 
 - (void)fetchJSONAtURL:(NSString *)url withTarget:(id)target action:(SEL)action
@@ -136,31 +136,35 @@ static NSString *serviceInfoPath = @"/info";
 
 #pragma mark - Fetches
 
-- (void)fetchServerInfoAtHost:(NSString *)host withTarget:(NSObject *)target action:(SEL)action
+- (void)fetchServerInfoAtHost:(NSString *)host withTarget:(id)target action:(SEL)action
 {
-	NSString *infoServiceURLString = [[self serviceUrlStringForHost:host] stringByAppendingPathComponent:@"info"];
+	NSString *infoServiceURLString = [[self serverURLStringForHost:host] stringByAppendingString:@"/xservice"];
 	[self fetchJSONAtURL:infoServiceURLString withTarget:target action:action];
 }
 
-- (void)fetchServerInfoAtHost:(NSString *)host withDelegate:(id<XServiceRemoteDelegate>)delegate
+- (void)fetchDefaultPathsWithDelegate:(id<XServiceRemoteDelegate>)delegate
 {
-	NSString *infoServiceURLString = [[self serviceUrlStringForHost:host] stringByAppendingPathComponent:@"info"];
+	NSString *infoServiceURLString = [[self serviceURLString] stringByAppendingString:@"/paths"];
+	XDrvDebug(@"Fetching paths from: %@", infoServiceURLString);
 	[self fetchJSONAtURL:infoServiceURLString withDelegate:delegate];
-}
-
-- (void)fetchDirectoryContentsAtPath:(NSString *)path withTarget:(id)target action:(SEL)action
-{
-	NSString *encodedPath = [path stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
-	NSString *directoryService = [[self serviceUrlString] stringByAppendingFormat:@"/directory/?path=%@", encodedPath];
-	[self fetchJSONAtURL:directoryService withTarget:target action:action];
 }
 
 - (void)fetchDirectoryContentsAtPath:(NSString *)path withDelegate:(id<XServiceRemoteDelegate>)delegate
 {
 	NSString *encodedPath = [path stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
-	NSString *directoryService = [[self serviceUrlString] stringByAppendingFormat:@"/directory/?path=%@", encodedPath];
+	NSString *directoryService = [[self serviceURLString] stringByAppendingFormat:@"/directory/?path=%@", encodedPath];
 	[self fetchJSONAtURL:directoryService withDelegate:delegate];
 }
+
+/* Deprecated */
+- (void)fetchDirectoryContentsAtPath:(NSString *)path withTarget:(id)target action:(SEL)action
+{
+	XDrvLog(@"DEPRECATED: use fetchDirectoryContentsAtPath:withDelegate: instead");
+	NSString *encodedPath = [path stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
+	NSString *directoryService = [[self serviceURLString] stringByAppendingFormat:@"/directory/?path=%@", encodedPath];
+	[self fetchJSONAtURL:directoryService withTarget:target action:action];
+}
+
 
 
 
@@ -168,7 +172,7 @@ static NSString *serviceInfoPath = @"/info";
 
 - (void)downloadFileAtPath:(NSString *)path withDelegate:(id<XServiceRemoteDelegate>)delegate
 {
-	NSString *absolutePath = [[self serverUrlString] stringByAppendingString:[path stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding]];
+	NSString *absolutePath = [[self serverURLString] stringByAppendingString:[path stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding]];
 	[self downloadFileAtAbsolutePath:absolutePath withDelegate:delegate];
 }
 

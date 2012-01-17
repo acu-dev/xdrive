@@ -13,6 +13,7 @@
 @property (nonatomic, retain) NSString * protocol;
 @property (nonatomic, retain) NSNumber * port;
 @property (nonatomic, retain) NSString * hostname;
+@property (nonatomic, retain) NSString * context;
 @property (nonatomic, retain) NSString * servicePath;
 @property (nonatomic, retain) NSSet *defaultPaths;
 @property (nonatomic, retain) NSSet *entries;

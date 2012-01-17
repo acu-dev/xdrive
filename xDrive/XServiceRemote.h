@@ -20,16 +20,39 @@
 - (id)initWithServer:(XServer *)server;
 	// Saves the server to use for requests and initializes the requests storage
 
-- (void)fetchServerInfoAtHost:(NSString *)host withTarget:(NSObject *)target action:(SEL)action;
-- (void)fetchServerInfoAtHost:(NSString *)host withDelegate:(id<XServiceRemoteDelegate>)delegate;
-	// Gets the server's info. If host is nil the active server will be used.
+- (void)fetchServerInfoAtHost:(NSString *)host withTarget:(id)target action:(SEL)action;
+	// Gets the service info
 
-- (void)fetchDirectoryContentsAtPath:(NSString *)path withTarget:(id)target action:(SEL)action;
+- (void)fetchDefaultPathsWithDelegate:(id<XServiceRemoteDelegate>)delegate;
+	// Gets the server's configured default paths.
+
 - (void)fetchDirectoryContentsAtPath:(NSString *)path withDelegate:(id<XServiceRemoteDelegate>)delegate;
 	// Gets the directory contents for a path
+
+/* Deprecated */
+
+- (void)fetchDirectoryContentsAtPath:(NSString *)path withTarget:(id)target action:(SEL)action;
 
 - (void)downloadFileAtPath:(NSString *)path withDelegate:(id<XServiceRemoteDelegate>)delegate;
 - (void)downloadFileAtAbsolutePath:(NSString *)path withDelegate:(id<XServiceRemoteDelegate>)delegate;
 	// Downloads a file at given url path and notifies delegate on events
+
+
+@end
+
+
+
+@protocol XServiceRemoteDelegate <NSObject>
+
+- (void)connectionFinishedWithResult:(NSObject *)result;
+// Connection finished
+
+- (void)connectionFailedWithError:(NSError *)error;
+// Connection failed
+
+@optional
+
+- (void)connectionDownloadPercentUpdate:(float)percent;
+// Provides an updated percentage of the file downloaded so the view can update (e.g. progress bar)
 
 @end

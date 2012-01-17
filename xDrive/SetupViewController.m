@@ -372,6 +372,10 @@ static int FormDefaultYPosIpadLandscape = 166;
 												@"AccountViewController", 
 												@"Message displayed when authentication fails during server validation.");
 		}
+		else if ([error code] == ServerIsIncompatible)
+		{
+			reason = [error localizedDescription];
+		}
 		else
 		{
 			// Something else went wrong

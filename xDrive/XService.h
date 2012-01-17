@@ -10,6 +10,7 @@
 #import "XServiceLocal.h"
 #import "XServiceRemote.h"
 #import "XServer.h"
+@protocol XServiceRemoteDelegate;
 @protocol ServerStatusDelegate;
 @protocol XFileDownloadDelegate;
 
@@ -39,13 +40,6 @@
 
 - (void)downloadFile:(XFile *)file withDelegate:(id<XServiceRemoteDelegate>)delegate;
 	// Downloads a file to a temp location and notifies the delegate.
-
-
-/**
- *
- *  Depricated (need to be replaced)
- *
- */
 
 - (XServer *)activeServer;
 // Accessor for the server object saved in db (nil if none saved)
@@ -90,20 +84,7 @@ typedef enum _ServerStatus{
 
 
 
-@protocol XServiceRemoteDelegate <NSObject>
 
-- (void)connectionFinishedWithResult:(NSObject *)result;
-	// Connection finished
-
-- (void)connectionFailedWithError:(NSError *)error;
-	// Connection failed
-
-@optional
-
-- (void)connectionDownloadPercentUpdate:(float)percent;
-	// Provides an updated percentage of the file downloaded so the view can update (e.g. progress bar)
-
-@end
 
 
 

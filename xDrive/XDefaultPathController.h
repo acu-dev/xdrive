@@ -12,7 +12,7 @@
 
 @interface XDefaultPathController : NSObject
 
-- (void)fetchDefaultPaths:(NSArray *)defaultPaths withDelegate:(id<ServerStatusDelegate>)delegate;
-	// Fires off requests to get the directory contentes and icon file for each default path.
+- (void)fetchDefaultPathsWithStatusDelegate:(id<ServerStatusDelegate>)delegate;
+	// Gets a list of default paths configured on the server
 
 @end

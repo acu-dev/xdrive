@@ -15,8 +15,8 @@
 
 
 
-@interface XService() <CGChallengeResponseDelegate>
 
+@interface XService() <CGChallengeResponseDelegate>
 
 @property (nonatomic, strong) NSURLCredential *validateCredential;
 	// Credential used when validating server info.
@@ -116,14 +116,19 @@ static XService *sharedXService;
 																  authenticationMethod:@"NSURLAuthenticationMethodHTTPBasic"];
 	[self removeAllCredentialsForProtectionSpace:protectionSpace];*/
 	
+	/*serverStatusDelegate = delegate;
+	validateCredential = [NSURLCredential credentialWithUser:username password:password persistence:NSURLCredentialPersistenceNone];
+	[self.remoteService fetchDefaultPathsAtHost:host withTarget:self action:@selector(receiveDefaultPaths:)];*/
+	
+	
+	// Set delegate to recieve server status messages
 	serverStatusDelegate = delegate;
-	validateCredential = [NSURLCredential credentialWithUser:username password:password persistence:NSURLCredentialPersistencePermanent];
+	
+	// Save credential (used when fetching default paths if info fetch succeeds)
+	validateCredential = [NSURLCredential credentialWithUser:username password:password persistence:NSURLCredentialPersistenceNone];
+	
+	// Fetch server info
 	[self.remoteService fetchServerInfoAtHost:host withTarget:self action:@selector(receiveServerInfoResult:)];
-}
-
-- (void)validateServerWithDelegate:(id<ServerStatusDelegate>)delegate
-{
-	[self.remoteService fetchServerInfoAtHost:nil withTarget:self action:@selector(receiveServerInfoResult:)];
 }
 
 - (void)receiveServerInfoResult:(NSObject *)result
@@ -138,23 +143,21 @@ static XService *sharedXService;
 	NSDictionary *info = (NSDictionary *)result;
 	XDrvDebug(@"Received info: %@", info);
 	
-	NSDictionary *versionInfo = [info objectForKey:@"versions"];
-	NSDictionary *serverInfo = [info objectForKey:@"server"];
-	NSArray *defaultPaths = [info objectForKey:@"defaultPaths"];
+	NSDictionary *xserviceInfo = [info objectForKey:@"xservice"];
+	//NSDictionary *xdriveInfo = [info objectForKey:@"xdrive"];
 	
-	if (versionInfo)
+	if (xserviceInfo)
 	{
 		// Evaluate version info
-		if (![self isServerVersionCompatible:[versionInfo objectForKey:@"xservice"]])
+		if (![self isServerVersionCompatible:[xserviceInfo objectForKey:@"version"]])
 		{
 			// Version incompatible
 			NSString *title = NSLocalizedStringFromTable(@"Unsupported server version",
 														 @"XService",
 														 @"Title for error given when a server responds with an unsupported version.");
-			NSString *localDesc = NSLocalizedStringFromTable(@"%@ responded with a version that is unsupported by this app. Please check for updates.", 
+			NSString *desc = NSLocalizedStringFromTable(@"Server's version is unsupported by this app. Please check for updates.", 
 															 @"XService",
 															 @"Description for error given when a server responds with an unsupported version.");
-			NSString *desc = [NSString stringWithFormat:localDesc, [serverInfo objectForKey:@"host"]];
 			NSDictionary *errorInfo = [NSDictionary dictionaryWithObjectsAndKeys:title, NSLocalizedFailureReasonErrorKey, desc, NSLocalizedDescriptionKey, nil];
 			NSError *error = [NSError errorWithDomain:@"XService" code:ServerIsIncompatible userInfo:errorInfo];
 			[serverStatusDelegate validateServerFailedWithError:error];
@@ -165,13 +168,11 @@ static XService *sharedXService;
 	if (![self activeServer])
 	{
 		// Save server info
-		[self saveServerWithDetails:info];
+		[self saveServerWithDetails:xserviceInfo];
 		
-		if (defaultPaths)
-		{
-			defaultPathController = [[XDefaultPathController alloc] init];
-			[defaultPathController fetchDefaultPaths:defaultPaths withDelegate:serverStatusDelegate];
-		}
+		// Fetch default paths
+		defaultPathController = [[XDefaultPathController alloc] init];
+		[defaultPathController fetchDefaultPathsWithStatusDelegate:serverStatusDelegate];
 	}
 	else
 	{
@@ -181,6 +182,8 @@ static XService *sharedXService;
 
 - (BOOL)isServerVersionCompatible:(NSString *)version
 {
+	// This could evaluate a set of compatible versions. For now
+	// it requires an exact match.
 	return ([version isEqualToString:[XDriveConfig appVersion]]);
 }
 
@@ -189,12 +192,13 @@ static XService *sharedXService;
 	XDrvDebug(@"Creating new server object...");
 	XServer *newServer = [NSEntityDescription insertNewObjectForEntityForName:@"Server" 
 													   inManagedObjectContext:[self.localService managedObjectContext]];
-	NSDictionary *serverDetails = [details objectForKey:@"server"];
-	newServer.protocol = [serverDetails objectForKey:@"protocol"];
-	newServer.port = [serverDetails objectForKey:@"port"];
-	newServer.hostname = [serverDetails objectForKey:@"host"];
-	newServer.servicePath = [serverDetails objectForKey:@"servicePath"];
+	newServer.protocol = [details objectForKey:@"protocol"];
+	newServer.port = [details objectForKey:@"port"];
+	newServer.hostname = [details objectForKey:@"host"];
+	newServer.context = [details objectForKey:@"context"];
+	newServer.servicePath = [details objectForKey:@"serviceBase"];
 	
+	/*
 	// Create all default path objects
 	NSDictionary *pathDetails = [details objectForKey:@"defaultPaths"];
 	for (NSDictionary *defaultPath in pathDetails)
@@ -204,7 +208,7 @@ static XService *sharedXService;
 		newDefaultPath.name = [defaultPath objectForKey:@"name"];
 		newDefaultPath.path = [defaultPath objectForKey:@"path"];
 		[newServer addDefaultPathsObject:newDefaultPath];
-	}
+	}*/
 	
 	// Save context
 	NSError *error = nil;
@@ -389,6 +393,7 @@ static XService *sharedXService;
 
 - (void)respondToAuthenticationChallenge:(NSURLAuthenticationChallenge *)challenge forHandler:(CGAuthenticationChallengeHandler *)challengeHandler
 {
+	XDrvDebug(@"Received auth challenge");
 	if (validateCredential)
 	{
 		// Validating account, use saved credential

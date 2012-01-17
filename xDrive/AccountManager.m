@@ -40,7 +40,7 @@
 - (void)validateServerURL:(NSString *)url withCredential:(NSURLCredential *)credential delegate:(id<ValidateAccountDelegate>)delegate
 {
 	validateAccountDelegate = delegate;
-	[[XService sharedXService].remoteService fetchServerInfoAtHost:url withDelegate:self];
+	//[[XService sharedXService].remoteService fetchServerInfoAtHost:url withDelegate:self];
 }
 
 @end
