@@ -11,12 +11,11 @@
 #import "XDriveConfig.h"
 #import "XDefaultPath.h"
 #import "XDefaultPathController.h"
-#import <CGNetUtils/CGNetUtils.h>
 
 
 
 
-@interface XService() <CGChallengeResponseDelegate>
+@interface XService()
 
 @property (nonatomic, strong) NSURLCredential *validateCredential;
 	// Credential used when validating server info.
@@ -85,9 +84,6 @@ static XService *sharedXService;
 		// Init local and remote services
 		_localService = [[XServiceLocal alloc] init];
 		_remoteService = [[XServiceRemote alloc] initWithServer:[self.localService activeServer]];
-		
-		// Set self as the challenge response delegate
-		[CGNet utils].challengeResponseDelegate = self;
     }
     return self;
 }

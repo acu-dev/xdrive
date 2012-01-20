@@ -8,6 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		A93E36AA13C5630600DE693D /* DirectoryContentsViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = A93E36A913C5630600DE693D /* DirectoryContentsViewController.m */; };
+		A96CBBD014C9EE2C0069A641 /* SetupController.m in Sources */ = {isa = PBXBuildFile; fileRef = A96CBBCF14C9EE2C0069A641 /* SetupController.m */; };
 		A978436C13C6876700120A94 /* DirectoryNavigationController.m in Sources */ = {isa = PBXBuildFile; fileRef = A978436B13C6876700120A94 /* DirectoryNavigationController.m */; };
 		A9C34FCC1426668400E3BC3C /* OpenFileViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = A9C34FCB1426668400E3BC3C /* OpenFileViewController.m */; };
 		C30580341418207400E49727 /* README.md in Resources */ = {isa = PBXBuildFile; fileRef = C30580331418207400E49727 /* README.md */; };
@@ -113,6 +114,8 @@
 /* Begin PBXFileReference section */
 		A93E36A813C5630600DE693D /* DirectoryContentsViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DirectoryContentsViewController.h; sourceTree = "<group>"; };
 		A93E36A913C5630600DE693D /* DirectoryContentsViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DirectoryContentsViewController.m; sourceTree = "<group>"; };
+		A96CBBCE14C9EE2C0069A641 /* SetupController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SetupController.h; sourceTree = "<group>"; };
+		A96CBBCF14C9EE2C0069A641 /* SetupController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SetupController.m; sourceTree = "<group>"; };
 		A978436A13C6876700120A94 /* DirectoryNavigationController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DirectoryNavigationController.h; sourceTree = "<group>"; };
 		A978436B13C6876700120A94 /* DirectoryNavigationController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DirectoryNavigationController.m; sourceTree = "<group>"; };
 		A9C34FCA1426668400E3BC3C /* OpenFileViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OpenFileViewController.h; sourceTree = "<group>"; };
@@ -349,6 +352,8 @@
 			children = (
 				C387701F143F9A1F00E3CE8E /* SetupViewController.h */,
 				C3877020143F9A1F00E3CE8E /* SetupViewController.m */,
+				A96CBBCE14C9EE2C0069A641 /* SetupController.h */,
+				A96CBBCF14C9EE2C0069A641 /* SetupController.m */,
 			);
 			name = Setup;
 			sourceTree = "<group>";
@@ -636,6 +641,7 @@
 				C3877021143F9A1F00E3CE8E /* SetupViewController.m in Sources */,
 				C3C0DE4B1448B691002E35C3 /* XFileUtils.m in Sources */,
 				C3C0DE4E1448C9FA002E35C3 /* AccountManager.m in Sources */,
+				A96CBBD014C9EE2C0069A641 /* SetupController.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

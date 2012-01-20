@@ -20,8 +20,8 @@
 - (id)initWithServer:(XServer *)server;
 	// Saves the server to use for requests and initializes the requests storage
 
-- (void)fetchServerInfoAtHost:(NSString *)host withTarget:(id)target action:(SEL)action;
-	// Gets the service info
+- (void)fetchServerInfoAtHost:(NSString *)host withDelegate:(id<XServiceRemoteDelegate>)delegate;
+	// Gets the server info (version, service paths, etc)
 
 - (void)fetchDefaultPathsWithDelegate:(id<XServiceRemoteDelegate>)delegate;
 	// Gets the server's configured default paths.
@@ -45,14 +45,15 @@
 @protocol XServiceRemoteDelegate <NSObject>
 
 - (void)connectionFinishedWithResult:(NSObject *)result;
-// Connection finished
-
 - (void)connectionFailedWithError:(NSError *)error;
-// Connection failed
+	// Connection status
 
 @optional
 
 - (void)connectionDownloadPercentUpdate:(float)percent;
-// Provides an updated percentage of the file downloaded so the view can update (e.g. progress bar)
+	// Provides an updated percentage of the file downloaded so the view can update (e.g. progress bar)
+
+- (NSURLCredential *)credentialForAuthenticationChallenge;
+	// Returns a credential to use when the connection sends an authentication challenge
 
 @end

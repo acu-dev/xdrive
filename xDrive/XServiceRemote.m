@@ -13,7 +13,7 @@
 
 
 
-@interface XServiceRemote() <CGConnectionDelegate>
+@interface XServiceRemote() <CGConnectionDelegate, CGChallengeResponseDelegate>
 
 @property (nonatomic, strong) NSMutableDictionary *requests;
 	// Container for each request's connection info
@@ -39,7 +39,7 @@
 
 
 
-static NSString *serviceInfoPath = @"/info";
+//static NSString *serviceInfoPath = @"/info";
 
 
 
@@ -59,6 +59,7 @@ static NSString *serviceInfoPath = @"/info";
 	{
 		activeServer = server;
 		requests = [[NSMutableDictionary alloc] init];
+		[CGNet utils].challengeResponseDelegate = self;
     }
     return self;
 }
@@ -270,6 +271,30 @@ static NSString *serviceInfoPath = @"/info";
 	// Calculate percent of file downloaded
 	float percent = (float)totalReceivedBytes / (float)expectedTotalBytes;
 	XDrvDebug(@"Download file percent done: %f", percent);
+	
+	id<XServiceRemoteDelegate> delegate = [request objectForKey:@"delegate"];
+	if ([delegate respondsToSelector:@selector(connectionDownloadPercentUpdate:)])
+	{
+		// Send event off to delegate
+		[delegate connectionDownloadPercentUpdate:percent];
+	}
+}
+
+
+
+#pragma mark - CGChallengeResponseDelegate
+
+- (void)respondToAuthenticationChallenge:(NSURLAuthenticationChallenge *)challenge
+							  forHandler:(CGAuthenticationChallengeHandler *)challengeHandler
+{
+	// Get request details
+	NSDictionary *request = [requests objectForKey:[connection description]];
+	if (!request)
+	{
+		XDrvLog(@"- Error: Unable to find details for connection: %@; nothing to do", [connection description]);
+		return;
+	}
+	
 	
 	id<XServiceRemoteDelegate> delegate = [request objectForKey:@"delegate"];
 	if ([delegate respondsToSelector:@selector(connectionDownloadPercentUpdate:)])
