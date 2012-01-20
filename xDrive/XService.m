@@ -124,7 +124,7 @@ static XService *sharedXService;
 	validateCredential = [NSURLCredential credentialWithUser:username password:password persistence:NSURLCredentialPersistenceNone];
 	
 	// Fetch server info
-	[self.remoteService fetchServerInfoAtHost:host withTarget:self action:@selector(receiveServerInfoResult:)];
+	//[self.remoteService fetchServerInfoAtHost:host withTarget:self action:@selector(receiveServerInfoResult:)];
 }
 
 - (void)receiveServerInfoResult:(NSObject *)result
@@ -386,7 +386,7 @@ static XService *sharedXService;
 
 
 #pragma mark - CGChallengeResponseDelegate
-
+/*
 - (void)respondToAuthenticationChallenge:(NSURLAuthenticationChallenge *)challenge forHandler:(CGAuthenticationChallengeHandler *)challengeHandler
 {
 	XDrvDebug(@"Received auth challenge");
@@ -401,7 +401,7 @@ static XService *sharedXService;
 		[challenge.sender continueWithoutCredentialForAuthenticationChallenge:challenge];
 	}
 }
-
+*/
 
 
 @end

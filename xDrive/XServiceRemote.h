@@ -7,7 +7,6 @@
 //
 
 #import "XServer.h"
-#import <CGNetUtils/CGNetUtils.h>
 @protocol XServiceRemoteDelegate;
 
 

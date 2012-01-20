@@ -9,7 +9,7 @@
 #import "XServiceRemote.h"
 #import "XDriveConfig.h"
 #import "XService.h"
-#import <CGNetUtils/CGNetUtils.h>
+#import <CGNetUtils/CGNet.h>
 
 
 
@@ -288,19 +288,18 @@
 							  forHandler:(CGAuthenticationChallengeHandler *)challengeHandler
 {
 	// Get request details
-	NSDictionary *request = [requests objectForKey:[connection description]];
+	NSDictionary *request = [requests objectForKey:[challengeHandler.connection description]];
 	if (!request)
 	{
-		XDrvLog(@"- Error: Unable to find details for connection: %@; nothing to do", [connection description]);
+		XDrvLog(@"- Error: Unable to find details for connection: %@; nothing to do", [challengeHandler.connection description]);
 		return;
 	}
-	
-	
 	id<XServiceRemoteDelegate> delegate = [request objectForKey:@"delegate"];
-	if ([delegate respondsToSelector:@selector(connectionDownloadPercentUpdate:)])
+	
+	if ([delegate respondsToSelector:@selector(credentialForAuthenticationChallenge)])
 	{
-		// Send event off to delegate
-		[delegate connectionDownloadPercentUpdate:percent];
+		// Get credential to use from delegate
+		[challengeHandler resolveWithCredential:[delegate credentialForAuthenticationChallenge]];
 	}
 }
 
