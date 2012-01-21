@@ -44,15 +44,20 @@
 @protocol XServiceRemoteDelegate <NSObject>
 
 - (void)connectionFinishedWithResult:(NSObject *)result;
-- (void)connectionFailedWithError:(NSError *)error;
-	// Connection status
+    // Result of the remote connection
 
 @optional
 
-- (void)connectionDownloadPercentUpdate:(float)percent;
-	// Provides an updated percentage of the file downloaded so the view can update (e.g. progress bar)
+- (void)connectionFailedWithError:(NSError *)error;
+    // Handle connection failure
+
+- (void)fileTransferProgressUpdate:(float)percent;
+    // Get updates on the file being transferred
 
 - (NSURLCredential *)credentialForAuthenticationChallenge;
-	// Returns a credential to use when the connection sends an authentication challenge
+	// Provides a credential to use when the connection sends an authentication challenge
+
+/* deprecated */
+- (void)connectionDownloadPercentUpdate:(float)percent;
 
 @end
