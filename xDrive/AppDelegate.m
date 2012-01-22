@@ -7,55 +7,61 @@
 //
 
 #import "AppDelegate.h"
+#import "XDriveConfig.h"
 #import "XService.h"
+#import "SetupController.h"
+
+
+@interface AppDelegate ()
+
+@property (nonatomic, strong) SetupController *setupController;
+
+@end
+
+
+
 
 @implementation AppDelegate
 
 @synthesize window;
+@synthesize setupController;
+
+
+
+#pragma mark - Application
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
 {
     // Override point for customization after application launch.
 	self.window = [[UIWindow alloc] initWithFrame:[[UIScreen mainScreen] bounds]];
-	UIViewController *viewController = nil;
 	
-	if ([[UIDevice currentDevice] userInterfaceIdiom] == UIUserInterfaceIdiomPhone)
+	// Implement iPad specific stuff
+	/*if ([[UIDevice currentDevice] userInterfaceIdiom] == UIUserInterfaceIdiomPad) {
+	 UISplitViewController *splitViewController = (UISplitViewController *)self.window.rootViewController;
+	 UINavigationController *navigationController = [splitViewController.viewControllers lastObject];
+	 splitViewController.delegate = (id)navigationController.topViewController;
+	 }*/
+	
+	// Get root view controller
+	UIViewController *rootViewController = nil;
+	if (![[XService sharedXService] activeServer])
 	{
-		// iPhone views
-		UIStoryboard *storyboard = [UIStoryboard storyboardWithName:@"MainStoryboard_iPhone" bundle:nil];
-		
-		if ([[XService sharedXService] activeServer])
-		{
-			// Send to root view
-			viewController = [storyboard instantiateInitialViewController];
-		}
-		else
-		{
-			// Send to setup view
-			viewController = [storyboard instantiateViewControllerWithIdentifier:@"SetupView"];
-		}
+		// No server configured so make setup the root view controller
+		XDrvDebug(@"Loading initial setup");
+		setupController = [[SetupController alloc] init];
+		rootViewController = [setupController viewController];
 	}
 	else
 	{
-		// iPad
-		UIStoryboard *storyboard = [UIStoryboard storyboardWithName:@"MainStoryboard_iPad" bundle:nil];
-				
-		if ([[XService sharedXService] activeServer])
-		{
-			// Send to root view
-			viewController = [storyboard instantiateInitialViewController];
-		}
-		else
-		{
-			// Send to setup view
-			viewController = [storyboard instantiateViewControllerWithIdentifier:@"SetupView"];
-		}
+		// Load storyboard's initial view controller
+		NSString *storyboardName = ([[UIDevice currentDevice] userInterfaceIdiom] == UIUserInterfaceIdiomPhone) ? @"MainStoryboard_iPhone" : @"MainStoryboard_iPad";
+		UIStoryboard *storyboard = [UIStoryboard storyboardWithName:storyboardName bundle:nil];
+		rootViewController = [storyboard instantiateInitialViewController];
 	}
-	
-	//[[UINavigationBar appearance] setTintColor:[UIColor colorWithRed:0.160 green:0.250 blue:0.337 alpha:1]];
-	
-	self.window.rootViewController = viewController;
-    [self.window makeKeyAndVisible];
+
+	// Display
+	self.window.rootViewController = rootViewController;
+	[self.window makeKeyAndVisible];
     return YES;
 }
 
@@ -98,4 +104,20 @@
 	 */
 }
 
+
+
 @end
+
+
+
+
+
+
+
+
+
+
+
+
+
+

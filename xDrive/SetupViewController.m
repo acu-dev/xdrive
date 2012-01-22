@@ -68,6 +68,7 @@ static int FormDefaultYPosIpadLandscape = 166;
 @synthesize serverField, usernameField, passwordField;
 @synthesize loginButton;
 @synthesize activityIndicator;
+@synthesize setupController;
 
 
 

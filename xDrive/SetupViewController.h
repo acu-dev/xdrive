@@ -6,6 +6,8 @@
 //  Copyright (c) 2011 Abilene Christian University. All rights reserved.
 //
 
+#import "SetupController.h"
+
 @interface SetupViewController : UIViewController <UITextFieldDelegate, UIGestureRecognizerDelegate>
 
 @property (nonatomic, strong) IBOutlet UIImageView *bgImageView;
@@ -13,6 +15,7 @@
 @property (nonatomic, strong) IBOutlet UITextField *serverField, *usernameField, *passwordField;
 @property (nonatomic, strong) IBOutlet UIButton *loginButton;
 @property (nonatomic, strong) IBOutlet UIActivityIndicatorView *activityIndicator;
+@property (nonatomic, strong) SetupController *setupController;
 
 - (IBAction)dismissKeyboard:(id)sender;
 - (IBAction)login:(id)sender;
