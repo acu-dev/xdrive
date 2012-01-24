@@ -137,10 +137,11 @@
 
 #pragma mark - Fetches
 
-- (void)fetchServerInfoAtHost:(NSString *)host withTarget:(id)target action:(SEL)action
+- (void)fetchInfoAtHost:(NSString *)host withDelegate:(id<XServiceRemoteDelegate>)delegate
 {
 	NSString *infoServiceURLString = [[self serverURLStringForHost:host] stringByAppendingString:@"/xservice"];
-	[self fetchJSONAtURL:infoServiceURLString withTarget:target action:action];
+	XDrvDebug(@"Getting info from url: %@", infoServiceURLString);
+	[self fetchJSONAtURL:infoServiceURLString withDelegate:delegate];
 }
 
 - (void)fetchDefaultPathsWithDelegate:(id<XServiceRemoteDelegate>)delegate
@@ -239,18 +240,19 @@
 	}
 	
 	id<XServiceRemoteDelegate> delegate = [request objectForKey:@"delegate"];
-	if (delegate)
+	if ([delegate respondsToSelector:@selector(connectionFailedWithError:)])
 	{
 		// Send event off to delegate
 		[delegate connectionFailedWithError:error];
 	}
-	else
+	
+	/*else
 	{
 		// Send results off to request's target
 		id target = [request objectForKey:@"targetObject"];
 		SEL action = NSSelectorFromString([request objectForKey:@"selectorString"]);
 		[target performSelector:action withObject:error];
-	}
+	}*/
 	
 	// Clean up request
 	request = nil;

@@ -14,6 +14,7 @@
 
 
 
+
 @interface SetupController() <XServiceRemoteDelegate>
 
 @property (nonatomic, strong) NSURLCredential *validateCredential;
@@ -51,7 +52,7 @@
 	
 	
 	// Get server info
-	[[XService sharedXService].remoteService fetchServerInfoAtHost:host withDelegate:self];
+	[[XService sharedXService].remoteService fetchInfoAtHost:host withDelegate:self];
 }
 
 
@@ -64,7 +65,20 @@
 
 - (void)connectionFailedWithError:(NSError *)error
 {
-	
+	if ([error code] == -1013)
+	{
+		// Build fake info object
+		NSDictionary *xservice = [[NSDictionary alloc] initWithObjectsAndKeys:
+								  @"1.0-SNAPSHOT", @"version",
+								  @"https", @"protocol",
+								  @"webfiles.acu.edu", @"host",
+								  [NSNumber numberWithInt:443], @"port",
+								  @"/xservice", @"context",
+								  @"/rs", @"serviceBase",
+								  nil];
+		NSDictionary *result = [[NSDictionary alloc] initWithObjectsAndKeys:@"xservice", xservice, nil];
+		[self connectionFinishedWithResult:result];
+	}
 }
 
 - (NSURLCredential *)credentialForAuthenticationChallenge

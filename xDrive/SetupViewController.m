@@ -47,7 +47,7 @@ static int FormDefaultYPosIpadLandscape = 166;
 - (BOOL)isFormValid;
 	// Evaluates the user, pass, and server text fields for valid data
 
-- (void)validateAccount;
+- (void)doLogin;
 	// Asks XService to validate the account credentials.
 
 - (void)dismissSetup;
@@ -166,7 +166,7 @@ static int FormDefaultYPosIpadLandscape = 166;
 	if ([self isFormValid])
 	{
 		
-		[self validateAccount];
+		[self doLogin];
 	}
 	else
 	{
@@ -290,7 +290,7 @@ static int FormDefaultYPosIpadLandscape = 166;
 	}
 	else if ([self isFormValid])
 	{
-		[self validateAccount];
+		[self doLogin];
 	}
 	
 	return NO;
@@ -313,7 +313,7 @@ static int FormDefaultYPosIpadLandscape = 166;
 
 #pragma mark - Login
 
-- (void)validateAccount
+- (void)doLogin
 {
 	loginButton.enabled = NO;
 	[self dismissKeyboard:self];
@@ -323,11 +323,13 @@ static int FormDefaultYPosIpadLandscape = 166;
 	[activityIndicator startAnimating];
 	activityIndicator.hidden = NO;
 	
-	// Ask XService to validate account
-	[[XService sharedXService] validateUsername:usernameField.text 
-									   password:passwordField.text 
-										forHost:serverField.text 
-								   withDelegate:self];
+	if (!setupController)
+	{
+		XDrvLog(@"Can't do setup, setupController is not set");
+		return;
+	}
+	
+	[setupController setupWithUsername:usernameField.text password:passwordField.text forHost:serverField.text];
 }
 
 - (BOOL)isFormValid

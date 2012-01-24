@@ -19,7 +19,7 @@
 - (id)initWithServer:(XServer *)server;
 	// Saves the server to use for requests and initializes the requests storage
 
-- (void)fetchServerInfoAtHost:(NSString *)host withDelegate:(id<XServiceRemoteDelegate>)delegate;
+- (void)fetchInfoAtHost:(NSString *)host withDelegate:(id<XServiceRemoteDelegate>)delegate;
 	// Gets the server info (version, service paths, etc)
 
 - (void)fetchDefaultPathsWithDelegate:(id<XServiceRemoteDelegate>)delegate;
