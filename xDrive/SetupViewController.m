@@ -30,7 +30,7 @@ static int FormDefaultYPosIpadPortrait = 270;
 static int FormDefaultYPosIpadLandscape = 166;
 
 
-@interface SetupViewController() <ServerStatusDelegate>
+@interface SetupViewController()
 
 @property (nonatomic, assign) BOOL isKeyboardVisible, isRotating;
 
@@ -319,7 +319,7 @@ static int FormDefaultYPosIpadLandscape = 166;
 	[self dismissKeyboard:self];
 	
 	// Show activity
-	[self validateServerStatusUpdate:@"Connecting to server..."];
+	[self setupStatusUpdate:@"Connecting to server..."];
 	[activityIndicator startAnimating];
 	activityIndicator.hidden = NO;
 	
@@ -350,9 +350,9 @@ static int FormDefaultYPosIpadLandscape = 166;
 
 
 
-#pragma mark - ServerStatusDelegate
+#pragma mark - Setup Responses
 
-- (void)validateServerStatusUpdate:(NSString *)status
+- (void)setupStatusUpdate:(NSString *)status
 {
 	if (!status)
 		status = @"Login";
@@ -360,7 +360,7 @@ static int FormDefaultYPosIpadLandscape = 166;
 	[loginButton setTitle:status forState:UIControlStateNormal];
 }
 
-- (void)validateServerFailedWithError:(NSError *)error
+- (void)setupFailedWithError:(NSError *)error
 {
 	NSString *reason = nil;
 	
@@ -397,7 +397,7 @@ static int FormDefaultYPosIpadLandscape = 166;
 		reason = [NSString stringWithFormat:msg, [XDriveConfig appName]];
 	}
 		
-	[self validateServerStatusUpdate:nil];
+	[self setupStatusUpdate:nil];
 	[activityIndicator stopAnimating];
 	activityIndicator.hidden = YES;
 	loginButton.enabled = YES;
@@ -407,10 +407,10 @@ static int FormDefaultYPosIpadLandscape = 166;
 	[hud hideAfter:2];
 }
 
-- (void)validateServerFinishedWithSuccess
+- (void)setupFinished
 {
 	// Success!
-	[self validateServerStatusUpdate:@"Success!"];
+	[self setupStatusUpdate:@"Success!"];
 	[activityIndicator stopAnimating];
 	activityIndicator.hidden = YES;
 	

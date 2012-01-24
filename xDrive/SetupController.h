@@ -11,8 +11,7 @@
 
 @interface SetupController : NSObject
 
-@property (strong, nonatomic) UIViewController *viewController;
-	// View controller to provide user/host/pass
+- (UIViewController *)viewController;
 
 - (void)setupWithUsername:(NSString *)username password:(NSString *)password forHost:(NSString *)host;
 	// Starts validating the user/pass/host provided

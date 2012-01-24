@@ -64,7 +64,7 @@
 		C388C9FE1445D88A0098E123 /* setup-bg-ipad.png in Resources */ = {isa = PBXBuildFile; fileRef = C388C9FD1445D88A0098E123 /* setup-bg-ipad.png */; };
 		C3AAF63D142CED6C002BC5C8 /* SettingsViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = C3AAF63C142CED6C002BC5C8 /* SettingsViewController.m */; };
 		C3AAF642142CFCC1002BC5C8 /* RecentViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = C3AAF641142CFCC1002BC5C8 /* RecentViewController.m */; };
-		C3B63B81142B94C100152C8A /* XDefaultPathController.m in Sources */ = {isa = PBXBuildFile; fileRef = C3B63B80142B94C100152C8A /* XDefaultPathController.m */; };
+		C3B63B81142B94C100152C8A /* DefaultPathController.m in Sources */ = {isa = PBXBuildFile; fileRef = C3B63B80142B94C100152C8A /* DefaultPathController.m */; };
 		C3C0DE4B1448B691002E35C3 /* XFileUtils.m in Sources */ = {isa = PBXBuildFile; fileRef = C3C0DE4A1448B691002E35C3 /* XFileUtils.m */; };
 		C3C0DE4E1448C9FA002E35C3 /* AccountManager.m in Sources */ = {isa = PBXBuildFile; fileRef = C3C0DE4D1448C9FA002E35C3 /* AccountManager.m */; };
 		C3C9A9C213D9D61B003B5E91 /* AudioToolbox.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C3C9A9C113D9D61B003B5E91 /* AudioToolbox.framework */; };
@@ -180,8 +180,8 @@
 		C3AAF63C142CED6C002BC5C8 /* SettingsViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SettingsViewController.m; sourceTree = "<group>"; };
 		C3AAF640142CFCC1002BC5C8 /* RecentViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RecentViewController.h; sourceTree = "<group>"; };
 		C3AAF641142CFCC1002BC5C8 /* RecentViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RecentViewController.m; sourceTree = "<group>"; };
-		C3B63B7F142B94C100152C8A /* XDefaultPathController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = XDefaultPathController.h; sourceTree = "<group>"; };
-		C3B63B80142B94C100152C8A /* XDefaultPathController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = XDefaultPathController.m; sourceTree = "<group>"; };
+		C3B63B7F142B94C100152C8A /* DefaultPathController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DefaultPathController.h; sourceTree = "<group>"; };
+		C3B63B80142B94C100152C8A /* DefaultPathController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DefaultPathController.m; sourceTree = "<group>"; };
 		C3C0DE491448B691002E35C3 /* XFileUtils.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = XFileUtils.h; sourceTree = "<group>"; };
 		C3C0DE4A1448B691002E35C3 /* XFileUtils.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = XFileUtils.m; sourceTree = "<group>"; };
 		C3C0DE4C1448C9FA002E35C3 /* AccountManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AccountManager.h; sourceTree = "<group>"; };
@@ -337,8 +337,6 @@
 				C3D9E88713C34D2B007D1A7C /* XServiceLocal.m */,
 				C3D9E88213C34D1A007D1A7C /* XServiceRemote.h */,
 				C3D9E88313C34D1A007D1A7C /* XServiceRemote.m */,
-				C3B63B7F142B94C100152C8A /* XDefaultPathController.h */,
-				C3B63B80142B94C100152C8A /* XDefaultPathController.m */,
 				C3C0DE491448B691002E35C3 /* XFileUtils.h */,
 				C3C0DE4A1448B691002E35C3 /* XFileUtils.m */,
 				C3C0DE4C1448C9FA002E35C3 /* AccountManager.h */,
@@ -354,6 +352,8 @@
 				C3877020143F9A1F00E3CE8E /* SetupViewController.m */,
 				A96CBBCE14C9EE2C0069A641 /* SetupController.h */,
 				A96CBBCF14C9EE2C0069A641 /* SetupController.m */,
+				C3B63B7F142B94C100152C8A /* DefaultPathController.h */,
+				C3B63B80142B94C100152C8A /* DefaultPathController.m */,
 			);
 			name = Setup;
 			sourceTree = "<group>";
@@ -633,7 +633,7 @@
 				C3E6E0BE13DE010A00EA014B /* XDefaultPath.m in Sources */,
 				C3E6E0C113DE06E100EA014B /* xDrive.xcdatamodeld in Sources */,
 				A9C34FCC1426668400E3BC3C /* OpenFileViewController.m in Sources */,
-				C3B63B81142B94C100152C8A /* XDefaultPathController.m in Sources */,
+				C3B63B81142B94C100152C8A /* DefaultPathController.m in Sources */,
 				C3AAF63D142CED6C002BC5C8 /* SettingsViewController.m in Sources */,
 				C3AAF642142CFCC1002BC5C8 /* RecentViewController.m in Sources */,
 				C33F001B1436526900B236B5 /* LocalStorageViewController.m in Sources */,

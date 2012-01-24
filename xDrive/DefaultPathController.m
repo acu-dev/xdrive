@@ -6,20 +6,23 @@
 //  Copyright (c) 2011 Abilene Christian University. All rights reserved.
 //
 
-#import "XDefaultPathController.h"
+#import "DefaultPathController.h"
 #import "XDriveConfig.h"
 #import "XDefaultPath.h"
 #import "XFileUtils.h"
 
 
 
-@interface XDefaultPathController() <XServiceRemoteDelegate>
+@interface DefaultPathController() <XServiceRemoteDelegate>
+
+@property (nonatomic, strong) XServer *xServer;
+	// Server object to fetch default paths from
+
+@property (nonatomic, strong) SetupViewController *setupViewController;
+	// View controller to receive status notifications
 
 @property (nonatomic, strong) NSArray *pathDetails;
 	// The array of default paths to fetch
-
-@property (nonatomic, assign) id<ServerStatusDelegate> serverStatusDelegate;
-	// Delegate to receive status notifications
 
 @property (nonatomic, assign) int activeFetchCount;
 	// Counter that gets decremented when fetches return
@@ -47,24 +50,38 @@
 
 
 
-@implementation XDefaultPathController
+@implementation DefaultPathController
 
+
+@synthesize xServer;
+@synthesize setupViewController;
 
 @synthesize pathDetails;
-@synthesize serverStatusDelegate;
 @synthesize activeFetchCount;
 @synthesize iconToPathMap;
 
 
 
+- (id)initWithServer:(XServer *)server
+{
+	self = [super init];
+	if (self)
+	{
+		self.xServer = server;
+	}
+	return self;
+}
+
+
+
 #pragma mark - Fetching
 
-- (void)fetchDefaultPathsWithStatusDelegate:(id<ServerStatusDelegate>)delegate
+- (void)fetchDefaultPathsWithViewController:(SetupViewController *)viewController
 {
-	serverStatusDelegate = delegate;
+	setupViewController = viewController;
 	
 	// Get the list of default paths
-	[serverStatusDelegate validateServerStatusUpdate:@"Downloading defaults..."];
+	[viewController setupStatusUpdate:@"Downloading defaults..."];
 	[[XService sharedXService].remoteService fetchDefaultPathsWithDelegate:self];
 }
 
@@ -106,7 +123,7 @@
 {
 	pathDetails = details;
 	iconToPathMap = [[NSMutableDictionary alloc] init];
-	[serverStatusDelegate validateServerStatusUpdate:@"Initializing..."];
+	[setupViewController setupStatusUpdate:@"Initializing..."];
 	
 	// Start fetching directory contents and icons for each default path
 	for (NSDictionary *defaultPath in pathDetails)
@@ -207,7 +224,7 @@
 	if (!activeFetchCount)
 	{
 		// All done getting default paths; notify delegate
-		[serverStatusDelegate validateServerFinishedWithSuccess];
+		[setupViewController setupFinished];
 	}
 }
 
@@ -219,7 +236,7 @@
 	if (!activeFetchCount)
 	{
 		// All done getting default paths; notify delegate
-		[serverStatusDelegate validateServerFinishedWithSuccess];
+		[setupViewController setupFinished];
 	}
 }
 

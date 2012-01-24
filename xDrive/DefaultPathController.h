@@ -7,12 +7,15 @@
 //
 
 #import "XService.h"
+#import "SetupViewController.h"
 
 
+@interface DefaultPathController : NSObject
 
-@interface XDefaultPathController : NSObject
+- (id)initWithServer:(XServer *)server;
+	// Init with a server to save default path data to
 
-- (void)fetchDefaultPathsWithStatusDelegate:(id<ServerStatusDelegate>)delegate;
+- (void)fetchDefaultPathsWithViewController:(SetupViewController *)viewController;
 	// Gets a list of default paths configured on the server
 
 @end

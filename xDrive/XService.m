@@ -10,7 +10,7 @@
 #import "XFileUtils.h"
 #import "XDriveConfig.h"
 #import "XDefaultPath.h"
-#import "XDefaultPathController.h"
+#import "DefaultPathController.h"
 
 
 
@@ -20,7 +20,7 @@
 @property (nonatomic, strong) NSURLCredential *validateCredential;
 	// Credential used when validating server info.
 
-@property (nonatomic, strong) XDefaultPathController *defaultPathController;
+@property (nonatomic, strong) DefaultPathController *defaultPathController;
 
 @property (nonatomic, assign) int fetchingDefaultPaths;
 	// Counter that gets decremented as default path fetches return.
@@ -127,7 +127,7 @@ static XService *sharedXService;
 	//[self.remoteService fetchServerInfoAtHost:host withTarget:self action:@selector(receiveServerInfoResult:)];
 }
 
-- (void)receiveServerInfoResult:(NSObject *)result
+/*- (void)receiveServerInfoResult:(NSObject *)result
 {
 	if ([result isKindOfClass:[NSError class]])
 	{
@@ -167,7 +167,7 @@ static XService *sharedXService;
 		[self saveServerWithDetails:xserviceInfo];
 		
 		// Fetch default paths
-		defaultPathController = [[XDefaultPathController alloc] init];
+		defaultPathController = [[DefaultPathController alloc] init];
 		[defaultPathController fetchDefaultPathsWithStatusDelegate:serverStatusDelegate];
 	}
 	else
@@ -204,7 +204,7 @@ static XService *sharedXService;
 		newDefaultPath.name = [defaultPath objectForKey:@"name"];
 		newDefaultPath.path = [defaultPath objectForKey:@"path"];
 		[newServer addDefaultPathsObject:newDefaultPath];
-	}*/
+	}*
 	
 	// Save context
 	NSError *error = nil;
@@ -221,7 +221,7 @@ static XService *sharedXService;
 		// Handle error
 		XDrvLog(@"Error: unable to save context after adding new server - %@", [error localizedDescription]);
 	}
-}
+}*/
 
 
 

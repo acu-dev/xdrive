@@ -15,9 +15,15 @@
 @property (nonatomic, strong) IBOutlet UITextField *serverField, *usernameField, *passwordField;
 @property (nonatomic, strong) IBOutlet UIButton *loginButton;
 @property (nonatomic, strong) IBOutlet UIActivityIndicatorView *activityIndicator;
-@property (nonatomic, strong) SetupController *setupController;
+@property (nonatomic, weak) SetupController *setupController;
+
 
 - (IBAction)dismissKeyboard:(id)sender;
 - (IBAction)login:(id)sender;
+
+
+- (void)setupStatusUpdate:(NSString *)status;
+- (void)setupFailedWithError:(NSError *)error;
+- (void)setupFinished;
 
 @end
