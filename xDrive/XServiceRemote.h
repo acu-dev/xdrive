@@ -16,6 +16,9 @@
 @property (strong, nonatomic) XServer *activeServer;
 	// Server info to use when building request URLs
 
+@property (nonatomic, weak) id<XServiceRemoteDelegate> authDelegate;
+	// Special delegate to handle authentication challenges instead of the connection's delegate
+
 - (id)initWithServer:(XServer *)server;
 	// Saves the server to use for requests and initializes the requests storage
 

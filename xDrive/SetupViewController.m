@@ -366,7 +366,7 @@ static int FormDefaultYPosIpadLandscape = 166;
 	
 	if (error)
 	{
-		XDrvLog(@"Validate account failed: %@", [error description]);
+		XDrvLog(@"Setup failed: %@", [error description]);
 		
 		if ([error code] == NSURLErrorUserCancelledAuthentication)
 		{

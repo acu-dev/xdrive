@@ -15,11 +15,11 @@
 
 @interface DefaultPathController() <XServiceRemoteDelegate>
 
+@property (nonatomic, strong) SetupController *setupController;
+	// View controller to receive status notifications
+
 @property (nonatomic, strong) XServer *xServer;
 	// Server object to fetch default paths from
-
-@property (nonatomic, strong) SetupViewController *setupViewController;
-	// View controller to receive status notifications
 
 @property (nonatomic, strong) NSArray *pathDetails;
 	// The array of default paths to fetch
@@ -30,11 +30,8 @@
 @property (nonatomic, strong) NSMutableDictionary *iconToPathMap;
 	// Map of icon file names and the paths they go to
 
-- (void)fetchDefaultPath:(NSDictionary *)defaultPath;
-	// Fires off fetches for the default path's contents and icon files
-
 - (void)receiveDefaultPaths:(NSArray *)details;
-	// Parses the list of paths returned and fires off a directory contents fetch for each one
+	// Creates an XDefaultPath object for each path returned and attaches them to the server
 
 - (void)receiveDefaultPathDetails:(NSDictionary *)details;
 	// Creates the default path directory and associates it with the XDefaultPath object
@@ -53,8 +50,9 @@
 @implementation DefaultPathController
 
 
+@synthesize setupController;
 @synthesize xServer;
-@synthesize setupViewController;
+
 
 @synthesize pathDetails;
 @synthesize activeFetchCount;
@@ -62,12 +60,12 @@
 
 
 
-- (id)initWithServer:(XServer *)server
+- (id)initWithController:(SetupController *)controller
 {
 	self = [super init];
 	if (self)
 	{
-		self.xServer = server;
+		self.setupController = controller;
 	}
 	return self;
 }
@@ -76,41 +74,48 @@
 
 #pragma mark - Fetching
 
-- (void)fetchDefaultPathsWithViewController:(SetupViewController *)viewController
+- (void)fetchDefaultPathsForServer:(XServer *)server
 {
-	setupViewController = viewController;
+	xServer	= server;
 	
 	// Get the list of default paths
-	[viewController setupStatusUpdate:@"Downloading defaults..."];
+	[setupController defaultPathsStatusUpdate:@"Downloading defaults..."];
 	[[XService sharedXService].remoteService fetchDefaultPathsForServer:xServer withDelegate:self];
 }
 
-- (void)fetchDefaultPath:(NSDictionary *)defaultPath
+- (void)initializeDefaultPaths
 {
-	NSString *path = [defaultPath objectForKey:@"path"];
+	// Map to associate fetched icons with their default path
+	iconToPathMap = [[NSMutableDictionary alloc] init];
 	
-	// Get the default path's directory contents
-	XDrvDebug(@"Fetching default paths: %@", path);
-	[[XService sharedXService].remoteService fetchDirectoryContentsAtPath:path withDelegate:self];
-	activeFetchCount++;
-	
-	NSString *iconPath = [defaultPath objectForKey:@"icon"];
-	if (iconPath)
+	// Start fetching directory contents and icons for each default path
+	for (NSDictionary *defaultPath in pathDetails)
 	{
-		// Get the default path's icon
-		XDrvDebug(@"Fetching icon: %@", iconPath);
-		[[XService sharedXService].remoteService downloadFileAtAbsolutePath:iconPath withDelegate:self];
-		[iconToPathMap setObject:path forKey:[iconPath lastPathComponent]];
+		NSString *path = [defaultPath objectForKey:@"path"];
+		
+		// Get the default path's directory contents
+		XDrvDebug(@"Fetching directory details for default path: %@", path);
+		[[XService sharedXService].remoteService fetchDirectoryContentsAtPath:path withDelegate:self];
 		activeFetchCount++;
 		
-		NSString *hiresIconPath = [defaultPath objectForKey:@"icon@2x"];
-		if (hiresIconPath)
+		NSString *iconPath = [defaultPath objectForKey:@"icon"];
+		if (iconPath)
 		{
-			// Get the default path's @2x icon
-			XDrvDebug(@"Fetching @2x icon: %@", hiresIconPath);
-			[[XService sharedXService].remoteService downloadFileAtAbsolutePath:hiresIconPath withDelegate:self];
+			// Get the default path's icon
+			XDrvDebug(@"Fetching icon: %@", iconPath);
+			[[XService sharedXService].remoteService downloadFileAtAbsolutePath:iconPath withDelegate:self];
 			[iconToPathMap setObject:path forKey:[iconPath lastPathComponent]];
 			activeFetchCount++;
+			
+			NSString *hiresIconPath = [defaultPath objectForKey:@"icon@2x"];
+			if (hiresIconPath)
+			{
+				// Get the default path's @2x icon
+				XDrvDebug(@"Fetching @2x icon: %@", hiresIconPath);
+				[[XService sharedXService].remoteService downloadFileAtAbsolutePath:hiresIconPath withDelegate:self];
+				[iconToPathMap setObject:path forKey:[iconPath lastPathComponent]];
+				activeFetchCount++;
+			}
 		}
 	}
 }
@@ -123,14 +128,18 @@
 {
 	XDrvDebug(@"Got default paths: %@", details);
 	pathDetails = details;
-	iconToPathMap = [[NSMutableDictionary alloc] init];
-	[setupViewController setupStatusUpdate:@"Initializing..."];
 	
-	// Start fetching directory contents and icons for each default path
+	// Create all default path objects
 	for (NSDictionary *defaultPath in pathDetails)
 	{
-		//[self fetchDefaultPath:defaultPath];
+		XDefaultPath *newDefaultPath = [NSEntityDescription insertNewObjectForEntityForName:@"DefaultPath"
+																	 inManagedObjectContext:[[XService sharedXService].localService managedObjectContext]];
+		newDefaultPath.name = [defaultPath objectForKey:@"name"];
+		newDefaultPath.path = [defaultPath objectForKey:@"path"];
+		[xServer addDefaultPathsObject:newDefaultPath];
 	}
+	
+	[setupController defaultPathsValidated];
 }
 
 - (void)receiveDefaultPathDetails:(NSDictionary *)details
@@ -197,6 +206,13 @@
 
 - (void)connectionFinishedWithResult:(NSObject *)result
 {
+	if (!xServer)
+	{
+		// A connection failed and we're in a reset state; do nothing
+		return;
+	}
+	
+	
 	if (activeFetchCount == 0 && [result isKindOfClass:[NSArray class]])
 	{
 		// List of default paths
@@ -225,20 +241,22 @@
 	if (!activeFetchCount)
 	{
 		// All done getting default paths; notify delegate
-		[setupViewController setupFinished];
+		[setupController defaultPathsFinished];
 	}
 }
 
 - (void)connectionFailedWithError:(NSError *)error
 {
-	XDrvLog(@"Error: %@", error);
-	activeFetchCount--;
+	XDrvLog(@"Connection failed: %@", error);
 	
-	if (!activeFetchCount)
-	{
-		// All done getting default paths; notify delegate
-		[setupViewController setupFinished];
-	}
+	// Update view
+	[setupController defaultPathsFailedWithError:error];
+	
+	// Reset
+	activeFetchCount = 0;
+	pathDetails = nil;
+	setupController = nil;
+	xServer = nil;
 }
 
 

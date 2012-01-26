@@ -29,6 +29,8 @@ typedef enum _SetupStep {
 
 @property (nonatomic, strong) XServer *server;
 
+@property (nonatomic, assign) SetupStep setupStep;
+
 @property (nonatomic, strong) NSString *validateUser, *validatePass;
 	// User/pass to use when authenticating to server
 
@@ -36,7 +38,7 @@ typedef enum _SetupStep {
 
 - (void)receiveServerInfoResult:(NSObject *)result;
 - (BOOL)isServerVersionCompatible:(NSString *)version;
-
+- (void)saveCredentials;
 	
 @end
 
@@ -47,6 +49,7 @@ typedef enum _SetupStep {
 
 @synthesize viewController;
 @synthesize server;
+@synthesize setupStep;
 @synthesize validateUser, validatePass;
 @synthesize defaultPathController;
 
@@ -73,6 +76,7 @@ typedef enum _SetupStep {
 	validatePass = password;
 	
 	// Get server info
+	setupStep = ValidateServer;
 	[[XService sharedXService].remoteService fetchInfoAtHost:host withDelegate:self];
 }
 
@@ -105,11 +109,15 @@ typedef enum _SetupStep {
 	server.hostname = [xserviceInfo objectForKey:@"host"];
 	server.context = [xserviceInfo objectForKey:@"context"];
 	server.servicePath = [xserviceInfo objectForKey:@"serviceBase"];
-	XDrvDebug(@"Created enw server object: %@", server);
+	XDrvDebug(@"Created new server object: %@", server);
+	
+	// Become auth challenge handler
+	[XService sharedXService].remoteService.authDelegate = self;
 	
 	// Fetch default paths
-	defaultPathController = [[DefaultPathController alloc] initWithServer:server];
-	[defaultPathController fetchDefaultPathsWithViewController:viewController];
+	setupStep = FetchingDefaultPaths;
+	defaultPathController = [[DefaultPathController alloc] initWithController:self];
+	[defaultPathController fetchDefaultPathsForServer:server];
 }
 
 - (BOOL)isServerVersionCompatible:(NSString *)version
@@ -119,29 +127,83 @@ typedef enum _SetupStep {
 	return ([version isEqualToString:[XDriveConfig appVersion]]);
 }
 
+- (void)saveCredentials
+{
+	// Create protection space for the new server
+	NSURLProtectionSpace *protectionSpace = [[NSURLProtectionSpace alloc] initWithHost:server.hostname
+																				  port:[server.port integerValue]
+																			  protocol:server.protocol
+																				 realm:server.hostname
+																  authenticationMethod:@"NSURLAuthenticationMethodHTTPBasic"];
+	// Make a credential with permanent persistence
+	NSURLCredential *credential = [NSURLCredential credentialWithUser:validateUser password:validatePass persistence:NSURLCredentialPersistencePermanent];
+	
+	// Save credential to the protection space
+	XDrvDebug(@"Saving credentials for user: %@", validateUser);
+	[[NSURLCredentialStorage sharedCredentialStorage] setCredential:credential forProtectionSpace:protectionSpace];
+}
+
+
+
+#pragma mark - Default Paths Status
+
+- (void)defaultPathsStatusUpdate:(NSString *)status
+{
+	[viewController setupStatusUpdate:status];
+}
+
+- (void)defaultPathsFailedWithError:(NSError *)error
+{
+	[viewController setupFailedWithError:error];
+}
+
+- (void)defaultPathsValidated
+{
+	// Save the context now that server info has been validated
+	NSError *error = nil;
+	if (![[[XService sharedXService].localService managedObjectContext] save:&error])
+	{
+		// Handle error
+		XDrvLog(@"Error: unable to save context after adding new server - %@", [error localizedDescription]);
+		[viewController setupFailedWithError:error];
+		return;
+	}
+	
+	// Success!
+	XDrvDebug(@"Successfully saved server");
+	
+	// Update remote service
+	[XService sharedXService].remoteService.activeServer = server;
+	
+	// Save the credentials permanently now that they have been validated
+	[self saveCredentials];
+	
+	// Pre-populate default path directory contents
+	[defaultPathController initializeDefaultPaths];
+}
+
+- (void)defaultPathsFinished
+{
+	[viewController setupFinished];
+}
+
 
 #pragma mark - XServiceRemoteDelegate
 
 - (void)connectionFinishedWithResult:(NSObject *)result
 {
-	if (!server)
-	{
-		[self receiveServerInfoResult:result];
-		return;
-	}
-
-	XDrvLog(@"Finished: %@", result);
+	[self receiveServerInfoResult:result];
 }
 
 - (void)connectionFailedWithError:(NSError *)error
 {
-	XDrvLog(@"Failed: %@", error);
+	[viewController setupFailedWithError:error];
 }
 
 - (NSURLCredential *)credentialForAuthenticationChallenge
 {
-	XDrvDebug(@"Providing temp credential");
-	return nil;
+	XDrvDebug(@"Providing temp credential until it is validated");
+	return [NSURLCredential credentialWithUser:validateUser password:validatePass persistence:NSURLCredentialPersistenceNone];
 }
 
 @end

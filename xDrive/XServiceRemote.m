@@ -48,6 +48,7 @@
 
 
 @synthesize activeServer;
+@synthesize authDelegate;
 @synthesize requests;
 
 
@@ -146,15 +147,14 @@
 - (void)fetchInfoAtHost:(NSString *)host withDelegate:(id<XServiceRemoteDelegate>)delegate
 {
 	NSString *infoServiceURLString = [[self serverURLStringForHost:host] stringByAppendingString:@"/xservice"];
-	XDrvDebug(@"Getting info from url: %@", infoServiceURLString);
+	XDrvDebug(@"Getting info from URL: %@", infoServiceURLString);
 	[self fetchJSONAtURL:infoServiceURLString withDelegate:delegate];
 }
 
 - (void)fetchDefaultPathsForServer:(XServer *)server withDelegate:(id<XServiceRemoteDelegate>)delegate
 {
-	XDrvDebug(@"Fetching paths from server: %@", server);
 	NSString *infoServiceURLString = [[self serviceURLStringForServer:server] stringByAppendingString:@"/paths"];
-	XDrvDebug(@"Paths URL: %@", infoServiceURLString);
+	XDrvDebug(@"Getting paths from URL: %@", infoServiceURLString);
 	[self fetchJSONAtURL:infoServiceURLString withDelegate:delegate];
 }
 
@@ -296,6 +296,14 @@
 - (void)respondToAuthenticationChallenge:(NSURLAuthenticationChallenge *)challenge
 							  forHandler:(CGAuthenticationChallengeHandler *)challengeHandler
 {
+	if (authDelegate)
+	{
+		// Get credential from auth delegate
+		[challengeHandler resolveWithCredential:[authDelegate credentialForAuthenticationChallenge]];
+		return;
+	}
+	
+	
 	// Get request details
 	NSDictionary *request = [requests objectForKey:[challengeHandler.connection description]];
 	if (!request)
