@@ -15,6 +15,7 @@
 @dynamic protocol;
 @dynamic port;
 @dynamic hostname;
+@dynamic context;
 @dynamic servicePath;
 @dynamic defaultPaths;
 @dynamic entries;

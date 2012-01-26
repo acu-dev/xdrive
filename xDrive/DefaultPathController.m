@@ -121,6 +121,7 @@
 
 - (void)receiveDefaultPaths:(NSArray *)details
 {
+	XDrvDebug(@"Got default paths: %@", details);
 	pathDetails = details;
 	iconToPathMap = [[NSMutableDictionary alloc] init];
 	[setupViewController setupStatusUpdate:@"Initializing..."];
@@ -128,7 +129,7 @@
 	// Start fetching directory contents and icons for each default path
 	for (NSDictionary *defaultPath in pathDetails)
 	{
-		[self fetchDefaultPath:defaultPath];
+		//[self fetchDefaultPath:defaultPath];
 	}
 }
 

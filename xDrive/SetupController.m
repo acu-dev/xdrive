@@ -27,8 +27,7 @@ typedef enum _SetupStep {
 @property (nonatomic, strong) SetupViewController *viewController;
 	// View controller to provide user/host/pass
 
-@property (nonatomic, assign) int defaultPathsToReturn;
-	// Counter of default paths that we're waiting for to return
+@property (nonatomic, strong) XServer *server;
 
 @property (nonatomic, strong) NSString *validateUser, *validatePass;
 	// User/pass to use when authenticating to server
@@ -37,7 +36,7 @@ typedef enum _SetupStep {
 
 - (void)receiveServerInfoResult:(NSObject *)result;
 - (BOOL)isServerVersionCompatible:(NSString *)version;
-- (void)createServerWithDetails:(NSDictionary *)details;
+
 	
 @end
 
@@ -47,7 +46,7 @@ typedef enum _SetupStep {
 @implementation SetupController
 
 @synthesize viewController;
-@synthesize defaultPathsToReturn;
+@synthesize server;
 @synthesize validateUser, validatePass;
 @synthesize defaultPathController;
 
@@ -100,16 +99,16 @@ typedef enum _SetupStep {
 
 	// Create server object
 	XDrvDebug(@"Creating new server object...");
-	XServer *newServer = [NSEntityDescription insertNewObjectForEntityForName:@"Server" 
+	server = [NSEntityDescription insertNewObjectForEntityForName:@"Server" 
 													   inManagedObjectContext:[[XService sharedXService].localService managedObjectContext]];
-	newServer.protocol = [xserviceInfo objectForKey:@"protocol"];
-	newServer.port = [xserviceInfo objectForKey:@"port"];
-	newServer.hostname = [xserviceInfo objectForKey:@"host"];
-	newServer.context = [xserviceInfo objectForKey:@"context"];
-	newServer.servicePath = [xserviceInfo objectForKey:@"serviceBase"];
+	server.protocol = [xserviceInfo objectForKey:@"protocol"];
+	server.port = [xserviceInfo objectForKey:@"port"];
+	server.hostname = [xserviceInfo objectForKey:@"host"];
+	server.context = [xserviceInfo objectForKey:@"context"];
+	server.servicePath = [xserviceInfo objectForKey:@"serviceBase"];
 	
 	// Fetch default paths
-	defaultPathController = [[DefaultPathController alloc] initWithServer:newServer];
+	defaultPathController = [[DefaultPathController alloc] initWithServer:server];
 	[defaultPathController fetchDefaultPathsWithViewController:viewController];
 }
 
@@ -125,29 +124,23 @@ typedef enum _SetupStep {
 
 - (void)connectionFinishedWithResult:(NSObject *)result
 {
-	
+	if (!server)
+	{
+		[self receiveServerInfoResult:result];
+		return;
+	}
+
+	XDrvLog(@"Finished: %@", result);
 }
 
 - (void)connectionFailedWithError:(NSError *)error
 {
-	if ([error code] == -1013)
-	{
-		// Build fake info object
-		NSDictionary *xservice = [[NSDictionary alloc] initWithObjectsAndKeys:
-								  @"1.0-SNAPSHOT", @"version",
-								  @"https", @"protocol",
-								  @"webfiles.acu.edu", @"host",
-								  [NSNumber numberWithInt:443], @"port",
-								  @"/xservice", @"context",
-								  @"/rs", @"serviceBase",
-								  nil];
-		NSDictionary *result = [[NSDictionary alloc] initWithObjectsAndKeys:@"xservice", xservice, nil];
-		[self connectionFinishedWithResult:result];
-	}
+	XDrvLog(@"Failed: %@", error);
 }
 
 - (NSURLCredential *)credentialForAuthenticationChallenge
 {
+	XDrvDebug(@"Providing temp credential");
 	return nil;
 }
 
