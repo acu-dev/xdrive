@@ -98,7 +98,6 @@ typedef enum _SetupStep {
 	}
 
 	// Create server object
-	XDrvDebug(@"Creating new server object...");
 	server = [NSEntityDescription insertNewObjectForEntityForName:@"Server" 
 													   inManagedObjectContext:[[XService sharedXService].localService managedObjectContext]];
 	server.protocol = [xserviceInfo objectForKey:@"protocol"];
@@ -106,6 +105,7 @@ typedef enum _SetupStep {
 	server.hostname = [xserviceInfo objectForKey:@"host"];
 	server.context = [xserviceInfo objectForKey:@"context"];
 	server.servicePath = [xserviceInfo objectForKey:@"serviceBase"];
+	XDrvDebug(@"Created enw server object: %@", server);
 	
 	// Fetch default paths
 	defaultPathController = [[DefaultPathController alloc] initWithServer:server];

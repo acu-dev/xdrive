@@ -23,7 +23,7 @@
 	// Generates an absolute URL to the host using default protocol and port.
 	// If no host is passed and an activeServer is present, activeServer is used.
 
-- (NSString *)serviceURLStringForHost:(NSString *)host;
+- (NSString *)serviceURLStringForServer:(XServer *)server;
 - (NSString *)serviceURLString;
 	// Generates an absolute URL to the service base path of the passed host
 	// (uses the default vars defined in XDriveConfig.h. If host is nil the
@@ -95,9 +95,15 @@
 	return [self serverURLStringForHost:nil];
 }
 
-- (NSString *)serviceURLString
+- (NSString *)serviceURLStringForServer:(XServer *)server
 {	
-	return [[[self serverURLString] stringByAppendingString:activeServer.context] stringByAppendingString:activeServer.servicePath];
+	if (!server) server = activeServer;
+	return [[[self serverURLStringForHost:server.hostname] stringByAppendingString:server.context] stringByAppendingString:server.servicePath];
+}
+
+- (NSString *)serviceURLString
+{
+	return [self serviceURLStringForServer:nil];
 }
 
 - (void)fetchJSONAtURL:(NSString *)url withTarget:(id)target action:(SEL)action
@@ -144,10 +150,11 @@
 	[self fetchJSONAtURL:infoServiceURLString withDelegate:delegate];
 }
 
-- (void)fetchDefaultPathsWithDelegate:(id<XServiceRemoteDelegate>)delegate
+- (void)fetchDefaultPathsForServer:(XServer *)server withDelegate:(id<XServiceRemoteDelegate>)delegate
 {
-	NSString *infoServiceURLString = [[self serviceURLString] stringByAppendingString:@"/paths"];
-	XDrvDebug(@"Fetching paths from: %@", infoServiceURLString);
+	XDrvDebug(@"Fetching paths from server: %@", server);
+	NSString *infoServiceURLString = [[self serviceURLStringForServer:server] stringByAppendingString:@"/paths"];
+	XDrvDebug(@"Paths URL: %@", infoServiceURLString);
 	[self fetchJSONAtURL:infoServiceURLString withDelegate:delegate];
 }
 

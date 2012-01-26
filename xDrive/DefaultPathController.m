@@ -82,7 +82,7 @@
 	
 	// Get the list of default paths
 	[viewController setupStatusUpdate:@"Downloading defaults..."];
-	[[XService sharedXService].remoteService fetchDefaultPathsWithDelegate:self];
+	[[XService sharedXService].remoteService fetchDefaultPathsForServer:xServer withDelegate:self];
 }
 
 - (void)fetchDefaultPath:(NSDictionary *)defaultPath

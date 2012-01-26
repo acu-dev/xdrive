@@ -22,7 +22,7 @@
 - (void)fetchInfoAtHost:(NSString *)host withDelegate:(id<XServiceRemoteDelegate>)delegate;
 	// Gets the server info (version, service paths, etc)
 
-- (void)fetchDefaultPathsWithDelegate:(id<XServiceRemoteDelegate>)delegate;
+- (void)fetchDefaultPathsForServer:(XServer *)server withDelegate:(id<XServiceRemoteDelegate>)delegate;
 	// Gets the server's configured default paths.
 
 - (void)fetchDirectoryContentsAtPath:(NSString *)path withDelegate:(id<XServiceRemoteDelegate>)delegate;
