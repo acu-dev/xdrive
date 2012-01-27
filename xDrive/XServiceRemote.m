@@ -86,7 +86,7 @@
 			protocol,
 			host,
 			port];
-	XDrvDebug(@"serverURL: %@", serverURL);
+	//XDrvDebug(@"serverURL: %@", serverURL);
 	
 	return serverURL;
 }
@@ -160,8 +160,14 @@
 
 - (void)fetchDirectoryContentsAtPath:(NSString *)path withDelegate:(id<XServiceRemoteDelegate>)delegate
 {
-	NSString *encodedPath = [path stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
-	NSString *directoryService = [[self serviceURLString] stringByAppendingFormat:@"/directory/?path=%@", encodedPath];
+	NSString *encodedPath = (__bridge NSString *)CFURLCreateStringByAddingPercentEscapes(
+																						 NULL,
+																						 (__bridge CFStringRef)path,
+																						 NULL,
+																						 (CFStringRef)@"!*'();:@&=+$,/?%#[]",
+																						 kCFStringEncodingUTF8);
+	NSString *directoryService = [[self serviceURLString] stringByAppendingFormat:@"/entry/%@", encodedPath];
+	XDrvDebug(@"Getting directory contents at path: %@", directoryService);
 	[self fetchJSONAtURL:directoryService withDelegate:delegate];
 }
 

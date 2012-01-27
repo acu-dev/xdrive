@@ -31,9 +31,6 @@ typedef enum _SetupStep {
 
 @property (nonatomic, assign) SetupStep setupStep;
 
-@property (nonatomic, strong) NSString *validateUser, *validatePass;
-	// User/pass to use when authenticating to server
-
 @property (nonatomic, strong) DefaultPathController *defaultPathController;
 
 - (void)receiveServerInfoResult:(NSObject *)result;
@@ -47,10 +44,10 @@ typedef enum _SetupStep {
 
 @implementation SetupController
 
+@synthesize validateUser, validatePass;
 @synthesize viewController;
 @synthesize server;
 @synthesize setupStep;
-@synthesize validateUser, validatePass;
 @synthesize defaultPathController;
 
 - (UIViewController *)viewController

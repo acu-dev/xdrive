@@ -21,7 +21,7 @@
 @property (nonatomic, strong) XServer *xServer;
 	// Server object to fetch default paths from
 
-@property (nonatomic, strong) NSArray *pathDetails;
+@property (nonatomic, strong) NSMutableArray *pathDetails;
 	// The array of default paths to fetch
 
 @property (nonatomic, assign) int activeFetchCount;
@@ -132,11 +132,17 @@
 - (void)receiveDefaultPaths:(NSArray *)details
 {
 	XDrvDebug(@"Got default paths: %@", details);
-	pathDetails = details;
+	pathDetails = [[NSMutableArray alloc] init];
 	
-	// Create all default path objects
-	for (NSDictionary *defaultPath in pathDetails)
+	for (NSDictionary *path in details)
 	{
+		NSMutableDictionary *defaultPath = [[NSMutableDictionary alloc] initWithDictionary:path];
+		
+		// Replace user placeholder in paths
+		[defaultPath setValue:[[defaultPath objectForKey:@"path"] stringByReplacingOccurrencesOfString:@"${user}" withString:setupController.validateUser] forKey:@"path"];
+		[pathDetails addObject:defaultPath];
+		
+		// Create default path object
 		XDefaultPath *newDefaultPath = [NSEntityDescription insertNewObjectForEntityForName:@"DefaultPath"
 																	 inManagedObjectContext:[[XService sharedXService].localService managedObjectContext]];
 		newDefaultPath.name = [defaultPath objectForKey:@"name"];
@@ -169,6 +175,7 @@
 
 - (void)receiveDefaultPathIcon:(NSString *)tmpFilePath
 {
+	XDrvDebug(@"icon path map: %@", iconToPathMap);
 	// Move file to permanent home
 	NSString *fileName = [tmpFilePath lastPathComponent];
 	NSString *newFilePath = [[[[XService sharedXService] activeServerDocumentPath] stringByAppendingString:@"-meta/icons"] 
@@ -177,6 +184,7 @@
 	
 	// Set icon path
 	XDefaultPath *defaultPath = [self defaultPathWithPath:[iconToPathMap objectForKey:fileName]];
+	XDrvDebug(@"Attaching icon %@ to default path %@", newFilePath, defaultPath.path);
 	defaultPath.icon = newFilePath;
 	
 	// Save

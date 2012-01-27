@@ -11,6 +11,9 @@
 
 @interface SetupController : NSObject
 
+@property (nonatomic, strong) NSString *validateUser, *validatePass;
+	// User/pass to use when authenticating to server
+
 - (UIViewController *)viewController;
 	// Initializes the setup view controller for displaying on initial app launch
 
