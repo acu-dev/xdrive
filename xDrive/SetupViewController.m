@@ -415,7 +415,7 @@ static int FormDefaultYPosIpadLandscape = 166;
 	activityIndicator.hidden = YES;
 	
 	// Hide view after hud hides
-	[self performSelector:@selector(dismissSetup) withObject:nil afterDelay:2.0];
+	[self performSelector:@selector(dismissSetup) withObject:nil afterDelay:1.5];
 }
 
 

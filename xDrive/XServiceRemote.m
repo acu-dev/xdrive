@@ -171,12 +171,16 @@
 	[self fetchJSONAtURL:directoryService withDelegate:delegate];
 }
 
-/* Deprecated */
 - (void)fetchDirectoryContentsAtPath:(NSString *)path withTarget:(id)target action:(SEL)action
 {
-	XDrvLog(@"DEPRECATED: use fetchDirectoryContentsAtPath:withDelegate: instead");
-	NSString *encodedPath = [path stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
-	NSString *directoryService = [[self serviceURLString] stringByAppendingFormat:@"/directory/?path=%@", encodedPath];
+	NSString *encodedPath = (__bridge NSString *)CFURLCreateStringByAddingPercentEscapes(
+																						 NULL,
+																						 (__bridge CFStringRef)path,
+																						 NULL,
+																						 (CFStringRef)@"!*'();:@&=+$,/?%#[]",
+																						 kCFStringEncodingUTF8);
+	NSString *directoryService = [[self serviceURLString] stringByAppendingFormat:@"/entry/%@", encodedPath];
+	XDrvDebug(@"Getting directory contents at path: %@", directoryService);
 	[self fetchJSONAtURL:directoryService withTarget:target action:action];
 }
 
