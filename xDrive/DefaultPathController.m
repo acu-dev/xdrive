@@ -42,6 +42,9 @@
 - (XDefaultPath *)defaultPathWithPath:(NSString *)path;
 	// Searches the XDefaultPath objects for one that matches the given path
 
+- (NSString *)contextURLString;
+	// Generates a URL to the configured server's context
+
 @end
 
 
@@ -102,6 +105,7 @@
 		if (iconPath)
 		{
 			// Get the default path's icon
+			iconPath = [[self contextURLString] stringByAppendingString:iconPath];
 			XDrvDebug(@"Fetching icon: %@", iconPath);
 			[[XService sharedXService].remoteService downloadFileAtAbsolutePath:iconPath withDelegate:self];
 			[iconToPathMap setObject:path forKey:[iconPath lastPathComponent]];
@@ -111,6 +115,7 @@
 			if (hiresIconPath)
 			{
 				// Get the default path's @2x icon
+				hiresIconPath = [[self contextURLString] stringByAppendingString:hiresIconPath];
 				XDrvDebug(@"Fetching @2x icon: %@", hiresIconPath);
 				[[XService sharedXService].remoteService downloadFileAtAbsolutePath:hiresIconPath withDelegate:self];
 				[iconToPathMap setObject:path forKey:[iconPath lastPathComponent]];
@@ -198,6 +203,15 @@
 		}
 	}
 	return defaultPath;
+}
+
+- (NSString *)contextURLString
+{
+	return [NSString stringWithFormat:@"%@://%@:%i%@",
+			xServer.protocol,
+			xServer.hostname,
+			[xServer.port intValue],
+			xServer.context];
 }
 
 
