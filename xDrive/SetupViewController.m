@@ -121,6 +121,7 @@ static int FormDefaultYPosIpadLandscape = 166;
 	self.loginButton = nil;
 	self.activityIndicator = nil;
 	self.hud = nil;
+	self.setupController = nil;
 }
 
 - (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation
@@ -415,7 +416,7 @@ static int FormDefaultYPosIpadLandscape = 166;
 	activityIndicator.hidden = YES;
 	
 	// Hide view after hud hides
-	[self performSelector:@selector(dismissSetup) withObject:nil afterDelay:1.5];
+	[self performSelector:@selector(dismissSetup) withObject:nil afterDelay:1.0];
 }
 
 

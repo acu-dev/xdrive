@@ -50,6 +50,19 @@ typedef enum _SetupStep {
 @synthesize setupStep;
 @synthesize defaultPathController;
 
+
+
+- (void)dealloc
+{
+	self.validateUser = nil;
+	self.validatePass = nil;
+	self.defaultPathController = nil;
+	self.server = nil;
+	self.viewController = nil;
+}
+
+
+
 - (UIViewController *)viewController
 {
 	if (!viewController)

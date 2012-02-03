@@ -73,6 +73,14 @@
 	return self;
 }
 
+- (void)dealloc
+{
+	self.iconToPathMap = nil;
+	self.pathDetails = nil;
+	self.xServer = nil;
+	self.setupController = nil;
+}
+
 
 
 #pragma mark - Fetching

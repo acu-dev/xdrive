@@ -160,7 +160,7 @@
 
 - (void)fetchDirectoryContentsAtPath:(NSString *)path withDelegate:(id<XServiceRemoteDelegate>)delegate
 {
-	NSString *encodedPath = (__bridge NSString *)CFURLCreateStringByAddingPercentEscapes(
+	NSString *encodedPath = (__bridge_transfer NSString *)CFURLCreateStringByAddingPercentEscapes(
 																						 NULL,
 																						 (__bridge CFStringRef)path,
 																						 NULL,
@@ -173,7 +173,7 @@
 
 - (void)fetchDirectoryContentsAtPath:(NSString *)path withTarget:(id)target action:(SEL)action
 {
-	NSString *encodedPath = (__bridge NSString *)CFURLCreateStringByAddingPercentEscapes(
+	NSString *encodedPath = (__bridge_transfer NSString *)CFURLCreateStringByAddingPercentEscapes(
 																						 NULL,
 																						 (__bridge CFStringRef)path,
 																						 NULL,

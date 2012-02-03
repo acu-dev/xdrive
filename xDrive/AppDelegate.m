@@ -45,25 +45,24 @@
 	 }*/
 	
 	// Get root view controller
-	UIViewController *rootViewController = nil;
+
 	if (![[XService sharedXService] activeServer])
 	{
 		// No server configured so make setup the root view controller
 		XDrvDebug(@"Loading initial setup");
 		setupController = [[SetupController alloc] init];
-		rootViewController = [setupController viewController];
+		window.rootViewController = [setupController viewController];
 	}
 	else
 	{
 		// Load storyboard's initial view controller
 		NSString *storyboardName = ([[UIDevice currentDevice] userInterfaceIdiom] == UIUserInterfaceIdiomPhone) ? @"MainStoryboard_iPhone" : @"MainStoryboard_iPad";
 		UIStoryboard *storyboard = [UIStoryboard storyboardWithName:storyboardName bundle:nil];
-		rootViewController = [storyboard instantiateInitialViewController];
+		window.rootViewController = [storyboard instantiateInitialViewController];
 	}
 
 	// Display
-	self.window.rootViewController = rootViewController;
-	[self.window makeKeyAndVisible];
+	[window makeKeyAndVisible];
     return YES;
 }
 
@@ -74,9 +73,9 @@
 	 Use this method to pause ongoing tasks, disable timers, and throttle down OpenGL ES frame rates. Games should use this method to pause the game.
 	 */
 	
-	if ([self.window.rootViewController isKindOfClass:[UITabBarController class]])
+	if ([window.rootViewController isKindOfClass:[UITabBarController class]])
 	{
-		UITabBarController *tabBarController = (UITabBarController *)self.window.rootViewController;
+		UITabBarController *tabBarController = (UITabBarController *)window.rootViewController;
 		
 		NSMutableArray *saveOrder = [NSMutableArray arrayWithCapacity:[tabBarController.viewControllers count]];
 		for (UIViewController *viewController in tabBarController.viewControllers) {
@@ -129,7 +128,7 @@
 
 - (void)cleanupSetup
 {
-	XDrvLog(@"Removing setup controller");
+	XDrvDebug(@"Removing setup controller");
 	self.setupController = nil;
 }
 
