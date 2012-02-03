@@ -40,6 +40,13 @@ static NSString *defaultServiceBasepath = @"/xservice/rs";
 + (void)setAccountUsername:(NSString *)username;
 + (void)setAccountServer:(NSString *)server;
 
++ (void)saveTabItemOrder:(NSArray *)order;
+	// Writes the tab item order to the user preferences
+
++ (NSArray *)getSavedTabItemOrder;
+	// Retrieves the tab item order from user preferences. Returns nil of none saved
+
+
 @end
 
 

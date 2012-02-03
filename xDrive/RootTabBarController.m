@@ -11,11 +11,13 @@
 #import "XService.h"
 #import "XDefaultPath.h"
 #import "XDriveConfig.h"
+#import "AppDelegate.h"
 
 
 
 @interface RootTabBarController()
 - (void)initTabItems;
+- (NSArray *)orderedViewControllers:(NSArray *)viewControllers;
 @end
 
 
@@ -42,6 +44,12 @@
     return YES;
 }
 
+- (void)viewDidAppear:(BOOL)animated
+{
+	// Tell app delegate we've appeared so we can become root view controller and setup controllers can be cleaned up
+	[(AppDelegate *)[[UIApplication sharedApplication] delegate] tabBarControllerDidAppear:self];
+}
+
 - (void)initTabItems
 {
 	NSMutableArray *viewControllers = [[NSMutableArray alloc] init];
@@ -59,24 +67,44 @@
 		[viewControllers addObject:navController];
 	}
 	
-	// Root browser
-	//DirectoryNavigationController *rootBrowser = [storyboard instantiateViewControllerWithIdentifier:@"directoryNav"];
-	//rootBrowser.tabBarItem.image = [UIImage imageNamed:@"eye.png"];
-	//[rootBrowser setRootPath:@"/"];
-	//[viewControllers addObject:rootBrowser];
+	// Recent
+	UINavigationController *recentNavController = [storyboard instantiateViewControllerWithIdentifier:@"recentNav"];
+	recentNavController.tabBarItem.image = [UIImage imageNamed:@"clock.png"];
+	[viewControllers addObject:recentNavController];
 	
 	// Settings
 	UINavigationController *settingsNavController = [storyboard instantiateViewControllerWithIdentifier:@"settingsNav"];
 	settingsNavController.tabBarItem.image = [UIImage imageNamed:@"gear.png"];
 	[viewControllers addObject:settingsNavController];
 	
-	// Recent
-	UINavigationController *recentNavController = [storyboard instantiateViewControllerWithIdentifier:@"recentNav"];
-	recentNavController.tabBarItem.image = [UIImage imageNamed:@"clock.png"];
-	[viewControllers addObject:recentNavController];
-	
 	// Init tab items
-	self.viewControllers = viewControllers;
+	self.viewControllers = [self orderedViewControllers:viewControllers];
 }
 
+- (NSArray *)orderedViewControllers:(NSArray *)viewControllers
+{
+	NSArray *savedOrder = [XDriveConfig getSavedTabItemOrder];
+	NSMutableArray *orderedViewControllers = [NSMutableArray arrayWithCapacity:[savedOrder count]];
+	
+	for (int i = 0; i < [savedOrder count]; i++)
+	{
+		for (UIViewController *viewController in viewControllers)
+		{
+			if ([viewController.title isEqualToString:[savedOrder objectAtIndex:i]])
+			{
+				[orderedViewControllers addObject:viewController];
+			}
+		}
+	}
+	return orderedViewControllers;
+}
+
+
 @end
+
+
+
+
+
+
+

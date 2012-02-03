@@ -16,6 +16,8 @@
 
 @property (nonatomic, strong) SetupController *setupController;
 
+- (void)cleanupSetup;
+
 @end
 
 
@@ -71,6 +73,18 @@
 	 Sent when the application is about to move from active to inactive state. This can occur for certain types of temporary interruptions (such as an incoming phone call or SMS message) or when the user quits the application and it begins the transition to the background state.
 	 Use this method to pause ongoing tasks, disable timers, and throttle down OpenGL ES frame rates. Games should use this method to pause the game.
 	 */
+	
+	if ([self.window.rootViewController isKindOfClass:[UITabBarController class]])
+	{
+		UITabBarController *tabBarController = (UITabBarController *)self.window.rootViewController;
+		
+		NSMutableArray *saveOrder = [NSMutableArray arrayWithCapacity:[tabBarController.viewControllers count]];
+		for (UIViewController *viewController in tabBarController.viewControllers) {
+			[saveOrder addObject:viewController.title];
+		}
+		
+		[XDriveConfig saveTabItemOrder:saveOrder];
+	}
 }
 
 - (void)applicationDidEnterBackground:(UIApplication *)application
@@ -102,6 +116,21 @@
 	 Save data if appropriate.
 	 See also applicationDidEnterBackground:.
 	 */
+
+}
+
+
+- (void)tabBarControllerDidAppear:(UITabBarController *)tabBarController
+{
+	XDrvDebug(@"Setting root view controller to tab bar controller");
+	self.window.rootViewController = tabBarController;
+	[self performSelector:@selector(cleanupSetup) withObject:nil afterDelay:1.0];
+}
+
+- (void)cleanupSetup
+{
+	XDrvLog(@"Removing setup controller");
+	self.setupController = nil;
 }
 
 

@@ -133,10 +133,14 @@
 {
 	XDrvDebug(@"Got default paths: %@", details);
 	pathDetails = [[NSMutableArray alloc] init];
+	NSMutableArray *order = [NSMutableArray arrayWithCapacity:[details count]];
 	
 	for (NSDictionary *path in details)
 	{
 		NSMutableDictionary *defaultPath = [[NSMutableDictionary alloc] initWithDictionary:path];
+		
+		// Save path order
+		[order addObject:[defaultPath objectForKey:@"name"]];
 		
 		// Replace user placeholder in paths
 		[defaultPath setValue:[[defaultPath objectForKey:@"path"] stringByReplacingOccurrencesOfString:@"${user}" withString:setupController.validateUser] forKey:@"path"];
@@ -150,6 +154,12 @@
 		[xServer addDefaultPathsObject:newDefaultPath];
 	}
 	
+	// Add standard tab bar items and save order
+	[order addObject:@"Recent"];
+	[order addObject:@"Settings"];
+	[XDriveConfig saveTabItemOrder:order];
+	
+	// All done
 	[setupController defaultPathsValidated];
 }
 
