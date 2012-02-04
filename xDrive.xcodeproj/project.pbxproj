@@ -8,6 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		A93E36AA13C5630600DE693D /* DirectoryContentsViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = A93E36A913C5630600DE693D /* DirectoryContentsViewController.m */; };
+		A9674E3C14DCE69700464E37 /* UIStoryboard+Xdrive.m in Sources */ = {isa = PBXBuildFile; fileRef = A9674E3B14DCE69700464E37 /* UIStoryboard+Xdrive.m */; };
 		A96CBBD014C9EE2C0069A641 /* SetupController.m in Sources */ = {isa = PBXBuildFile; fileRef = A96CBBCF14C9EE2C0069A641 /* SetupController.m */; };
 		A978436C13C6876700120A94 /* DirectoryNavigationController.m in Sources */ = {isa = PBXBuildFile; fileRef = A978436B13C6876700120A94 /* DirectoryNavigationController.m */; };
 		A9C34FCC1426668400E3BC3C /* OpenFileViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = A9C34FCB1426668400E3BC3C /* OpenFileViewController.m */; };
@@ -114,6 +115,8 @@
 /* Begin PBXFileReference section */
 		A93E36A813C5630600DE693D /* DirectoryContentsViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DirectoryContentsViewController.h; sourceTree = "<group>"; };
 		A93E36A913C5630600DE693D /* DirectoryContentsViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DirectoryContentsViewController.m; sourceTree = "<group>"; };
+		A9674E3A14DCE69700464E37 /* UIStoryboard+Xdrive.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIStoryboard+Xdrive.h"; sourceTree = "<group>"; };
+		A9674E3B14DCE69700464E37 /* UIStoryboard+Xdrive.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIStoryboard+Xdrive.m"; sourceTree = "<group>"; };
 		A96CBBCE14C9EE2C0069A641 /* SetupController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SetupController.h; sourceTree = "<group>"; };
 		A96CBBCF14C9EE2C0069A641 /* SetupController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SetupController.m; sourceTree = "<group>"; };
 		A978436A13C6876700120A94 /* DirectoryNavigationController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DirectoryNavigationController.h; sourceTree = "<group>"; };
@@ -456,6 +459,8 @@
 			isa = PBXGroup;
 			children = (
 				C3877010143F790B00E3CE8E /* Settings.bundle */,
+				A9674E3A14DCE69700464E37 /* UIStoryboard+Xdrive.h */,
+				A9674E3B14DCE69700464E37 /* UIStoryboard+Xdrive.m */,
 				C3527A371423CBFB00B830DF /* XDriveConfig.h */,
 				C3877012143F850F00E3CE8E /* XDriveConfig.m */,
 				C3FC6C6613BCB90B009FBAA3 /* AppDelegate.h */,
@@ -642,6 +647,7 @@
 				C3C0DE4B1448B691002E35C3 /* XFileUtils.m in Sources */,
 				C3C0DE4E1448C9FA002E35C3 /* AccountManager.m in Sources */,
 				A96CBBD014C9EE2C0069A641 /* SetupController.m in Sources */,
+				A9674E3C14DCE69700464E37 /* UIStoryboard+Xdrive.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
