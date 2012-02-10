@@ -8,8 +8,11 @@
 
 @interface XFileUtils : NSObject
 
-+ (NSString *)appDocuments;
-	// Path of the Documents directory in the app's sandbox
++ (NSString *)applicationDocumentsDirectory;
+	// Path to the Documents directory in the app's sandbox
+
++ (NSString *)applicationCachesDirectory;
+	// Path to the Library/Caches directory in the app's sandbox
 
 + (void)moveFileAtPath:(NSString *)oldFilePath toPath:(NSString *)newFilePath;
 	// Moves a file from one location to another

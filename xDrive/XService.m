@@ -25,22 +25,12 @@
 @property (nonatomic, assign) int fetchingDefaultPaths;
 	// Counter that gets decremented as default path fetches return.
 
-- (void)receiveServerInfoResult:(NSDictionary *)result;
-	// Evaluates the server info returned. If valid, server info is saved
-	// and setup as active server.
-	
-- (BOOL)isServerVersionCompatible:(NSString *)version;
-	// Determines if server's version is compatible with the app version.
-
-- (void)saveServerWithDetails:(NSDictionary *)details;
-	// Takes received server info and saves a server object with the details.
-
-
+/*
 - (void)saveCredentialWithUsername:(NSString *)user password:(NSString *)pass;
 - (void)removeAllCredentialsForProtectionSpace:(NSURLProtectionSpace *)protectionSpace;
 - (NSURLProtectionSpace *)protectionSpace;
 - (NSURLCredential *)storedCredentialForProtectionSpace:(NSURLProtectionSpace *)protectionSpace withUser:(NSString *)user;
-
+*/
 @end
 
 
@@ -99,135 +89,19 @@ static XService *sharedXService;
 
 - (NSString *)activeServerDocumentPath
 {
-	return [[XFileUtils appDocuments] stringByAppendingPathComponent:[self activeServer].hostname];
+	return [[XFileUtils applicationDocumentsDirectory] stringByAppendingPathComponent:[self activeServer].hostname];
 }
 
-- (void)validateUsername:(NSString *)username password:(NSString *)password forHost:(NSString *)host withDelegate:(id<ServerStatusDelegate>)delegate
+- (NSString *)activeServerCachePath
 {
-	// Clear any saved credentials for host
-	/*NSURLProtectionSpace *protectionSpace = [[NSURLProtectionSpace alloc] initWithHost:host
-																				  port:defaultServerPort
-																			  protocol:defaultServerProtocol
-																				 realm:host
-																  authenticationMethod:@"NSURLAuthenticationMethodHTTPBasic"];
-	[self removeAllCredentialsForProtectionSpace:protectionSpace];*/
-	
-	/*serverStatusDelegate = delegate;
-	validateCredential = [NSURLCredential credentialWithUser:username password:password persistence:NSURLCredentialPersistenceNone];
-	[self.remoteService fetchDefaultPathsAtHost:host withTarget:self action:@selector(receiveDefaultPaths:)];*/
-	
-	
-	// Set delegate to recieve server status messages
-	serverStatusDelegate = delegate;
-	
-	// Save credential (used when fetching default paths if info fetch succeeds)
-	validateCredential = [NSURLCredential credentialWithUser:username password:password persistence:NSURLCredentialPersistenceNone];
-	
-	// Fetch server info
-	//[self.remoteService fetchServerInfoAtHost:host withTarget:self action:@selector(receiveServerInfoResult:)];
+	return [[XFileUtils applicationCachesDirectory] stringByAppendingPathComponent:[self activeServer].hostname];
 }
-
-/*- (void)receiveServerInfoResult:(NSObject *)result
-{
-	if ([result isKindOfClass:[NSError class]])
-	{
-		// Pass errors off to delegate
-		[serverStatusDelegate validateServerFailedWithError:(NSError *)result];
-		return;
-	}
-	
-	NSDictionary *info = (NSDictionary *)result;
-	XDrvDebug(@"Received info: %@", info);
-	
-	NSDictionary *xserviceInfo = [info objectForKey:@"xservice"];
-	//NSDictionary *xdriveInfo = [info objectForKey:@"xdrive"];
-	
-	if (xserviceInfo)
-	{
-		// Evaluate version info
-		if (![self isServerVersionCompatible:[xserviceInfo objectForKey:@"version"]])
-		{
-			// Version incompatible
-			NSString *title = NSLocalizedStringFromTable(@"Unsupported server version",
-														 @"XService",
-														 @"Title for error given when a server responds with an unsupported version.");
-			NSString *desc = NSLocalizedStringFromTable(@"Server's version is unsupported by this app. Please check for updates.", 
-															 @"XService",
-															 @"Description for error given when a server responds with an unsupported version.");
-			NSDictionary *errorInfo = [NSDictionary dictionaryWithObjectsAndKeys:title, NSLocalizedFailureReasonErrorKey, desc, NSLocalizedDescriptionKey, nil];
-			NSError *error = [NSError errorWithDomain:@"XService" code:ServerIsIncompatible userInfo:errorInfo];
-			[serverStatusDelegate validateServerFailedWithError:error];
-			return;
-		}
-	}
-	
-	if (![self activeServer])
-	{
-		// Save server info
-		[self saveServerWithDetails:xserviceInfo];
-		
-		// Fetch default paths
-		defaultPathController = [[DefaultPathController alloc] init];
-		[defaultPathController fetchDefaultPathsWithStatusDelegate:serverStatusDelegate];
-	}
-	else
-	{
-		[serverStatusDelegate validateServerFinishedWithSuccess];
-	}
-}
-
-- (BOOL)isServerVersionCompatible:(NSString *)version
-{
-	// This could evaluate a set of compatible versions. For now
-	// it requires an exact match.
-	return ([version isEqualToString:[XDriveConfig appVersion]]);
-}
-
-- (void)saveServerWithDetails:(NSDictionary *)details
-{
-	XDrvDebug(@"Creating new server object...");
-	XServer *newServer = [NSEntityDescription insertNewObjectForEntityForName:@"Server" 
-													   inManagedObjectContext:[self.localService managedObjectContext]];
-	newServer.protocol = [details objectForKey:@"protocol"];
-	newServer.port = [details objectForKey:@"port"];
-	newServer.hostname = [details objectForKey:@"host"];
-	newServer.context = [details objectForKey:@"context"];
-	newServer.servicePath = [details objectForKey:@"serviceBase"];
-	
-	/*
-	// Create all default path objects
-	NSDictionary *pathDetails = [details objectForKey:@"defaultPaths"];
-	for (NSDictionary *defaultPath in pathDetails)
-	{
-		XDefaultPath *newDefaultPath = [NSEntityDescription insertNewObjectForEntityForName:@"DefaultPath"
-																	 inManagedObjectContext:[self.localService managedObjectContext]];
-		newDefaultPath.name = [defaultPath objectForKey:@"name"];
-		newDefaultPath.path = [defaultPath objectForKey:@"path"];
-		[newServer addDefaultPathsObject:newDefaultPath];
-	}*
-	
-	// Save context
-	NSError *error = nil;
-	if ([[self.localService managedObjectContext] save:&error])
-	{
-		// Success!
-		XDrvDebug(@"Successfully created server");
-		
-		// Update remote service
-		self.remoteService.activeServer = newServer;
-	}
-	else
-	{
-		// Handle error
-		XDrvLog(@"Error: unable to save context after adding new server - %@", [error localizedDescription]);
-	}
-}*/
 
 
 
 #pragma mark - Credentials
 
-- (void)saveCredentialWithUsername:(NSString *)user password:(NSString *)pass
+/*- (void)saveCredentialWithUsername:(NSString *)user password:(NSString *)pass
 {
 	// Make credential
 	NSURLCredential *credential = [NSURLCredential credentialWithUser:user password:pass persistence:NSURLCredentialPersistencePermanent];
@@ -298,7 +172,7 @@ static XService *sharedXService;
 	NSArray *allKeys = [allCredentials allKeys];
 	XDrvDebug(@"First user found: %@", [allKeys objectAtIndex:0]);
 	return [allKeys objectAtIndex:0];
-}
+}*/
 
 #pragma mark - Directory
 
@@ -382,26 +256,6 @@ static XService *sharedXService;
 {
 	[self.remoteService downloadFileAtPath:file.path withDelegate:delegate];
 }
-
-
-
-#pragma mark - CGChallengeResponseDelegate
-/*
-- (void)respondToAuthenticationChallenge:(NSURLAuthenticationChallenge *)challenge forHandler:(CGAuthenticationChallengeHandler *)challengeHandler
-{
-	XDrvDebug(@"Received auth challenge");
-	if (validateCredential)
-	{
-		// Validating account, use saved credential
-		[challengeHandler resolveWithCredential:validateCredential];
-	}
-	else
-	{
-		// Attempt to continue without credential
-		[challenge.sender continueWithoutCredentialForAuthenticationChallenge:challenge];
-	}
-}
-*/
 
 
 @end

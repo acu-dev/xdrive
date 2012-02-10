@@ -21,7 +21,12 @@
 	return [[self.name componentsSeparatedByString:@"."] lastObject];
 }
 
-- (NSString *)localPath
+- (NSString *)cachePath
+{
+	return [[[XService sharedXService] activeServerCachePath] stringByAppendingString:self.path];
+}
+
+- (NSString *)documentPath
 {
 	return [[[XService sharedXService] activeServerDocumentPath] stringByAppendingString:self.path];
 }

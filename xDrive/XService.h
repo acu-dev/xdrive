@@ -31,6 +31,15 @@
 + (XService *)sharedXService;
 	// One XService to rule them all
 
+- (XServer *)activeServer;
+// Accessor for the server object saved in db (nil if none saved)
+
+- (NSString *)activeServerDocumentPath;
+// Path for database and metadata files to be stored
+
+- (NSString *)activeServerCachePath;
+// Path for files to be cached
+
 - (XDirectory *)directoryWithPath:(NSString *)path;
 	// Gets a directory object at given path. Fires off remote fetch in background
 	// and if necessary, directory contents are updated.
@@ -41,17 +50,6 @@
 - (void)downloadFile:(XFile *)file withDelegate:(id<XServiceRemoteDelegate>)delegate;
 	// Downloads a file to a temp location and notifies the delegate.
 
-- (XServer *)activeServer;
-// Accessor for the server object saved in db (nil if none saved)
-
-- (NSString *)activeServerDocumentPath;
-// Path for files to be stored
-
-- (void)validateUsername:(NSString *)username password:(NSString *)password forHost:(NSString *)host withDelegate:(id<ServerStatusDelegate>)delegate;
-// Saves user/pass as a temporary credential and sends request for the server's version info
-
-- (void)validateServerWithDelegate:(id<ServerStatusDelegate>)delegate;
-// Sends request for the saved server's info
 
 @end
 

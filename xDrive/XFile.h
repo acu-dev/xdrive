@@ -15,6 +15,7 @@
 @property (nonatomic, retain) NSString * type;
 
 - (NSString *)extension;
-- (NSString *)localPath;
+- (NSString *)cachePath;
+- (NSString *)documentPath;
 
 @end

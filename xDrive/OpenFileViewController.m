@@ -68,8 +68,8 @@
 	
 	self.title = [xFile.name stringByDeletingPathExtension];
 	
-	XDrvDebug(@"File path: %@", [xFile localPath]);
-	if ([[NSFileManager defaultManager] fileExistsAtPath:[xFile localPath]])
+	XDrvDebug(@"File path: %@", [xFile cachePath]);
+	if ([[NSFileManager defaultManager] fileExistsAtPath:[xFile cachePath]])
 	{
 		// Hide download view
 		downloadView.hidden = YES;
@@ -124,7 +124,7 @@
 	 textEncodingName:@"utf-8" 
 			  baseURL:[NSURL URLWithString:[xFile localPath]]];*/
 	
-    NSURLRequest *request = [NSURLRequest requestWithURL:[NSURL fileURLWithPath:[xFile localPath]]];
+    NSURLRequest *request = [NSURLRequest requestWithURL:[NSURL fileURLWithPath:[xFile cachePath]]];
     [webView loadRequest:request];
 }
 
@@ -137,7 +137,7 @@
 	XDrvLog(@"download finished with result: %@", result);
 	
 	// Move file to permanent home
-	[XFileUtils moveFileAtPath:(NSString *)result toPath:[xFile localPath]];
+	[XFileUtils moveFileAtPath:(NSString *)result toPath:[xFile cachePath]];
 	
 	// Load file
 	[self loadFile];

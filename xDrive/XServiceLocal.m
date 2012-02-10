@@ -7,6 +7,8 @@
 //
 
 #import "XServiceLocal.h"
+#import "XDriveConfig.h"
+#import "XFileUtils.h"
 
 
 
@@ -18,7 +20,6 @@
 - (XEntry *)createEntryOfType:(NSString *)type withPath:(NSString *)path;
 
 // Utils
-- (NSURL *)applicationDocumentsDirectory;
 - (NSString *)entryNameFromPath:(NSString *)path;
 @end
 
@@ -230,13 +231,14 @@
 		return persistentStoreCoordinator;
 	}
 	
-	NSURL *storeURL = [[self applicationDocumentsDirectory] URLByAppendingPathComponent:@"xDrive.sqlite"];
+	NSString *urlString = [[XFileUtils applicationDocumentsDirectory] stringByAppendingPathComponent:@"xDrive.sqlite"];
+	XDrvLog(@"store url: %@", urlString);
 	
 	NSError *error = nil;
 	persistentStoreCoordinator = [[NSPersistentStoreCoordinator alloc] initWithManagedObjectModel:[self managedObjectModel]];
 	if (![persistentStoreCoordinator addPersistentStoreWithType:NSSQLiteStoreType
 												  configuration:nil
-															URL:storeURL
+															URL:[NSURL fileURLWithPath:urlString]
 														options:nil
 														  error:&error])
 	{
@@ -247,15 +249,9 @@
 	return persistentStoreCoordinator;
 }
 
-#pragma mark - Utils
 
-/**
- Returns the URL to the application's Documents directory.
- */
-- (NSURL *)applicationDocumentsDirectory
-{
-    return [[[NSFileManager defaultManager] URLsForDirectory:NSDocumentDirectory inDomains:NSUserDomainMask] lastObject];
-}
+
+#pragma mark - Utils
 
 - (NSString *)entryNameFromPath:(NSString *)path
 {

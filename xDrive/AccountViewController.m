@@ -113,10 +113,10 @@
 	[hud show];
 	
 	// Ask XService to validate account
-	[[XService sharedXService] validateUsername:usernameField.text 
+	/*[[XService sharedXService] validateUsername:usernameField.text 
 									   password:passwordField.text 
 										forHost:serverURLField.text 
-								   withDelegate:self];
+								   withDelegate:self];*/
 }
 
 
