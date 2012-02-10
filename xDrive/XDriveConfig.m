@@ -23,6 +23,11 @@
 	return [[[NSBundle mainBundle] infoDictionary] objectForKey:@"CFBundleDisplayName"];
 }
 
++ (NSArray *)supportedServiceVersions
+{
+	return [[[NSBundle mainBundle] infoDictionary] objectForKey:@"SupportedServiceVersions"];
+}
+
 
 
 

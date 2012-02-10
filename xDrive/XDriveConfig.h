@@ -28,6 +28,10 @@ static NSString *defaultServiceBasepath = @"/xservice/rs";
 
 
 
+
+
+
+
 @interface XDriveConfig : NSObject
 
 + (NSString *)appVersion;
@@ -35,6 +39,9 @@ static NSString *defaultServiceBasepath = @"/xservice/rs";
 
 + (NSString *)appName;
 	// Display name of the app as defined in the Info plist
+
++ (NSArray *)supportedServiceVersions;
+	// List of xservice versions supported by this version of xdrive
 
 + (BOOL)shouldResetApp;
 + (void)setAccountUsername:(NSString *)username;

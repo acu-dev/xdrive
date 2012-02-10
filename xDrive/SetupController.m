@@ -132,9 +132,8 @@ typedef enum _SetupStep {
 
 - (BOOL)isServerVersionCompatible:(NSString *)version
 {
-	// This could evaluate a set of compatible versions. For now
-	// it requires an exact match.
-	return ([version isEqualToString:[XDriveConfig appVersion]]);
+	// Evaluate if the server version is listed as supported
+	return ([[XDriveConfig supportedServiceVersions] containsObject:version]);
 }
 
 - (void)saveCredentials
