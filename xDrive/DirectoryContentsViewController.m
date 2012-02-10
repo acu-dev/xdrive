@@ -141,7 +141,6 @@
 	NSString *iconName = [iconTypes objectForKey:entryType];
 	if (iconName)
 	{
-		XDrvDebug(@"Using icon named: %@", iconName);
 		return [UIImage imageNamed:iconName];
 	}
 
@@ -150,12 +149,10 @@
 	iconName = [iconTypes objectForKey:category];
 	if (iconName)
 	{
-		XDrvDebug(@"Using icon named: %@", iconName);
 		return [UIImage imageNamed:iconName];
 	}
 	
 	// Use default
-	XDrvDebug(@"Using default icon");
 	return [UIImage imageNamed:[iconTypes objectForKey:@"default"]];
 }
 

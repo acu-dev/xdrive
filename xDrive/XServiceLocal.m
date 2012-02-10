@@ -232,7 +232,6 @@
 	}
 	
 	NSString *urlString = [[XFileUtils applicationDocumentsDirectory] stringByAppendingPathComponent:@"xDrive.sqlite"];
-	XDrvLog(@"store url: %@", urlString);
 	
 	NSError *error = nil;
 	persistentStoreCoordinator = [[NSPersistentStoreCoordinator alloc] initWithManagedObjectModel:[self managedObjectModel]];

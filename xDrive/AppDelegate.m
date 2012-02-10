@@ -121,15 +121,17 @@
 
 - (void)tabBarControllerDidAppear:(UITabBarController *)tabBarController
 {
-	XDrvDebug(@"Setting root view controller to tab bar controller");
 	self.window.rootViewController = tabBarController;
 	[self performSelector:@selector(cleanupSetup) withObject:nil afterDelay:1.0];
 }
 
 - (void)cleanupSetup
 {
-	XDrvDebug(@"Removing setup controller");
-	self.setupController = nil;
+	if (setupController)
+	{
+		XDrvDebug(@"Removing setup controller");
+		self.setupController = nil;
+	}
 }
 
 

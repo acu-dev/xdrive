@@ -61,7 +61,6 @@
 	{
 		DirectoryNavigationController *navController = [storyboard instantiateViewControllerWithIdentifier:@"directoryNav"];
 		navController.tabBarItem.image = [UIImage imageWithContentsOfFile:defaultPath.icon];
-		XDrvDebug(@"Setting tab bar item icon to %@", defaultPath.icon);
 		[navController setRootPath:defaultPath.path];
 		[navController setTitle:defaultPath.name];
 		[viewControllers addObject:navController];

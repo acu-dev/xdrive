@@ -54,15 +54,12 @@
 
 + (void)saveTabItemOrder:(NSArray *)order
 {
-	XDrvDebug(@"Saving tab item order: %@", order);
 	[[NSUserDefaults standardUserDefaults] setObject:order forKey:@"savedTabOrder"];
 }
 
 + (NSArray *)getSavedTabItemOrder
 {
-	NSArray *order = [[NSUserDefaults standardUserDefaults] objectForKey:@"savedTabOrder"];
-	XDrvDebug(@"Retrieved tab item order: %@", order);
-	return order;
+	return [[NSUserDefaults standardUserDefaults] objectForKey:@"savedTabOrder"];
 }
 
 
