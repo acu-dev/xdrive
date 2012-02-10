@@ -119,7 +119,7 @@ typedef enum _SetupStep {
 	server.hostname = [xserviceInfo objectForKey:@"host"];
 	server.context = [xserviceInfo objectForKey:@"context"];
 	server.servicePath = [xserviceInfo objectForKey:@"serviceBase"];
-	XDrvDebug(@"Created new server object: %@", server);
+	XDrvDebug(@"Created new server object");
 	
 	// Become auth challenge handler
 	[XService sharedXService].remoteService.authDelegate = self;
@@ -143,13 +143,13 @@ typedef enum _SetupStep {
 																				  port:[server.port integerValue]
 																			  protocol:server.protocol
 																				 realm:server.hostname
-																  authenticationMethod:@"NSURLAuthenticationMethodHTTPBasic"];
+																  authenticationMethod:@"NSURLAuthenticationMethodDefault"];
 	// Make a credential with permanent persistence
 	NSURLCredential *credential = [NSURLCredential credentialWithUser:validateUser password:validatePass persistence:NSURLCredentialPersistencePermanent];
 	
 	// Save credential to the protection space
 	XDrvDebug(@"Saving credentials for user: %@", validateUser);
-	[[NSURLCredentialStorage sharedCredentialStorage] setCredential:credential forProtectionSpace:protectionSpace];
+	[[NSURLCredentialStorage sharedCredentialStorage] setDefaultCredential:credential forProtectionSpace:protectionSpace];
 }
 
 

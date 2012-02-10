@@ -139,7 +139,7 @@
 
 - (void)receiveDefaultPaths:(NSArray *)details
 {
-	XDrvDebug(@"Got default paths: %@", details);
+	XDrvDebug(@"Got default paths");
 	pathDetails = [[NSMutableArray alloc] init];
 	NSMutableArray *order = [NSMutableArray arrayWithCapacity:[details count]];
 	
@@ -193,7 +193,6 @@
 
 - (void)receiveDefaultPathIcon:(NSString *)tmpFilePath
 {
-	XDrvDebug(@"icon path map: %@", iconToPathMap);
 	// Move file to permanent home
 	NSString *fileName = [tmpFilePath lastPathComponent];
 	NSString *newFilePath = [[[[XService sharedXService] activeServerDocumentPath] stringByAppendingString:@"-meta/icons"] 

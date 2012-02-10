@@ -52,6 +52,7 @@
 
 - (void)initTabItems
 {
+	XDrvDebug(@"Initializing tab items");
 	NSMutableArray *viewControllers = [[NSMutableArray alloc] init];
 	NSString *storyboardName = ([[UIDevice currentDevice] userInterfaceIdiom] == UIUserInterfaceIdiomPhone) ? @"MainStoryboard_iPhone" : @"MainStoryboard_iPad";
 	UIStoryboard *storyboard = [UIStoryboard storyboardWithName:storyboardName bundle:nil];

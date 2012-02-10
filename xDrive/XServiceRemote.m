@@ -39,9 +39,6 @@
 
 
 
-//static NSString *serviceInfoPath = @"/info";
-
-
 
 
 @implementation XServiceRemote
@@ -219,6 +216,8 @@
 
 - (void)cgConnection:(CGConnection *)connection finishedWithResult:(id)result
 {
+	XDrvDebug(@"Connection finished");
+	
 	// Get request details
 	NSDictionary *request = [requests objectForKey:[connection description]];
 	if (!request)
@@ -248,6 +247,8 @@
 
 - (void)cgConnection:(CGConnection *)connection failedWithError:(NSError *)error
 {
+	XDrvDebug(@"Connection failed");
+	
 	// Get request details
 	NSDictionary *request = [requests objectForKey:[connection description]];
 	if (!request)
@@ -306,9 +307,12 @@
 - (void)respondToAuthenticationChallenge:(NSURLAuthenticationChallenge *)challenge
 							  forHandler:(CGAuthenticationChallengeHandler *)challengeHandler
 {
+	XDrvDebug(@"Received auth challenge");
+	
 	if (authDelegate)
 	{
 		// Get credential from auth delegate
+		XDrvDebug(@"Asking auth delegate for credential");
 		[challengeHandler resolveWithCredential:[authDelegate credentialForAuthenticationChallenge]];
 		return;
 	}
@@ -327,6 +331,24 @@
 	{
 		// Get credential to use from delegate
 		[challengeHandler resolveWithCredential:[delegate credentialForAuthenticationChallenge]];
+	}
+	else
+	{
+		//XDrvLog(@"No credential found");
+		
+		
+		
+		NSURLProtectionSpace *protectionSpace = [[NSURLProtectionSpace alloc] initWithHost:activeServer.hostname
+																					  port:[activeServer.port integerValue]
+																				  protocol:activeServer.protocol
+																					 realm:activeServer.hostname
+																	  authenticationMethod:@"NSURLAuthenticationMethodHTTPBasic"];
+		
+		NSDictionary *allCredentials = [[NSURLCredentialStorage sharedCredentialStorage] credentialsForProtectionSpace:protectionSpace];
+		//XDrvLog(@"all credentials: %@", allCredentials);
+		
+		XDrvDebug(@"host: %@", challenge.protectionSpace.host);
+		XDrvDebug(@"auth method: %@", challenge.protectionSpace.authenticationMethod);
 	}
 }
 
