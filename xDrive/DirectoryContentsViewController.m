@@ -10,6 +10,7 @@
 #import "XService.h"
 #import "XDriveConfig.h"
 #import "OpenFileViewController.h"
+#import "UIStoryboard+Xdrive.h"
 
 
 
@@ -40,11 +41,6 @@
 {
 	directory = dir;
 	managedObjectContext = [[XService sharedXService] localService].managedObjectContext;
-	
-	if (!directory.name || [directory.name isEqualToString:@""] || [directory.name isEqualToString:@"/"])
-		self.title = @"Browse";
-	else
-		self.title = directory.name;
 }
 
 - (void)didReceiveMemoryWarning
@@ -76,29 +72,25 @@
     // e.g. self.myOutlet = nil;
 }
 
+- (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender
+{
+	if ([segue.identifier isEqualToString:@"ViewFile"])
+	{
+		XFile *file = [self.fetchedResultsController objectAtIndexPath:[self.tableView indexPathForSelectedRow]];
+		[(id)segue.destinationViewController setXFile:file];
+	}
+}
+
 - (void)viewWillAppear:(BOOL)animated
 {
-    [super viewWillAppear:animated];
+	XDrvLog(@"view will appear");
+	[super viewWillAppear:animated];
 }
 
 - (void)viewDidAppear:(BOOL)animated
 {
-    [super viewDidAppear:animated];
-}
-
-- (void)viewWillDisappear:(BOOL)animated
-{
-    [super viewWillDisappear:animated];
-}
-
-- (void)viewDidDisappear:(BOOL)animated
-{
-    [super viewDidDisappear:animated];
-}
-
-- (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation
-{
-    return YES;
+	XDrvLog(@"view did appear");
+	[super viewDidAppear:animated];
 }
 
 
@@ -218,23 +210,19 @@
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
 	XEntry *entry = [self.fetchedResultsController objectAtIndexPath:indexPath];
-	NSString *storyboardName = ([[UIDevice currentDevice] userInterfaceIdiom] == UIUserInterfaceIdiomPhone) ? @"MainStoryboard_iPhone" : @"MainStoryboard_iPad";
-	UIStoryboard *storyboard = [UIStoryboard storyboardWithName:storyboardName bundle:nil];
 	
 	if ([entry isKindOfClass:[XDirectory class]])
 	{
 		XDirectory *updatedDir = [[XService sharedXService] directoryWithPath:entry.path];
-		DirectoryContentsViewController *viewController = [storyboard instantiateViewControllerWithIdentifier:@"directoryContents"];
+		DirectoryContentsViewController *viewController = [[UIStoryboard mainStoryboard] instantiateViewControllerWithIdentifier:@"directoryContents"];
 		[viewController setDirectory:updatedDir];
 		[self.navigationController pushViewController:viewController animated:YES];
 	}
 	else if ([OpenFileViewController isFileViewable:(XFile *)entry])
 	{
+		// Load file in viewer
 		XDrvDebug(@"Opening file entry: %@", [entry description]);
-		UINavigationController *navController = [storyboard instantiateViewControllerWithIdentifier:@"openFile"];
-		OpenFileViewController *viewController = (OpenFileViewController *)navController.topViewController;
-		[viewController setXFile:(XFile *)entry];
-		[self.navigationController presentModalViewController:navController animated:YES];
+		[self performSegueWithIdentifier:@"ViewFile" sender:self];
 	}
 }
 

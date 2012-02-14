@@ -28,6 +28,4 @@
 
 + (BOOL)isFileViewable:(XFile *)file;
 
-- (IBAction)done:(id)sender;
-
 @end

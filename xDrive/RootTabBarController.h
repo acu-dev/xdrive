@@ -6,6 +6,6 @@
 //  Copyright 2011 Abilene Christian University. All rights reserved.
 //
 
-@interface RootTabBarController : UITabBarController
+@interface RootTabBarController : UITabBarController <UITabBarControllerDelegate>
 
 @end

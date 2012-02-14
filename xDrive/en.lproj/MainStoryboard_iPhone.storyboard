@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="1.0" toolsVersion="1938" systemVersion="11C74" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" initialViewController="4">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="1.0" toolsVersion="1938" systemVersion="11D50" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" initialViewController="4">
     <dependencies>
         <development defaultVersion="4200" identifier="xcode"/>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="933"/>
@@ -46,24 +46,10 @@
             </objects>
             <point key="canvasLocation" x="937" y="664"/>
         </scene>
-        <scene sceneID="VO8-I8-BDk">
-            <objects>
-                <placeholder placeholderIdentifier="IBFirstResponder" id="qDK-hG-ddv" userLabel="First Responder" sceneMemberID="firstResponder"/>
-                <navigationController storyboardIdentifier="openFile" definesPresentationContext="YES" id="VWN-IB-5LG" sceneMemberID="viewController">
-                    <navigationBar key="navigationBar" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" id="diC-Wo-cED">
-                        <autoresizingMask key="autoresizingMask"/>
-                    </navigationBar>
-                    <connections>
-                        <segue destination="m2V-yS-yfv" kind="relationship" relationship="rootViewController" id="CAl-PN-uIa"/>
-                    </connections>
-                </navigationController>
-            </objects>
-            <point key="canvasLocation" x="1360" y="-268"/>
-        </scene>
         <scene sceneID="PJI-bt-McC">
             <objects>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="700-wd-rja" userLabel="First Responder" sceneMemberID="firstResponder"/>
-                <viewController storyboardIdentifier="" id="m2V-yS-yfv" customClass="OpenFileViewController" sceneMemberID="viewController">
+                <viewController storyboardIdentifier="" hidesBottomBarWhenPushed="YES" id="m2V-yS-yfv" customClass="OpenFileViewController" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="2WA-5j-HFA">
                         <rect key="frame" x="0.0" y="64" width="320" height="416"/>
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
@@ -84,24 +70,18 @@
                                         <nil key="highlightedColor"/>
                                         <color key="shadowColor" white="0.66666666666666663" alpha="1" colorSpace="calibratedWhite"/>
                                     </label>
-                                    <webView contentMode="center" scalesPageToFit="YES" id="Lbj-Le-8GX">
-                                        <rect key="frame" x="0.0" y="0.0" width="320" height="416"/>
-                                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
-                                        <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
-                                    </webView>
                                 </subviews>
                                 <color key="backgroundColor" cocoaTouchSystemColor="viewFlipsideBackgroundColor"/>
                             </view>
+                            <webView contentMode="center" scalesPageToFit="YES" id="Lbj-Le-8GX">
+                                <rect key="frame" x="0.0" y="0.0" width="320" height="416"/>
+                                <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                                <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
+                            </webView>
                         </subviews>
                         <color key="backgroundColor" cocoaTouchSystemColor="scrollViewTexturedBackgroundColor"/>
                     </view>
-                    <navigationItem key="navigationItem" title="File Name" id="aF7-gc-DRg">
-                        <barButtonItem key="rightBarButtonItem" style="done" systemItem="done" id="BzT-zd-5mA">
-                            <connections>
-                                <action selector="done:" destination="m2V-yS-yfv" id="otc-h7-Ujt"/>
-                            </connections>
-                        </barButtonItem>
-                    </navigationItem>
+                    <navigationItem key="navigationItem" title="File Name" id="aF7-gc-DRg"/>
                     <connections>
                         <outlet property="downloadFileNameLabel" destination="h2j-Te-flo" id="ePI-04-HoB"/>
                         <outlet property="downloadProgressView" destination="JLX-cM-1HG" id="FaJ-Oh-bzc"/>
@@ -110,7 +90,7 @@
                     </connections>
                 </viewController>
             </objects>
-            <point key="canvasLocation" x="1833" y="-268"/>
+            <point key="canvasLocation" x="458" y="-266"/>
         </scene>
         <scene sceneID="kkQ-al-qFB">
             <objects>
@@ -338,20 +318,6 @@
             </objects>
             <point key="canvasLocation" x="1328" y="380"/>
         </scene>
-        <scene sceneID="J1T-Yk-Soj">
-            <objects>
-                <placeholder placeholderIdentifier="IBFirstResponder" id="p3n-lH-88k" userLabel="First Responder" sceneMemberID="firstResponder"/>
-                <navigationController storyboardIdentifier="directoryNav" definesPresentationContext="YES" id="ZoJ-NK-9hc" customClass="DirectoryNavigationController" sceneMemberID="viewController">
-                    <navigationBar key="navigationBar" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" id="C9p-x3-6Ki">
-                        <autoresizingMask key="autoresizingMask"/>
-                    </navigationBar>
-                    <connections>
-                        <segue destination="h0F-Ep-3VL" kind="relationship" relationship="rootViewController" id="ifM-wg-GIj"/>
-                    </connections>
-                </navigationController>
-            </objects>
-            <point key="canvasLocation" x="-16" y="-268"/>
-        </scene>
         <scene sceneID="6RX-sY-Z4q">
             <objects>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="rEs-Bz-xeL" userLabel="First Responder" sceneMemberID="firstResponder"/>
@@ -448,9 +414,13 @@
                         </connections>
                     </tableView>
                     <navigationItem key="navigationItem" title="Directory" id="VMY-8W-Zef"/>
+                    <simulatedNavigationBarMetrics key="simulatedTopBarMetrics" prompted="NO"/>
+                    <connections>
+                        <segue destination="m2V-yS-yfv" kind="push" identifier="ViewFile" id="CBC-Er-7RG"/>
+                    </connections>
                 </tableViewController>
             </objects>
-            <point key="canvasLocation" x="458" y="-268"/>
+            <point key="canvasLocation" x="-9" y="-266"/>
         </scene>
         <scene sceneID="Y30-99-QBO">
             <objects>
@@ -810,13 +780,9 @@
         <class className="DirectoryContentsViewController" superclassName="UITableViewController">
             <source key="sourceIdentifier" type="project" relativePath="./Classes/DirectoryContentsViewController.h"/>
         </class>
-        <class className="DirectoryNavigationController" superclassName="UINavigationController">
-            <source key="sourceIdentifier" type="project" relativePath="./Classes/DirectoryNavigationController.h"/>
-        </class>
         <class className="OpenFileViewController" superclassName="UIViewController">
             <source key="sourceIdentifier" type="project" relativePath="./Classes/OpenFileViewController.h"/>
             <relationships>
-                <relationship kind="action" name="done:"/>
                 <relationship kind="outlet" name="downloadFileNameLabel" candidateClass="UILabel"/>
                 <relationship kind="outlet" name="downloadProgressView" candidateClass="UIProgressView"/>
                 <relationship kind="outlet" name="downloadView" candidateClass="UIView"/>

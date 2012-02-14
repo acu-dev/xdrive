@@ -102,11 +102,6 @@
 }
 
 
-- (void)done:(id)sender
-{
-	[self dismissModalViewControllerAnimated:YES];
-}
-
 
 # pragma mark - Download File
 
@@ -134,7 +129,7 @@
 
 - (void)connectionFinishedWithResult:(NSObject *)result
 {
-	XDrvLog(@"download finished with result: %@", result);
+	XDrvDebug(@"Download finished with tmp file path: %@", result);
 	
 	// Move file to permanent home
 	[XFileUtils moveFileAtPath:(NSString *)result toPath:[xFile cachePath]];

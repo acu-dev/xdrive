@@ -7,11 +7,13 @@
 //
 
 #import "RootTabBarController.h"
-#import "DirectoryNavigationController.h"
+#import "UIStoryboard+Xdrive.h"
+#import "DirectoryContentsViewController.h"
 #import "XService.h"
 #import "XDefaultPath.h"
 #import "XDriveConfig.h"
 #import "AppDelegate.h"
+
 
 
 
@@ -22,6 +24,15 @@
 
 
 @implementation RootTabBarController
+
+
+
+- (void)awakeFromNib
+{
+	self.delegate = self;
+}
+
+
 
 #pragma mark - View lifecycle
 
@@ -46,6 +57,8 @@
 
 - (void)viewDidAppear:(BOOL)animated
 {
+	[super viewDidAppear:animated];
+	
 	// Tell app delegate we've appeared so we can become root view controller and setup controllers can be cleaned up
 	[(AppDelegate *)[[UIApplication sharedApplication] delegate] tabBarControllerDidAppear:self];
 }
@@ -54,26 +67,30 @@
 {
 	XDrvDebug(@"Initializing tab items");
 	NSMutableArray *viewControllers = [[NSMutableArray alloc] init];
-	NSString *storyboardName = ([[UIDevice currentDevice] userInterfaceIdiom] == UIUserInterfaceIdiomPhone) ? @"MainStoryboard_iPhone" : @"MainStoryboard_iPad";
-	UIStoryboard *storyboard = [UIStoryboard storyboardWithName:storyboardName bundle:nil];
 	
 	// Create nav controller for each default path
 	for (XDefaultPath *defaultPath in [[XService sharedXService] activeServer].defaultPaths)
 	{
-		DirectoryNavigationController *navController = [storyboard instantiateViewControllerWithIdentifier:@"directoryNav"];
+		XDirectory *directory = [[XService sharedXService] directoryWithPath:defaultPath.path];
+		
+		DirectoryContentsViewController *viewController = [[UIStoryboard mainStoryboard] instantiateViewControllerWithIdentifier:@"directoryContents"];
+		viewController.directory = directory;
+		viewController.title = defaultPath.name;
+		
+		UINavigationController *navController = [[UINavigationController alloc] initWithRootViewController:viewController];
 		navController.tabBarItem.image = [UIImage imageWithContentsOfFile:defaultPath.icon];
-		[navController setRootPath:defaultPath.path];
-		[navController setTitle:defaultPath.name];
+		navController.title = defaultPath.name;
+
 		[viewControllers addObject:navController];
 	}
 	
 	// Recent
-	UINavigationController *recentNavController = [storyboard instantiateViewControllerWithIdentifier:@"recentNav"];
+	UINavigationController *recentNavController = [[UIStoryboard mainStoryboard] instantiateViewControllerWithIdentifier:@"recentNav"];
 	recentNavController.tabBarItem.image = [UIImage imageNamed:@"clock.png"];
 	[viewControllers addObject:recentNavController];
 	
 	// Settings
-	UINavigationController *settingsNavController = [storyboard instantiateViewControllerWithIdentifier:@"settingsNav"];
+	UINavigationController *settingsNavController = [[UIStoryboard mainStoryboard] instantiateViewControllerWithIdentifier:@"settingsNav"];
 	settingsNavController.tabBarItem.image = [UIImage imageNamed:@"gear.png"];
 	[viewControllers addObject:settingsNavController];
 	
@@ -97,6 +114,20 @@
 		}
 	}
 	return orderedViewControllers;
+}
+
+
+
+#pragma mark - UITabBarControllerDelegate
+
+- (void)tabBarController:(UITabBarController *)tabBarController didEndCustomizingViewControllers:(NSArray *)viewControllers changed:(BOOL)changed
+{
+	NSMutableArray *saveOrder = [NSMutableArray arrayWithCapacity:[self.viewControllers count]];
+	for (UIViewController *viewController in self.viewControllers) {
+		[saveOrder addObject:viewController.title];
+	}
+	
+	[XDriveConfig saveTabItemOrder:saveOrder];
 }
 
 

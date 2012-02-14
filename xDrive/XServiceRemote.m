@@ -334,21 +334,7 @@
 	}
 	else
 	{
-		//XDrvLog(@"No credential found");
-		
-		
-		
-		NSURLProtectionSpace *protectionSpace = [[NSURLProtectionSpace alloc] initWithHost:activeServer.hostname
-																					  port:[activeServer.port integerValue]
-																				  protocol:activeServer.protocol
-																					 realm:activeServer.hostname
-																	  authenticationMethod:@"NSURLAuthenticationMethodHTTPBasic"];
-		
-		NSDictionary *allCredentials = [[NSURLCredentialStorage sharedCredentialStorage] credentialsForProtectionSpace:protectionSpace];
-		//XDrvLog(@"all credentials: %@", allCredentials);
-		
-		XDrvDebug(@"host: %@", challenge.protectionSpace.host);
-		XDrvDebug(@"auth method: %@", challenge.protectionSpace.authenticationMethod);
+		XDrvLog(@"No credential found; probably need to raise an authentication screen...");
 	}
 }
 
