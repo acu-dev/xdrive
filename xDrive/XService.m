@@ -236,7 +236,7 @@ static XService *sharedXService;
 	
 	// Save changes
 	NSError *error = nil;
-	if ([[self.localService managedObjectContext] save:&error])
+	if ([[_localService managedObjectContext] save:&error])
 	{
 		XDrvDebug(@"Successfully updated directory: %@", directory.path);
 	}
