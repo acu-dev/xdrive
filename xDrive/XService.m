@@ -15,6 +15,7 @@
 
 
 
+
 @interface XService()
 
 @property (nonatomic, strong) NSString *cachesDirPath;
@@ -276,7 +277,7 @@ static XService *sharedXService;
 			XFile *file = [self.localService fileWithPath:[entryFromJson objectForKey:@"path"]];
 			file.type = [entryFromJson objectForKey:@"type"];
 			file.size = [entryFromJson objectForKey:@"size"];
-			file.sizeDescription
+			//file.sizeDescription = [NSString stringByFormattingBytes:[file.size integerValue]];
 			entry = file;
 		}
 		entry.parent = directory;

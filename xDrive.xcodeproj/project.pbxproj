@@ -727,8 +727,12 @@
 			buildSettings = {
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "xDrive/xDrive-Prefix.pch";
-				HEADER_SEARCH_PATHS = "$(SOURCE_ROOT)/CGNetUtils";
+				HEADER_SEARCH_PATHS = (
+					"$(SOURCE_ROOT)/DTFoundation/**",
+					"$(SOURCE_ROOT)/CGNetUtils",
+				);
 				INFOPLIST_FILE = "xDrive/xDrive-Info.plist";
+				OTHER_LDFLAGS = "-ObjC";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				WRAPPER_EXTENSION = app;
 			};
@@ -739,8 +743,12 @@
 			buildSettings = {
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "xDrive/xDrive-Prefix.pch";
-				HEADER_SEARCH_PATHS = "$(SOURCE_ROOT)/CGNetUtils";
+				HEADER_SEARCH_PATHS = (
+					"$(SOURCE_ROOT)/DTFoundation/**",
+					"$(SOURCE_ROOT)/CGNetUtils",
+				);
 				INFOPLIST_FILE = "xDrive/xDrive-Info.plist";
+				OTHER_LDFLAGS = "-ObjC";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				WRAPPER_EXTENSION = app;
 			};
