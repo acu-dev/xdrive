@@ -17,13 +17,17 @@
 
 @interface XService()
 
+@property (nonatomic, strong) NSString *cachesDirPath;
+
+/*
 @property (nonatomic, strong) NSURLCredential *validateCredential;
 	// Credential used when validating server info.
 
 @property (nonatomic, strong) DefaultPathController *defaultPathController;
 
 @property (nonatomic, assign) int fetchingDefaultPaths;
-	// Counter that gets decremented as default path fetches return.
+	// Counter that gets decremented as default path fetches return
+*/
 
 /*
 - (void)saveCredentialWithUsername:(NSString *)user password:(NSString *)pass;
@@ -41,15 +45,18 @@
 
 @implementation XService
 
+// Public
 static XService *sharedXService;
-
-
 @synthesize localService = _localService;
 @synthesize remoteService = _remoteService;
 @synthesize serverStatusDelegate;
-@synthesize validateCredential;
+
+// Private
+@synthesize cachesDirPath;
+
+/*@synthesize validateCredential;
 @synthesize fetchingDefaultPaths;
-@synthesize defaultPathController;
+@synthesize defaultPathController;*/
 
 
 #pragma mark - Initialization
@@ -94,7 +101,11 @@ static XService *sharedXService;
 
 - (NSString *)activeServerCachePath
 {
-	return [[XFileUtils applicationCachesDirectory] stringByAppendingPathComponent:[self activeServer].hostname];
+	if (!cachesDirPath)
+	{
+		cachesDirPath = [[XFileUtils applicationCachesDirectory] stringByAppendingPathComponent:[self activeServer].hostname];
+	}
+	return cachesDirPath;
 }
 
 
