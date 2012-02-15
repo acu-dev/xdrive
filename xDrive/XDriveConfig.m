@@ -35,14 +35,24 @@
 
 #pragma mark - Settings
 
-+ (NSInteger)localStorageAmount
++ (NSNumber *)localStorageMaxBytes
 {
-	return [[NSUserDefaults standardUserDefaults] integerForKey:@"LocalStorageAmount"];
+	return [[NSUserDefaults standardUserDefaults] objectForKey:@"LocalStorageAmount"];
 }
 
-+ (void)setLocalStorageAmount:(NSInteger)amount
++ (void)setLocalStorageMaxBytes:(NSNumber *)bytes
 {
-	[[NSUserDefaults standardUserDefaults] setInteger:amount forKey:@"LocalStorageAmount"];
+	[[NSUserDefaults standardUserDefaults] setObject:bytes forKey:@"LocalStorageAmount"];
+}
+
++ (NSString *)localStorageDescription
+{
+	return [[NSUserDefaults standardUserDefaults] objectForKey:@"LocalStorageDescription"];
+}
+
++ (void)setLocalStorageDescription:(NSString *)description
+{
+	[[NSUserDefaults standardUserDefaults] setObject:description forKey:@"LocalStorageDescription"];
 }
 
 

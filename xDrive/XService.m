@@ -19,7 +19,6 @@
 @interface XService()
 
 @property (nonatomic, strong) NSString *cachesDirPath;
-@property (nonatomic, strong) NSNumber *localStorageAmount;
 
 /*
 @property (nonatomic, strong) NSURLCredential *validateCredential;
@@ -55,7 +54,6 @@ static XService *sharedXService;
 
 // Private
 @synthesize cachesDirPath;
-@synthesize localStorageAmount;
 
 /*@synthesize validateCredential;
 @synthesize fetchingDefaultPaths;
@@ -111,50 +109,6 @@ static XService *sharedXService;
 	return cachesDirPath;
 }
 
-
-
-#pragma mark - Storage
-
-- (NSInteger)localStorageAmount
-{
-	if (!localStorageAmount)
-	{
-		localStorageAmount = [NSNumber numberWithInteger:[XDriveConfig localStorageAmount]];
-	}
-	return [localStorageAmount integerValue];
-}
-
-- (NSString *)sizeDescriptionForBytes:(NSInteger)bytes
-{
-	NSString *unitSymbol = nil;
-	int thousands = lroundf(bytes / 1000);
-	switch (thousands) {
-		case 0:
-			unitSymbol = @"B";
-			break;
-		case 1:
-			unitSymbol = @"KB";
-			break;
-		case 2:
-			unitSymbol = @"MB";
-			break;
-		case 3:
-			unitSymbol = @"GB";
-			break;
-		case 4:
-			unitSymbol = @"TB";
-			break;
-		case 5:
-			unitSymbol = @"PB";
-			break;
-		default:
-			unitSymbol = @"??";
-			break;
-	}
-	
-	
-	
-}
 
 
 
@@ -277,7 +231,7 @@ static XService *sharedXService;
 			XFile *file = [self.localService fileWithPath:[entryFromJson objectForKey:@"path"]];
 			file.type = [entryFromJson objectForKey:@"type"];
 			file.size = [entryFromJson objectForKey:@"size"];
-			//file.sizeDescription = [NSString stringByFormattingBytes:[file.size integerValue]];
+			file.sizeDescription = [XFileUtils stringByFormattingBytes:[file.size integerValue]];
 			entry = file;
 		}
 		entry.parent = directory;

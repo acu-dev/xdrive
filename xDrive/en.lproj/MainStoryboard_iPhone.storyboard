@@ -156,14 +156,14 @@
                                             <autoresizingMask key="autoresizingMask"/>
                                             <subviews>
                                                 <label opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" text="Local Storage" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" id="O9q-v3-uVw">
-                                                    <rect key="frame" x="10" y="11" width="114" height="21"/>
+                                                    <rect key="frame" x="10" y="11" width="113" height="21"/>
                                                     <autoresizingMask key="autoresizingMask"/>
                                                     <fontDescription key="fontDescription" type="boldSystem" pointSize="17"/>
                                                     <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
                                                     <color key="highlightedColor" red="1" green="1" blue="1" alpha="1" colorSpace="calibratedRGB"/>
                                                 </label>
-                                                <label opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" text="500 MB" textAlignment="right" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" id="Ecm-LP-dEb">
-                                                    <rect key="frame" x="211" y="11" width="59" height="21"/>
+                                                <label opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" text="0 TB" textAlignment="right" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" id="Ecm-LP-dEb">
+                                                    <rect key="frame" x="234" y="11" width="36" height="21"/>
                                                     <autoresizingMask key="autoresizingMask"/>
                                                     <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                                     <color key="textColor" red="0.2196078431372549" green="0.32941176470588235" blue="0.52941176470588236" alpha="1" colorSpace="calibratedRGB"/>
@@ -227,6 +227,7 @@
                     <navigationItem key="navigationItem" title="Settings" id="8Yb-g5-0ZG"/>
                     <connections>
                         <outlet property="hostnameLabel" destination="Xj7-6e-7on" id="bcY-Df-CNP"/>
+                        <outlet property="storageLabel" destination="Ecm-LP-dEb" id="NQt-au-raZ"/>
                         <outlet property="userLabel" destination="ZCR-bC-yod" id="K6e-EL-zVE"/>
                     </connections>
                 </tableViewController>
@@ -447,7 +448,7 @@
                             <outlet property="delegate" destination="h0F-Ep-3VL" id="Y2I-Kx-kRB"/>
                         </connections>
                     </tableView>
-                    <navigationItem key="navigationItem" title="Directory" id="VMY-8W-Zef"/>
+                    <navigationItem key="navigationItem" id="VMY-8W-Zef"/>
                     <simulatedNavigationBarMetrics key="simulatedTopBarMetrics" prompted="NO"/>
                     <connections>
                         <segue destination="m2V-yS-yfv" kind="push" identifier="ViewFile" id="CBC-Er-7RG"/>
@@ -800,6 +801,9 @@
         <image name="setup-bg.png" width="480" height="480"/>
     </resources>
     <classes>
+        <class className="AccountViewController" superclassName="UITableViewController">
+            <source key="sourceIdentifier" type="project" relativePath="./Classes/AccountViewController.h"/>
+        </class>
         <class className="DirectoryContentsViewController" superclassName="UITableViewController">
             <source key="sourceIdentifier" type="project" relativePath="./Classes/DirectoryContentsViewController.h"/>
         </class>
@@ -822,6 +826,7 @@
             <source key="sourceIdentifier" type="project" relativePath="./Classes/SettingsViewController.h"/>
             <relationships>
                 <relationship kind="outlet" name="hostnameLabel" candidateClass="UILabel"/>
+                <relationship kind="outlet" name="storageLabel" candidateClass="UILabel"/>
                 <relationship kind="outlet" name="userLabel" candidateClass="UILabel"/>
             </relationships>
         </class>

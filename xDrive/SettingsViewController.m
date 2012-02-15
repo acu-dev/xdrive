@@ -9,6 +9,7 @@
 #import "SettingsViewController.h"
 #import "XDriveConfig.h"
 #import "XService.h"
+#import "XFileUtils.h"
 
 
 
@@ -44,7 +45,7 @@
 	userLabel.text = credential.user;
 	
 	// Storage
-	NSInteger amount = [[XService sharedXService] localStorageAmount];
+	storageLabel.text = [XDriveConfig localStorageDescription];
 }
 
 - (void)viewDidUnload

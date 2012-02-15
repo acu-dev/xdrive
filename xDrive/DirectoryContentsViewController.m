@@ -63,6 +63,9 @@
  
     // Uncomment the following line to display an Edit button in the navigation bar for this view controller.
     // self.navigationItem.rightBarButtonItem = self.editButtonItem;
+	
+	if (!self.title)
+		self.title = directory.name;
 }
 
 - (void)viewDidUnload
@@ -98,7 +101,7 @@
 	NSString *type = nil;
 	if ([entry isKindOfClass:[XFile class]])
 	{
-		cell.detailTextLabel.text = ((XFile *)entry).size;
+		cell.detailTextLabel.text = ((XFile *)entry).sizeDescription;
 		type = ((XFile *)entry).type;
 	}
 	else

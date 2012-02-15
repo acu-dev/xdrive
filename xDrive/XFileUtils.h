@@ -17,4 +17,6 @@
 + (void)moveFileAtPath:(NSString *)oldFilePath toPath:(NSString *)newFilePath;
 	// Moves a file from one location to another
 
++ (NSString *)stringByFormattingBytes:(long long)bytes;
+
 @end
