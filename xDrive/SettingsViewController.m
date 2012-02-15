@@ -14,7 +14,7 @@
 
 @interface SettingsViewController()
 
-
+- (void)customizeAccountCell:(UITableViewCell *)cell;
 
 @end
 
@@ -29,14 +29,6 @@
 
 #pragma mark - Initialization
 
-- (id)initWithStyle:(UITableViewStyle)style
-{
-    self = [super initWithStyle:style];
-    if (self) {
-        // Custom initialization
-    }
-    return self;
-}
 
 - (void)didReceiveMemoryWarning
 {
@@ -73,7 +65,7 @@
 
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView
 {
-	return 2;
+	return 1;
 }
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
@@ -85,16 +77,12 @@
 
 - (NSString *)tableView:(UITableView *)tableView titleForHeaderInSection:(NSInteger)section
 {
-	if (!section)
-		return @"Accounts";
 	return nil;
 }
 
 - (NSString *)tableView:(UITableView *)tableView titleForFooterInSection:(NSInteger)section
 {
-	if (section == 1)
-		return [NSString stringWithFormat:@"Version %@", [XDriveConfig appVersion]];
-	return nil;
+	return [NSString stringWithFormat:@"Version %@", [XDriveConfig appVersion]];
 }
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
@@ -102,7 +90,7 @@
 	NSString *cellIdentifier = (indexPath.section) ? @"BasicCell" : @"AccountCell";
     UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:cellIdentifier];
 
-    cell.textLabel.text = @"hi";
+	[self customizeAccountCell:cell];
     
     return cell;
 }
@@ -142,6 +130,18 @@
 			break;
 	}*/
 	[tableView deselectRowAtIndexPath:indexPath animated:YES];
+}
+
+
+
+#pragma mark - Cell customization
+
+- (void)customizeAccountCell:(UITableViewCell *)cell
+{
+	cell.textLabel.text = [XService sharedXService].activeServer.hostname;
+	
+	NSURLCredential *credential = [[NSURLCredentialStorage sharedCredentialStorage] defaultCredentialForProtectionSpace:[XDriveConfig protectionSpaceForServer:nil]];
+	cell.detailTextLabel.text = credential.user;
 }
 
 @end

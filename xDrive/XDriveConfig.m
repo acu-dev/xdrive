@@ -7,6 +7,9 @@
 //
 
 #import "XDriveConfig.h"
+#import "XService.h"
+
+
 
 @implementation XDriveConfig
 
@@ -30,26 +33,6 @@
 
 
 
-
-+ (BOOL)shouldResetApp
-{
-	NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
-	return [defaults boolForKey:@"reset_app"];
-}
-
-+ (void)setAccountUsername:(NSString *)username
-{
-	NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
-	[defaults setValue:username forKey:@"account_username"];
-}
-
-+ (void)setAccountServer:(NSString *)server
-{
-	NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
-	[defaults setValue:server forKey:@"account_server"];
-}
-
-
 #pragma mark - Tab Item Order
 
 + (void)saveTabItemOrder:(NSArray *)order
@@ -62,6 +45,20 @@
 	return [[NSUserDefaults standardUserDefaults] objectForKey:@"savedTabOrder"];
 }
 
+
+
+#pragma mark - Utils
+
++ (NSURLProtectionSpace *)protectionSpaceForServer:(XServer *)server
+{
+	if (!server) server = [XService sharedXService].activeServer;
+	NSURLProtectionSpace *protectionSpace = [[NSURLProtectionSpace alloc] initWithHost:server.hostname
+																				  port:[server.port integerValue]
+																			  protocol:server.protocol
+																				 realm:server.hostname
+																  authenticationMethod:@"NSURLAuthenticationMethodDefault"];
+	return protectionSpace;
+}
 
 
 @end

@@ -6,6 +6,9 @@
 //  Copyright (c) 2011 Abilene Christian University. All rights reserved.
 //
 
+#import "XServer.h"
+
+
 
 // Default server connection info
 static int defaultServerPort = 443;
@@ -20,7 +23,7 @@ static NSString *defaultServiceBasepath = @"/xservice/rs";
 	// If defined, will log ERROR & WARNING type messages to the console.
 	// Watch for these logs during development.
 
-#define XDRV_DEBUG
+//#define XDRV_DEBUG
 	// If defined, will log INFO & DEBUG type messages to the console.
 	// Useful in examining data as it moves around.
 
@@ -43,16 +46,14 @@ static NSString *defaultServiceBasepath = @"/xservice/rs";
 + (NSArray *)supportedServiceVersions;
 	// List of xservice versions supported by this version of xdrive
 
-+ (BOOL)shouldResetApp;
-+ (void)setAccountUsername:(NSString *)username;
-+ (void)setAccountServer:(NSString *)server;
-
 + (void)saveTabItemOrder:(NSArray *)order;
 	// Writes the tab item order to the user preferences
 
 + (NSArray *)getSavedTabItemOrder;
 	// Retrieves the tab item order from user preferences. Returns nil of none saved
 
++ (NSURLProtectionSpace *)protectionSpaceForServer:(XServer *)server;
+	// Util method to generate a protection space
 
 @end
 

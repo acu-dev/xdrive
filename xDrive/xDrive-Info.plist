@@ -21,15 +21,19 @@
 	<key>CFBundlePackageType</key>
 	<string>APPL</string>
 	<key>CFBundleShortVersionString</key>
-	<string>1.0-SNAPSHOT</string>
+	<string>0.1-SNAPSHOT</string>
 	<key>CFBundleSignature</key>
 	<string>????</string>
 	<key>CFBundleURLTypes</key>
 	<array/>
 	<key>CFBundleVersion</key>
-	<string>1.0-SNAPSHOT</string>
+	<string>0.1-SNAPSHOT</string>
 	<key>LSRequiresIPhoneOS</key>
 	<true/>
+	<key>SupportedServiceVersions</key>
+	<array>
+		<string>0.1</string>
+	</array>
 	<key>UIMainStoryboardFile</key>
 	<string>MainStoryboard_iPhone</string>
 	<key>UIMainStoryboardFile~ipad</key>
@@ -51,9 +55,5 @@
 	<array/>
 	<key>UTImportedTypeDeclarations</key>
 	<array/>
-	<key>SupportedServiceVersions</key>
-	<array>
-		<string>0.1</string>
-	</array>
 </dict>
 </plist>

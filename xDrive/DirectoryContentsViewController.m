@@ -81,18 +81,6 @@
 	}
 }
 
-- (void)viewWillAppear:(BOOL)animated
-{
-	XDrvLog(@"view will appear");
-	[super viewWillAppear:animated];
-}
-
-- (void)viewDidAppear:(BOOL)animated
-{
-	XDrvLog(@"view did appear");
-	[super viewDidAppear:animated];
-}
-
 
 
 #pragma mark - Cell customization
@@ -221,7 +209,7 @@
 	else if ([OpenFileViewController isFileViewable:(XFile *)entry])
 	{
 		// Load file in viewer
-		XDrvDebug(@"Opening file entry: %@", [entry description]);
+		XDrvDebug(@"Opening file entry: %@", entry.path);
 		[self performSegueWithIdentifier:@"ViewFile" sender:self];
 	}
 }
