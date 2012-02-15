@@ -39,6 +39,8 @@
 - (NSString *)activeServerCachePath;
 // Path for files to be cached
 
+- (NSInteger)localStorageAmount;
+
 - (XDirectory *)directoryWithPath:(NSString *)path;
 	// Gets a directory object at given path. Fires off remote fetch in background
 	// and if necessary, directory contents are updated.

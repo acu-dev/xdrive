@@ -33,6 +33,20 @@
 
 
 
+#pragma mark - Settings
+
++ (NSInteger)localStorageAmount
+{
+	return [[NSUserDefaults standardUserDefaults] integerForKey:@"LocalStorageAmount"];
+}
+
++ (void)setLocalStorageAmount:(NSInteger)amount
+{
+	[[NSUserDefaults standardUserDefaults] setInteger:amount forKey:@"LocalStorageAmount"];
+}
+
+
+
 #pragma mark - Tab Item Order
 
 + (void)saveTabItemOrder:(NSArray *)order

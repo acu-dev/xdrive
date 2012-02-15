@@ -193,6 +193,10 @@ typedef enum _SetupStep {
 
 - (void)defaultPathsFinished
 {
+	// Set default local storage
+	[XDriveConfig setLocalStorageAmount:500];
+	
+	// All done
 	[viewController setupFinished];
 }
 

@@ -46,6 +46,9 @@ static NSString *defaultServiceBasepath = @"/xservice/rs";
 + (NSArray *)supportedServiceVersions;
 	// List of xservice versions supported by this version of xdrive
 
++ (NSInteger)localStorageAmount;
++ (void)setLocalStorageAmount:(NSInteger)amount;
+
 + (void)saveTabItemOrder:(NSArray *)order;
 	// Writes the tab item order to the user preferences
 

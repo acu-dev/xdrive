@@ -10,6 +10,8 @@
 		A93E36AA13C5630600DE693D /* DirectoryContentsViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = A93E36A913C5630600DE693D /* DirectoryContentsViewController.m */; };
 		A9674E3C14DCE69700464E37 /* UIStoryboard+Xdrive.m in Sources */ = {isa = PBXBuildFile; fileRef = A9674E3B14DCE69700464E37 /* UIStoryboard+Xdrive.m */; };
 		A96CBBD014C9EE2C0069A641 /* SetupController.m in Sources */ = {isa = PBXBuildFile; fileRef = A96CBBCF14C9EE2C0069A641 /* SetupController.m */; };
+		A997F47914EC20820069D3F2 /* AccountViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = A997F47814EC20820069D3F2 /* AccountViewController.m */; };
+		A997F47C14EC3ADE0069D3F2 /* XFile.m in Sources */ = {isa = PBXBuildFile; fileRef = A997F47B14EC3ADE0069D3F2 /* XFile.m */; };
 		A9C34FCC1426668400E3BC3C /* OpenFileViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = A9C34FCB1426668400E3BC3C /* OpenFileViewController.m */; };
 		C30580341418207400E49727 /* README.md in Resources */ = {isa = PBXBuildFile; fileRef = C30580331418207400E49727 /* README.md */; };
 		C3224753142A339C005F7C48 /* file.application@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = C3224748142A339C005F7C48 /* file.application@2x.png */; };
@@ -79,7 +81,6 @@
 		C3E6E0C113DE06E100EA014B /* xDrive.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = C3E6E0BF13DE06E100EA014B /* xDrive.xcdatamodeld */; };
 		C3ECE28A13C3B8E8004FF63F /* XEntry.m in Sources */ = {isa = PBXBuildFile; fileRef = C3ECE28913C3B8E8004FF63F /* XEntry.m */; };
 		C3ECE28D13C3B8E9004FF63F /* XServer.m in Sources */ = {isa = PBXBuildFile; fileRef = C3ECE28C13C3B8E9004FF63F /* XServer.m */; };
-		C3ECE29613C3B8E9004FF63F /* XFile.m in Sources */ = {isa = PBXBuildFile; fileRef = C3ECE29513C3B8E9004FF63F /* XFile.m */; };
 		C3ECE29913C3BF2E004FF63F /* RootTabBarController.m in Sources */ = {isa = PBXBuildFile; fileRef = C3ECE29813C3BF2D004FF63F /* RootTabBarController.m */; };
 		C3FC6C5813BCB90B009FBAA3 /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C3FC6C5713BCB90B009FBAA3 /* UIKit.framework */; };
 		C3FC6C5A13BCB90B009FBAA3 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C3FC6C5913BCB90B009FBAA3 /* Foundation.framework */; };
@@ -115,6 +116,10 @@
 		A9674E3B14DCE69700464E37 /* UIStoryboard+Xdrive.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIStoryboard+Xdrive.m"; sourceTree = "<group>"; };
 		A96CBBCE14C9EE2C0069A641 /* SetupController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SetupController.h; sourceTree = "<group>"; };
 		A96CBBCF14C9EE2C0069A641 /* SetupController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SetupController.m; sourceTree = "<group>"; };
+		A997F47714EC20820069D3F2 /* AccountViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AccountViewController.h; sourceTree = "<group>"; };
+		A997F47814EC20820069D3F2 /* AccountViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AccountViewController.m; sourceTree = "<group>"; };
+		A997F47A14EC3ADE0069D3F2 /* XFile.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = XFile.h; sourceTree = "<group>"; };
+		A997F47B14EC3ADE0069D3F2 /* XFile.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = XFile.m; sourceTree = "<group>"; };
 		A9C34FCA1426668400E3BC3C /* OpenFileViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OpenFileViewController.h; sourceTree = "<group>"; };
 		A9C34FCB1426668400E3BC3C /* OpenFileViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OpenFileViewController.m; sourceTree = "<group>"; };
 		C30580331418207400E49727 /* README.md */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = README.md; sourceTree = "<group>"; };
@@ -205,8 +210,6 @@
 		C3ECE28913C3B8E8004FF63F /* XEntry.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = XEntry.m; sourceTree = "<group>"; };
 		C3ECE28B13C3B8E9004FF63F /* XServer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = XServer.h; sourceTree = "<group>"; };
 		C3ECE28C13C3B8E9004FF63F /* XServer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = XServer.m; sourceTree = "<group>"; };
-		C3ECE29413C3B8E9004FF63F /* XFile.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = XFile.h; sourceTree = "<group>"; };
-		C3ECE29513C3B8E9004FF63F /* XFile.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = XFile.m; sourceTree = "<group>"; };
 		C3ECE29713C3BF2D004FF63F /* RootTabBarController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RootTabBarController.h; sourceTree = "<group>"; };
 		C3ECE29813C3BF2D004FF63F /* RootTabBarController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RootTabBarController.m; sourceTree = "<group>"; };
 		C3FC6C5313BCB90B009FBAA3 /* xDrive.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = xDrive.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -345,13 +348,15 @@
 			name = Setup;
 			sourceTree = "<group>";
 		};
-		C3AAF63E142CF948002BC5C8 /* Accounts & Settings */ = {
+		C3AAF63E142CF948002BC5C8 /* Settings */ = {
 			isa = PBXGroup;
 			children = (
 				C3AAF63B142CED6C002BC5C8 /* SettingsViewController.h */,
 				C3AAF63C142CED6C002BC5C8 /* SettingsViewController.m */,
+				A997F47714EC20820069D3F2 /* AccountViewController.h */,
+				A997F47814EC20820069D3F2 /* AccountViewController.m */,
 			);
-			name = "Accounts & Settings";
+			name = Settings;
 			sourceTree = "<group>";
 		};
 		C3AAF63F142CFC88002BC5C8 /* Recent */ = {
@@ -391,12 +396,12 @@
 				C3ECE28C13C3B8E9004FF63F /* XServer.m */,
 				C3ECE28813C3B8E8004FF63F /* XEntry.h */,
 				C3ECE28913C3B8E8004FF63F /* XEntry.m */,
-				C3ECE29413C3B8E9004FF63F /* XFile.h */,
-				C3ECE29513C3B8E9004FF63F /* XFile.m */,
 				C3E6E0BC13DE010A00EA014B /* XDefaultPath.h */,
 				C3E6E0BD13DE010A00EA014B /* XDefaultPath.m */,
 				C3E6E0B913DE010900EA014B /* XDirectory.h */,
 				C3E6E0BA13DE010A00EA014B /* XDirectory.m */,
+				A997F47A14EC3ADE0069D3F2 /* XFile.h */,
+				A997F47B14EC3ADE0069D3F2 /* XFile.m */,
 			);
 			name = "Managed Objects";
 			sourceTree = "<group>";
@@ -450,7 +455,7 @@
 				C3ECE29713C3BF2D004FF63F /* RootTabBarController.h */,
 				C3ECE29813C3BF2D004FF63F /* RootTabBarController.m */,
 				C3877018143F98EB00E3CE8E /* Setup */,
-				C3AAF63E142CF948002BC5C8 /* Accounts & Settings */,
+				C3AAF63E142CF948002BC5C8 /* Settings */,
 				C3AAF63F142CFC88002BC5C8 /* Recent */,
 				A978436813C6847300120A94 /* Directory Contents */,
 				A9C34FC9142665CA00E3BC3C /* File Info */,
@@ -603,7 +608,6 @@
 				C3D9E88813C34D2B007D1A7C /* XServiceLocal.m in Sources */,
 				C3ECE28A13C3B8E8004FF63F /* XEntry.m in Sources */,
 				C3ECE28D13C3B8E9004FF63F /* XServer.m in Sources */,
-				C3ECE29613C3B8E9004FF63F /* XFile.m in Sources */,
 				C3ECE29913C3BF2E004FF63F /* RootTabBarController.m in Sources */,
 				A93E36AA13C5630600DE693D /* DirectoryContentsViewController.m in Sources */,
 				C3CF9CE813D9D54D003F21D1 /* ATMHud.m in Sources */,
@@ -624,6 +628,8 @@
 				C3C0DE4B1448B691002E35C3 /* XFileUtils.m in Sources */,
 				A96CBBD014C9EE2C0069A641 /* SetupController.m in Sources */,
 				A9674E3C14DCE69700464E37 /* UIStoryboard+Xdrive.m in Sources */,
+				A997F47914EC20820069D3F2 /* AccountViewController.m in Sources */,
+				A997F47C14EC3ADE0069D3F2 /* XFile.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

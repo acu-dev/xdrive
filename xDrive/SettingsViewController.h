@@ -8,6 +8,6 @@
 
 @interface SettingsViewController : UITableViewController
 
-
+@property (nonatomic, strong) IBOutlet UILabel *hostnameLabel, *userLabel, *storageLabel;
 
 @end
