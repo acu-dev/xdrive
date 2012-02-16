@@ -13,6 +13,7 @@
 
 @interface XFile : XEntry
 
+@property (nonatomic, retain) NSDate *lastAccessed;
 @property (nonatomic, retain) NSNumber * size;
 @property (nonatomic, retain) NSString * type;
 @property (nonatomic, retain) NSString * sizeDescription;

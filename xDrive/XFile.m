@@ -12,6 +12,7 @@
 
 @implementation XFile
 
+@dynamic lastAccessed;
 @dynamic size;
 @dynamic type;
 @dynamic sizeDescription;

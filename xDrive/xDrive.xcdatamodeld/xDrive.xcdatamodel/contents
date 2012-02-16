@@ -22,6 +22,7 @@
         <relationship name="server" minCount="1" maxCount="1" deletionRule="Nullify" destinationEntity="Server" inverseName="entries" inverseEntity="Server"/>
     </entity>
     <entity name="File" representedClassName="XFile" parentEntity="Entry">
+        <attribute name="lastAccessed" optional="YES" attributeType="Date" syncable="YES"/>
         <attribute name="size" optional="YES" attributeType="Integer 64" defaultValueString="0"/>
         <attribute name="sizeDescription" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="type" optional="YES" attributeType="String"/>
@@ -39,7 +40,7 @@
         <element name="DefaultPath" positionX="169" positionY="54" width="128" height="120"/>
         <element name="Directory" positionX="333" positionY="270" width="128" height="60"/>
         <element name="Entry" positionX="106" positionY="252" width="128" height="105"/>
-        <element name="File" positionX="63" positionY="405" width="128" height="75"/>
+        <element name="File" positionX="63" positionY="405" width="128" height="105"/>
         <element name="Server" positionX="-83" positionY="45" width="128" height="150"/>
     </elements>
 </model>
