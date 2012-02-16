@@ -513,7 +513,7 @@
 		C3FC6C4A13BCB90B009FBAA3 /* Project object */ = {
 			isa = PBXProject;
 			attributes = {
-				LastUpgradeCheck = 0420;
+				LastUpgradeCheck = 0430;
 			};
 			buildConfigurationList = C3FC6C4D13BCB90B009FBAA3 /* Build configuration list for PBXProject "xDrive" */;
 			compatibilityVersion = "Xcode 3.2";
