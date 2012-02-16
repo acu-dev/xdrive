@@ -206,40 +206,61 @@ static XService *sharedXService;
 		return nil;
 	}
 	
-	
-	XDrvDebug(@"Updating directory details at path: %@", [details objectForKey:@"path"]);
-	
 	// Get directory
 	XDirectory *directory = [self.localService directoryWithPath:[details objectForKey:@"path"]];
-	NSSet *localEntries = [directory contents];
+	
+	// Directory's last updated time from server
+	NSTimeInterval lastUpdatedSeconds = [[details objectForKey:@"lastUpdated"] doubleValue] / 1000;
+	NSDate *lastUpdated = [NSDate dateWithTimeIntervalSince1970:lastUpdatedSeconds];
+	if (directory.contentsLastUpdated)
+	{
+		if ([directory.contentsLastUpdated isEqualToDate:lastUpdated])
+		{
+			// Directory has not been updated since last fetch; nothing else to do
+			XDrvDebug(@"Directory has not been updated; using cached object for dir: %@", directory.path);
+			return directory;
+		}
+	}
+	XDrvDebug(@"Directory has changes; updating contents for dir: %@", directory.path);
+	directory.contentsLastUpdated = lastUpdated;
 	
 	// Go through contents and create a set of remote entries (entries that don't exist are created on the fly)
 	NSMutableSet *remoteEntries = [[NSMutableSet alloc] init];
 	NSArray *contents = [details objectForKey:@"contents"];
 	for (NSDictionary *entryFromJson in contents)
 	{
-		// Describe object
-		//XDrvDebug(@"type: %@ path: %@", [entryFromJson objectForKey:@"type"], [entryFromJson objectForKey:@"path"]);
-		
+		// Create/get object for each entry in contents
 		XEntry *entry = nil;
 		if ([[entryFromJson objectForKey:@"type"] isEqualToString:@"folder"])
 		{
+			// Folder
 			entry = [self.localService directoryWithPath:[entryFromJson objectForKey:@"path"]];
 		}
 		else
 		{
+			// File
 			XFile *file = [self.localService fileWithPath:[entryFromJson objectForKey:@"path"]];
 			file.type = [entryFromJson objectForKey:@"type"];
 			file.size = [entryFromJson objectForKey:@"size"];
 			file.sizeDescription = [XFileUtils stringByFormattingBytes:[file.size integerValue]];
 			entry = file;
 		}
+		
+		// Dates (times come from xservice in milliseconds since epoch)
+		NSTimeInterval createdSeconds = [[entryFromJson objectForKey:@"created"] doubleValue] / 1000;
+		NSTimeInterval lastUpdatedSeconds = [[entryFromJson objectForKey:@"lastUpdated"] doubleValue] / 1000;
+		entry.created = [NSDate dateWithTimeIntervalSince1970:createdSeconds];
+		entry.lastUpdated = [NSDate dateWithTimeIntervalSince1970:lastUpdatedSeconds];
+
+		// Common attributes
+		entry.creator = [entryFromJson objectForKey:@"creator"];
+		entry.lastUpdator = [entryFromJson objectForKey:@"lastUpdator"];
 		entry.parent = directory;
 		[remoteEntries addObject:entry];
 	}
 	
 	// Look for entries that no longer exist on server and need to be deleted
-	for (XEntry *entry in localEntries) {
+	for (XEntry *entry in [directory contents]) {
 		if (![remoteEntries containsObject:entry]) {
 			XDrvDebug(@"Entry %@ no longer exists on server; deleting...", entry.path);
 		}

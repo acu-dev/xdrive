@@ -13,6 +13,7 @@
 
 @implementation XDirectory
 
+@dynamic contentsLastUpdated;
 @dynamic contents;
 @dynamic defaultPath;
 

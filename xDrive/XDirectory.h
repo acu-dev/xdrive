@@ -12,6 +12,7 @@
 
 @interface XDirectory : XEntry
 
+@property (nonatomic, retain) NSDate *contentsLastUpdated;
 @property (nonatomic, retain) NSSet *contents;
 @property (nonatomic, retain) XDefaultPath *defaultPath;
 
