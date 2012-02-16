@@ -13,6 +13,7 @@
 		A997F47914EC20820069D3F2 /* AccountViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = A997F47814EC20820069D3F2 /* AccountViewController.m */; };
 		A997F47C14EC3ADE0069D3F2 /* XFile.m in Sources */ = {isa = PBXBuildFile; fileRef = A997F47B14EC3ADE0069D3F2 /* XFile.m */; };
 		A9C34FCC1426668400E3BC3C /* OpenFileViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = A9C34FCB1426668400E3BC3C /* OpenFileViewController.m */; };
+		A9DCAD8914ED6BE70014C8A8 /* LocalStorageViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = A9DCAD8814ED6BE70014C8A8 /* LocalStorageViewController.m */; };
 		C30580341418207400E49727 /* README.md in Resources */ = {isa = PBXBuildFile; fileRef = C30580331418207400E49727 /* README.md */; };
 		C3224753142A339C005F7C48 /* file.application@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = C3224748142A339C005F7C48 /* file.application@2x.png */; };
 		C3224754142A339C005F7C48 /* file.archive@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = C3224749142A339C005F7C48 /* file.archive@2x.png */; };
@@ -122,6 +123,8 @@
 		A997F47B14EC3ADE0069D3F2 /* XFile.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = XFile.m; sourceTree = "<group>"; };
 		A9C34FCA1426668400E3BC3C /* OpenFileViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OpenFileViewController.h; sourceTree = "<group>"; };
 		A9C34FCB1426668400E3BC3C /* OpenFileViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OpenFileViewController.m; sourceTree = "<group>"; };
+		A9DCAD8714ED6BE70014C8A8 /* LocalStorageViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LocalStorageViewController.h; sourceTree = "<group>"; };
+		A9DCAD8814ED6BE70014C8A8 /* LocalStorageViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LocalStorageViewController.m; sourceTree = "<group>"; };
 		C30580331418207400E49727 /* README.md */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = README.md; sourceTree = "<group>"; };
 		C3224748142A339C005F7C48 /* file.application@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "file.application@2x.png"; sourceTree = "<group>"; };
 		C3224749142A339C005F7C48 /* file.archive@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "file.archive@2x.png"; sourceTree = "<group>"; };
@@ -355,6 +358,8 @@
 				C3AAF63C142CED6C002BC5C8 /* SettingsViewController.m */,
 				A997F47714EC20820069D3F2 /* AccountViewController.h */,
 				A997F47814EC20820069D3F2 /* AccountViewController.m */,
+				A9DCAD8714ED6BE70014C8A8 /* LocalStorageViewController.h */,
+				A9DCAD8814ED6BE70014C8A8 /* LocalStorageViewController.m */,
 			);
 			name = Settings;
 			sourceTree = "<group>";
@@ -630,6 +635,7 @@
 				A9674E3C14DCE69700464E37 /* UIStoryboard+Xdrive.m in Sources */,
 				A997F47914EC20820069D3F2 /* AccountViewController.m in Sources */,
 				A997F47C14EC3ADE0069D3F2 /* XFile.m in Sources */,
+				A9DCAD8914ED6BE70014C8A8 /* LocalStorageViewController.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
