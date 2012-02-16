@@ -60,6 +60,11 @@ static NSString *defaultServiceBasepath = @"/xservice/rs";
 + (NSDictionary *)defaultLocalStorageOption;
 	// Default local storage settings
 
++ (long long)totalCachedBytes;
++ (void)setTotalCachedBytes:(long long)cachedBytes;
+	// Get/set number of bytes cached locally
+
+
 /* Tab Items */
 
 + (void)saveTabItemOrder:(NSArray *)order;

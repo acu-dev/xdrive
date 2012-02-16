@@ -56,6 +56,17 @@
 	return [[localStorageOptions objectForKey:@"options"] objectAtIndex:[[localStorageOptions objectForKey:@"defaultOption"] integerValue]];
 }
 
++ (long long)totalCachedBytes
+{
+	NSNumber *cachedBytes = [[NSUserDefaults standardUserDefaults] objectForKey:@"TotalCachedBytes"];
+	return (cachedBytes) ? [cachedBytes longLongValue] : 0;
+}
+
++ (void)setTotalCachedBytes:(long long)cachedBytes
+{
+	[[NSUserDefaults standardUserDefaults] setObject:[NSNumber numberWithLongLong:cachedBytes] forKey:@"TotalCachedBytes"];
+}
+
 
 
 #pragma mark - Tab Item Order
