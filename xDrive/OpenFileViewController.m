@@ -113,7 +113,7 @@
 
 - (void)loadFile
 {
-	XDrvLog(@"Loading %@ content at %@ into web view", xFile.type, xFile.path);
+	XDrvDebug(@"Loading %@ content at %@ into web view", xFile.type, xFile.path);
 	/*[webView loadData:[NSData dataWithContentsOfFile:[xFile localPath]]
 			 MIMEType:xFile.type
 	 textEncodingName:@"utf-8" 
