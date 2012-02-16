@@ -97,14 +97,14 @@ static XService *sharedXService;
 
 - (NSString *)activeServerDocumentPath
 {
-	return [[XFileUtils applicationDocumentsDirectory] stringByAppendingPathComponent:[self activeServer].hostname];
+	return [[XFileUtils documentsPath] stringByAppendingPathComponent:[self activeServer].hostname];
 }
 
 - (NSString *)activeServerCachePath
 {
 	if (!cachesDirPath)
 	{
-		cachesDirPath = [[XFileUtils applicationCachesDirectory] stringByAppendingPathComponent:[self activeServer].hostname];
+		cachesDirPath = [[XFileUtils cachesPath] stringByAppendingPathComponent:[self activeServer].hostname];
 	}
 	return cachesDirPath;
 }
