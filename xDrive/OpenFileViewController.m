@@ -113,7 +113,7 @@
 
 - (void)loadFile
 {
-	XDrvDebug(@"Loading %@ content at %@ into web view", xFile.type, xFile.path);
+	XDrvLog(@"Loading %@ content at %@ into web view", xFile.type, xFile.path);
 	/*[webView loadData:[NSData dataWithContentsOfFile:[xFile localPath]]
 			 MIMEType:xFile.type
 	 textEncodingName:@"utf-8" 
@@ -130,9 +130,7 @@
 - (void)connectionFinishedWithResult:(NSObject *)result
 {
 	XDrvDebug(@"Download finished with tmp file path: %@", result);
-	
-	// Move file to permanent home
-	[XFileUtils moveFileAtPath:(NSString *)result toPath:[xFile cachePath]];
+	[[XService sharedXService] cacheFile:xFile fromTmpPath:(NSString *)result];
 	
 	// Load file
 	[self loadFile];

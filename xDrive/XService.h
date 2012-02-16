@@ -49,6 +49,9 @@
 - (void)downloadFile:(XFile *)file withDelegate:(id<XServiceRemoteDelegate>)delegate;
 	// Downloads a file to a temp location and notifies the delegate.
 
+- (void)cacheFile:(XFile *)file fromTmpPath:(NSString *)tmpPath;
+	// Moves a downloaded file to it's cache location and handles local storage requirements
+
 
 @end
 

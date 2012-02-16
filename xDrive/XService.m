@@ -271,6 +271,27 @@ static XService *sharedXService;
 	[self.remoteService downloadFileAtPath:file.path withDelegate:delegate];
 }
 
+- (void)cacheFile:(XFile *)file fromTmpPath:(NSString *)tmpPath
+{
+	// Get file size
+	NSError *error = nil;
+	NSDictionary *fileAttributes = [[NSFileManager defaultManager] attributesOfItemAtPath:tmpPath error:&error];
+	if (error)
+	{
+		XDrvLog(@"Problem getting attributes of file at path: %@", tmpPath);
+		XDrvLog(@"%@", error);
+		return;
+	}
+	
+	long long fileSize = [[fileAttributes objectForKey:NSFileSize] longLongValue];
+	XDrvDebug(@"Adding %lld bytes to total cache size", fileSize);
+	[XDriveConfig setTotalCachedBytes:[XDriveConfig totalCachedBytes] + fileSize];
+	XDrvDebug(@"New total cache size: %@", [XFileUtils stringByFormattingBytes:[XDriveConfig totalCachedBytes]]);
+	
+	// Move file to permanent home
+	[XFileUtils moveFileAtPath:tmpPath toPath:[file cachePath]];
+}
+
 
 @end
 
