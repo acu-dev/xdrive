@@ -12,17 +12,35 @@
 @implementation XFileUtils
 
 
-+ (NSString *)applicationDocumentsDirectory
+#pragma mark - Paths
+
++ (NSString *)cachesPath
 {
-	NSArray *paths = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
-    return [paths lastObject];
+	static dispatch_once_t onceToken;
+	static NSString *cachedPath;
+	
+	dispatch_once(&onceToken, ^{
+		cachedPath = [NSSearchPathForDirectoriesInDomains(NSCachesDirectory, NSUserDomainMask, YES) lastObject];	
+	});
+	
+	return cachedPath;
 }
 
-+ (NSString *)applicationCachesDirectory
++ (NSString *)documentsPath
 {
-	NSArray *paths = NSSearchPathForDirectoriesInDomains(NSCachesDirectory, NSUserDomainMask, YES);
-    return [paths lastObject];
+	static dispatch_once_t onceToken;
+	static NSString *cachedPath;
+	
+	dispatch_once(&onceToken, ^{
+		cachedPath = [NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES) lastObject];	
+	});
+	
+	return cachedPath;
 }
+
+
+
+#pragma mark - File Actions
 
 + (void)moveFileAtPath:(NSString *)oldFilePath toPath:(NSString *)newFilePath
 {
@@ -49,6 +67,10 @@
 		XDrvLog(@"Problem moving file: %@", error);
 	}
 }
+
+
+
+#pragma mark - Utils
 
 + (NSString *)stringByFormattingBytes:(long long)bytes
 {
