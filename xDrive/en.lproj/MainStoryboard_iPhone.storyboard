@@ -287,15 +287,15 @@
                             </tableViewSection>
                             <tableViewSection headerTitle="Max Storage" id="cgt-dJ-lsi">
                                 <cells>
-                                    <tableViewCell contentMode="scaleToFill" selectionStyle="blue" accessoryType="checkmark" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" textLabel="yUc-fr-wLt" style="IBUITableViewCellStyleDefault" id="AdL-6N-SQV">
+                                    <tableViewCell contentMode="scaleToFill" selectionStyle="blue" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" textLabel="yUc-fr-wLt" style="IBUITableViewCellStyleDefault" id="AdL-6N-SQV">
                                         <rect key="frame" x="0.0" y="132" width="320" height="45"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <view key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center">
-                                            <rect key="frame" x="10" y="1" width="280" height="43"/>
+                                            <rect key="frame" x="10" y="1" width="300" height="43"/>
                                             <autoresizingMask key="autoresizingMask"/>
                                             <subviews>
                                                 <label opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" text="Off" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" id="yUc-fr-wLt">
-                                                    <rect key="frame" x="10" y="0.0" width="260" height="43"/>
+                                                    <rect key="frame" x="10" y="0.0" width="280" height="43"/>
                                                     <autoresizingMask key="autoresizingMask"/>
                                                     <fontDescription key="fontDescription" type="boldSystem" pointSize="17"/>
                                                     <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
@@ -370,7 +370,7 @@
                                             <rect key="frame" x="10" y="0.0" width="300" height="43"/>
                                             <autoresizingMask key="autoresizingMask"/>
                                             <subviews>
-                                                <label opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" text="3 GB" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" id="6i4-th-fO5">
+                                                <label opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" text="5 GB" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" id="6i4-th-fO5">
                                                     <rect key="frame" x="10" y="0.0" width="280" height="43"/>
                                                     <autoresizingMask key="autoresizingMask"/>
                                                     <fontDescription key="fontDescription" type="boldSystem" pointSize="17"/>
@@ -415,6 +415,10 @@
                     </tableView>
                     <navigationItem key="navigationItem" title="Local Storage" id="A20-NO-I7e"/>
                     <freeformSimulatedSizeMetrics key="simulatedDestinationMetrics"/>
+                    <connections>
+                        <outlet property="usageLabel" destination="SE5-l6-wID" id="Wso-sR-2hx"/>
+                        <outlet property="usageProgressView" destination="rKE-jf-bgx" id="h8v-CF-Lj9"/>
+                    </connections>
                 </tableViewController>
             </objects>
             <point key="canvasLocation" x="1332" y="312"/>
@@ -880,6 +884,10 @@
         </class>
         <class className="LocalStorageViewController" superclassName="UITableViewController">
             <source key="sourceIdentifier" type="project" relativePath="./Classes/LocalStorageViewController.h"/>
+            <relationships>
+                <relationship kind="outlet" name="usageLabel" candidateClass="UILabel"/>
+                <relationship kind="outlet" name="usageProgressView" candidateClass="UIProgressView"/>
+            </relationships>
         </class>
         <class className="OpenFileViewController" superclassName="UIViewController">
             <source key="sourceIdentifier" type="project" relativePath="./Classes/OpenFileViewController.h"/>

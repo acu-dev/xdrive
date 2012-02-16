@@ -86,6 +86,7 @@ static int FormDefaultYPosIpadLandscape = 166;
 - (void)viewDidLoad
 {
     [super viewDidLoad];
+	activityIndicator.hidden = YES;
 	
 	// Style BG
 	[[UIApplication sharedApplication] setStatusBarStyle:UIStatusBarStyleBlackOpaque];

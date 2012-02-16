@@ -193,12 +193,9 @@ typedef enum _SetupStep {
 
 - (void)defaultPathsFinished
 {
-	// Set default local storage to 500 MB
-	long long defaultStorageBytes = (500 * 1024) * 1024;
-	NSNumber *defaultStorage = [NSNumber numberWithLongLong:defaultStorageBytes];
-	[XDriveConfig setLocalStorageMaxBytes:defaultStorage];
-	[XDriveConfig setLocalStorageDescription:@"500 MB"];
-	
+	// Set default local storage
+	[XDriveConfig setLocalStorageOption:[XDriveConfig defaultLocalStorageOption]];
+		
 	// All done
 	[viewController setupFinished];
 }

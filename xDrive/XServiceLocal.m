@@ -231,7 +231,7 @@
 		return persistentStoreCoordinator;
 	}
 	
-	NSString *urlString = [[XFileUtils applicationDocumentsDirectory] stringByAppendingPathComponent:@"xDrive.sqlite"];
+	NSString *urlString = [[XFileUtils documentsPath] stringByAppendingPathComponent:@"xDrive.sqlite"];
 	
 	NSError *error = nil;
 	persistentStoreCoordinator = [[NSPersistentStoreCoordinator alloc] initWithManagedObjectModel:[self managedObjectModel]];

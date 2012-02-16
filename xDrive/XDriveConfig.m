@@ -35,24 +35,25 @@
 
 #pragma mark - Settings
 
-+ (NSNumber *)localStorageMaxBytes
++ (NSDictionary *)localStorageOption
 {
-	return [[NSUserDefaults standardUserDefaults] objectForKey:@"LocalStorageAmount"];
+	return [[NSUserDefaults standardUserDefaults] objectForKey:@"LocalStorageOption"];
 }
 
-+ (void)setLocalStorageMaxBytes:(NSNumber *)bytes
++ (void)setLocalStorageOption:(NSDictionary *)option
 {
-	[[NSUserDefaults standardUserDefaults] setObject:bytes forKey:@"LocalStorageAmount"];
+	[[NSUserDefaults standardUserDefaults] setObject:option forKey:@"LocalStorageOption"];
 }
 
-+ (NSString *)localStorageDescription
++ (NSArray *)localStorageOptions
 {
-	return [[NSUserDefaults standardUserDefaults] objectForKey:@"LocalStorageDescription"];
+	return [[NSDictionary dictionaryWithContentsOfFile:[[NSBundle mainBundle] pathForResource:@"LocalStorageOptions" ofType:@"plist"]] objectForKey:@"options"];
 }
 
-+ (void)setLocalStorageDescription:(NSString *)description
++ (NSDictionary *)defaultLocalStorageOption
 {
-	[[NSUserDefaults standardUserDefaults] setObject:description forKey:@"LocalStorageDescription"];
+	NSDictionary *localStorageOptions = [NSDictionary dictionaryWithContentsOfFile:[[NSBundle mainBundle] pathForResource:@"LocalStorageOptions" ofType:@"plist"]];
+	return [[localStorageOptions objectForKey:@"options"] objectAtIndex:[[localStorageOptions objectForKey:@"defaultOption"] integerValue]];
 }
 
 

@@ -45,7 +45,7 @@
 	userLabel.text = credential.user;
 	
 	// Storage
-	storageLabel.text = [XDriveConfig localStorageDescription];
+	storageLabel.text = [[XDriveConfig localStorageOption] objectForKey:@"description"];
 }
 
 - (void)viewDidUnload
@@ -53,6 +53,10 @@
     [super viewDidUnload];
     // Release any retained subviews of the main view.
     // e.g. self.myOutlet = nil;
+	
+	self.hostnameLabel = nil;
+	self.userLabel = nil;
+	self.storageLabel = nil;
 }
 
 

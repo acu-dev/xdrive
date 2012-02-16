@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>options</key>
+	<array>
+		<dict>
+			<key>description</key>
+			<string>Off</string>
+			<key>bytes</key>
+			<integer>0</integer>
+		</dict>
+		<dict>
+			<key>description</key>
+			<string>100 MB</string>
+			<key>bytes</key>
+			<integer>104857600</integer>
+		</dict>
+		<dict>
+			<key>description</key>
+			<string>500 MB</string>
+			<key>bytes</key>
+			<integer>524288000</integer>
+		</dict>
+		<dict>
+			<key>description</key>
+			<string>1 GB</string>
+			<key>bytes</key>
+			<integer>1073741824</integer>
+		</dict>
+		<dict>
+			<key>description</key>
+			<string>5 GB</string>
+			<key>bytes</key>
+			<integer>5368709120</integer>
+		</dict>
+	</array>
+	<key>defaultOption</key>
+	<integer>2</integer>
+</dict>
+</plist>

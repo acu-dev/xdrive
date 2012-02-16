@@ -37,6 +37,8 @@ static NSString *defaultServiceBasepath = @"/xservice/rs";
 
 @interface XDriveConfig : NSObject
 
+/* App Info */
+
 + (NSString *)appVersion;
 	// Current version of the app as defined in the Info plist
 
@@ -46,16 +48,27 @@ static NSString *defaultServiceBasepath = @"/xservice/rs";
 + (NSArray *)supportedServiceVersions;
 	// List of xservice versions supported by this version of xdrive
 
-+ (NSNumber *)localStorageMaxBytes;
-+ (void)setLocalStorageMaxBytes:(NSNumber *)bytes;
-+ (NSString *)localStorageDescription;
-+ (void)setLocalStorageDescription:(NSString *)description;
+/* Settings */
+
++ (NSDictionary *)localStorageOption;
++ (void)setLocalStorageOption:(NSDictionary *)option;
+	// Get/set settings for local storage
+
++ (NSArray *)localStorageOptions;
+	// All possible settings for local storage
+
++ (NSDictionary *)defaultLocalStorageOption;
+	// Default local storage settings
+
+/* Tab Items */
 
 + (void)saveTabItemOrder:(NSArray *)order;
 	// Writes the tab item order to the user preferences
 
 + (NSArray *)getSavedTabItemOrder;
 	// Retrieves the tab item order from user preferences. Returns nil of none saved
+
+/* Utils */
 
 + (NSURLProtectionSpace *)protectionSpaceForServer:(XServer *)server;
 	// Util method to generate a protection space
