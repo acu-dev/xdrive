@@ -36,7 +36,8 @@
 - (void)fetchDirectoryContentsAtPath:(NSString *)path withTarget:(id)target action:(SEL)action;
 
 - (void)downloadFileAtPath:(NSString *)path withDelegate:(id<XServiceRemoteDelegate>)delegate;
-- (void)downloadFileAtAbsolutePath:(NSString *)path withDelegate:(id<XServiceRemoteDelegate>)delegate;
+- (void)downloadFileAtPath:(NSString *)path ifModifiedSinceCachedDate:(NSDate *)cachedDate withDelegate:(id<XServiceRemoteDelegate>)delegate;
+- (void)downloadFileAtAbsolutePath:(NSString *)path ifModifiedSinceCachedDate:(NSDate *)cachedDate withDelegate:(id<XServiceRemoteDelegate>)delegate;
 	// Downloads a file at given url path and notifies delegate on events
 
 

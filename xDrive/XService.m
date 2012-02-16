@@ -289,7 +289,7 @@ static XService *sharedXService;
 
 - (void)downloadFile:(XFile *)file withDelegate:(id<XServiceRemoteDelegate>)delegate;
 {
-	[self.remoteService downloadFileAtPath:file.path withDelegate:delegate];
+	[self.remoteService downloadFileAtPath:file.path ifModifiedSinceCachedDate:file.lastUpdated withDelegate:delegate];
 }
 
 - (void)cacheFile:(XFile *)file fromTmpPath:(NSString *)tmpPath

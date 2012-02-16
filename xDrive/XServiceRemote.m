@@ -189,15 +189,25 @@
 - (void)downloadFileAtPath:(NSString *)path withDelegate:(id<XServiceRemoteDelegate>)delegate
 {
 	NSString *absolutePath = [[self serverURLString] stringByAppendingString:[path stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding]];
-	[self downloadFileAtAbsolutePath:absolutePath withDelegate:delegate];
+	[self downloadFileAtAbsolutePath:absolutePath ifModifiedSinceCachedDate:nil withDelegate:delegate];
 }
 
-- (void)downloadFileAtAbsolutePath:(NSString *)path withDelegate:(id<XServiceRemoteDelegate>)delegate
+- (void)downloadFileAtPath:(NSString *)path ifModifiedSinceCachedDate:(NSDate *)cachedDate withDelegate:(id<XServiceRemoteDelegate>)delegate
+{
+	NSString *absolutePath = [[self serverURLString] stringByAppendingString:[path stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding]];
+	[self downloadFileAtAbsolutePath:absolutePath ifModifiedSinceCachedDate:cachedDate withDelegate:delegate];
+}
+
+- (void)downloadFileAtAbsolutePath:(NSString *)path ifModifiedSinceCachedDate:(NSDate *)cachedDate withDelegate:(id<XServiceRemoteDelegate>)delegate
 {
 	XDrvDebug(@"Downloading file at path: %@", path); 
 	
 	// Create connection
-	CGConnection *connection = [[CGNet utils] getFileAtURL:[NSURL URLWithString:path] withDelegate:self];
+	CGConnection *connection = nil;
+	if (cachedDate)
+		connection = [[CGNet utils] getFileAtURL:[NSURL URLWithString:path] ifModifiedSinceCachedDate:cachedDate withDelegate:self];
+	else
+		connection = [[CGNet utils] getFileAtURL:[NSURL URLWithString:path] withDelegate:self];
 	
 	// Save connection info
 	NSDictionary *request = [[NSDictionary alloc] initWithObjectsAndKeys:
@@ -217,6 +227,7 @@
 - (void)cgConnection:(CGConnection *)connection finishedWithResult:(id)result
 {
 	XDrvDebug(@"Connection finished");
+	XDrvLog(@"result: %@", result);
 	
 	// Get request details
 	NSDictionary *request = [requests objectForKey:[connection description]];

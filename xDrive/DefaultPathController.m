@@ -115,7 +115,7 @@
 			// Get the default path's icon
 			iconPath = [[self contextURLString] stringByAppendingString:iconPath];
 			XDrvDebug(@"Fetching icon: %@", iconPath);
-			[[XService sharedXService].remoteService downloadFileAtAbsolutePath:iconPath withDelegate:self];
+			[[XService sharedXService].remoteService downloadFileAtAbsolutePath:iconPath ifModifiedSinceCachedDate:nil withDelegate:self];
 			[iconToPathMap setObject:path forKey:[iconPath lastPathComponent]];
 			activeFetchCount++;
 			
@@ -125,7 +125,7 @@
 				// Get the default path's @2x icon
 				hiresIconPath = [[self contextURLString] stringByAppendingString:hiresIconPath];
 				XDrvDebug(@"Fetching @2x icon: %@", hiresIconPath);
-				[[XService sharedXService].remoteService downloadFileAtAbsolutePath:hiresIconPath withDelegate:self];
+				[[XService sharedXService].remoteService downloadFileAtAbsolutePath:hiresIconPath ifModifiedSinceCachedDate:nil withDelegate:self];
 				[iconToPathMap setObject:path forKey:[iconPath lastPathComponent]];
 				activeFetchCount++;
 			}

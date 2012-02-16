@@ -138,7 +138,10 @@
 
 - (void)connectionFinishedWithResult:(NSObject *)result
 {
-	XDrvDebug(@"Download finished with tmp file path: %@", result);
+	XDrvDebug(@"Download finished with result: %@", result);
+	//return;
+	
+	
 	[[XService sharedXService] cacheFile:xFile fromTmpPath:(NSString *)result];
 	
 	// Load file
