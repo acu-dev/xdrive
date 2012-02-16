@@ -13,6 +13,10 @@
 
 @implementation XEntry
 
+@dynamic created;
+@dynamic creator;
+@dynamic lastUpdated;
+@dynamic lastUpdator;
 @dynamic name;
 @dynamic path;
 @dynamic parent;

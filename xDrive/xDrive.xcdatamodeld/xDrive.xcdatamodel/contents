@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<model name="" userDefinedModelVersionIdentifier="" type="com.apple.IDECoreDataModeler.DataModel" documentVersion="1.0" lastSavedToolsVersion="878" systemVersion="11D50" minimumToolsVersion="Automatic" macOSVersion="Automatic" iOSVersion="Automatic">
+<model name="" userDefinedModelVersionIdentifier="" type="com.apple.IDECoreDataModeler.DataModel" documentVersion="1.0" lastSavedToolsVersion="1170" systemVersion="11D50" minimumToolsVersion="Automatic" macOSVersion="Automatic" iOSVersion="Automatic">
     <entity name="DefaultPath" representedClassName="XDefaultPath">
         <attribute name="icon" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="name" attributeType="String"/>
@@ -12,6 +12,10 @@
         <relationship name="defaultPath" optional="YES" minCount="1" maxCount="1" deletionRule="Nullify" destinationEntity="DefaultPath" inverseName="directory" inverseEntity="DefaultPath"/>
     </entity>
     <entity name="Entry" representedClassName="XEntry" isAbstract="YES">
+        <attribute name="created" optional="YES" attributeType="Date" syncable="YES"/>
+        <attribute name="creator" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="lastUpdated" optional="YES" attributeType="Date" syncable="YES"/>
+        <attribute name="lastUpdator" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="name" optional="YES" attributeType="String" indexed="YES" spotlightIndexingEnabled="YES"/>
         <attribute name="path" attributeType="String" indexed="YES"/>
         <relationship name="parent" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="Directory" inverseName="contents" inverseEntity="Directory"/>

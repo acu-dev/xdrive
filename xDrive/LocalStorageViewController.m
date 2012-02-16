@@ -15,6 +15,7 @@
 
 @property (nonatomic, strong) NSIndexPath *selectedStorageIndexPath;
 
+- (void)updateStorageUsage;
 - (void)setLocalStorageOption:(NSDictionary *)option;
 
 @end
@@ -47,10 +48,13 @@
 {
     [super viewDidLoad];
 
-	// Set selected storage option
+	// Set currently selected storage option
 	NSArray *storageOptions = [XDriveConfig localStorageOptions];
 	NSInteger selectedIndex = [storageOptions indexOfObject:[XDriveConfig localStorageOption]];
 	selectedStorageIndexPath = [NSIndexPath indexPathForRow:selectedIndex inSection:1];
+	
+	// Set amount used
+	[self updateStorageUsage];
 }
 
 - (void)viewDidUnload
@@ -103,6 +107,16 @@
 
 
 #pragma mark - Local Storage
+
+- (void)updateStorageUsage
+{
+	long long maxBytesAvailable = [[[XDriveConfig localStorageOption] objectForKey:@"bytes"] longLongValue];
+	long long bytesCached = [XDriveConfig totalCachedBytes];
+	float percentUsed = (float)bytesCached / (float)maxBytesAvailable;
+	[usageProgressView setProgress:percentUsed animated:NO];
+	
+	usageLabel.text = [NSString stringWithFormat:@"Used %1.2f%% of %@", percentUsed, [[XDriveConfig localStorageOption] objectForKey:@"description"]];
+}
 
 - (void)setLocalStorageOption:(NSDictionary *)option
 {

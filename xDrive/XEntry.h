@@ -10,6 +10,10 @@
 
 @interface XEntry : NSManagedObject
 
+@property (nonatomic, retain) NSDate *created;
+@property (nonatomic, retain) NSString *creator;
+@property (nonatomic, retain) NSDate *lastUpdated;
+@property (nonatomic, retain) NSString *lastUpdator;
 @property (nonatomic, retain) NSString * name;
 @property (nonatomic, retain) NSString * path;
 @property (nonatomic, retain) XDirectory *parent;
