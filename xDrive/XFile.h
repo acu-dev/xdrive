@@ -19,7 +19,5 @@
 @property (nonatomic, retain) NSString * sizeDescription;
 
 - (NSString *)extension;
-- (NSString *)cachePath;
-- (NSString *)documentPath;
 
 @end

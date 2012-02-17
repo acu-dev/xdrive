@@ -68,25 +68,40 @@
 	
 	self.title = [xFile.name stringByDeletingPathExtension];
 	
-	XDrvDebug(@"File path: %@", [xFile cachePath]);
 	if ([[NSFileManager defaultManager] fileExistsAtPath:[xFile cachePath]])
 	{
-		// Hide download view
-		downloadView.hidden = YES;
+		// File has been cached locally
 		
-		// Display file
-		[self loadFile];
+		if ([xFile.lastAccessed compare:xFile.lastUpdated] == NSOrderedDescending)
+		{
+			// Last access is later in time than last updated (cached file is still fresh)
+			XDrvDebug(@"Cached file is fresh, loading it");
+			
+			// Display file
+			downloadView.hidden = YES;
+			[self loadFile];
+			
+			return;
+		}
+		else
+		{
+			// Last access is earlier in time than last updated (cached file is stale)
+			// Proceed to download file...
+			XDrvDebug(@"Cached file is stale, need to download it");
+		}
 	}
 	else
 	{
-		// Hide webview and show download indicator
-		[webView setAlpha:0];
-		downloadFileNameLabel.text = xFile.name;
-		
-		// Download file
+		// File not found locally. Proceed to download file...
 		XDrvDebug(@"File doesn't exist, need to download it");
-		[self downloadFile];
 	}
+	
+	// Hide webview and show download indicator
+	[webView setAlpha:0];
+	downloadFileNameLabel.text = xFile.name;
+	
+	// Download file
+	[self downloadFile];
 }
 
 - (void)viewDidUnload

@@ -9,6 +9,7 @@
 #import "XEntry.h"
 #import "XDirectory.h"
 #import "XServer.h"
+#import "XService.h"
 
 
 @implementation XEntry
@@ -21,5 +22,15 @@
 @dynamic path;
 @dynamic parent;
 @dynamic server;
+
+- (NSString *)cachePath
+{
+	return [[[XService sharedXService] activeServerCachePath] stringByAppendingString:self.path];
+}
+
+- (NSString *)documentPath
+{
+	return [[[XService sharedXService] activeServerDocumentPath] stringByAppendingString:self.path];
+}
 
 @end

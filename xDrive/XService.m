@@ -258,10 +258,21 @@
 		[remoteEntries addObject:entry];
 	}
 	
-	// Look for entries that no longer exist on server and need to be deleted
-	for (XEntry *entry in [directory contents]) {
-		if (![remoteEntries containsObject:entry]) {
-			XDrvDebug(@"Entry %@ no longer exists on server; deleting...", entry.path);
+	// Entries to delete
+	for (XEntry *entry in [directory contents])
+	{
+		if (![remoteEntries containsObject:entry])
+		{
+			// Entry does not exist in contents returned from server; needs to be deleted
+			
+			if ([entry isKindOfClass:[XDirectory class]])
+			{
+				XDrvDebug(@"Directory %@ no longer exists on server; deleting...", entry.path);
+			}
+			else
+			{
+				
+			}
 		}
 	}
 	
@@ -282,18 +293,51 @@
 	return directory;
 }
 
+- (void)removeCacheForDirectory:(XDirectory *)directory
+{
+	for (XEntry *entry in directory.contents)
+	{
+		if ([entry isKindOfClass:[XDirectory class]])
+		{
+			[self removeCacheForDirectory:(XDirectory *)entry];
+			
+			XDrvDebug(@"Deleting cache dir %@", [entry cachePath]);
+			[XFileUtils deleteItemAtPath:[entry cachePath]];
+		}
+		else
+		{
+			[self removeCacheForFile:(XFile *)entry];
+		}
+	}
+}
+
+- (void)clearCache
+{
+	// Throw this on a background thread?
+	
+	[XFileUtils deleteItemAtPath:[self activeServerCachePath]];
+	[XDriveConfig setTotalCachedBytes:0];
+}
+
 
 
 #pragma mark - File
 
 - (void)downloadFile:(XFile *)file withDelegate:(id<XServiceRemoteDelegate>)delegate;
 {
-	[self.remoteService downloadFileAtPath:file.path ifModifiedSinceCachedDate:file.lastUpdated withDelegate:delegate];
+	//[self.remoteService downloadFileAtPath:file.path ifModifiedSinceCachedDate:file.lastUpdated withDelegate:delegate];
+	[self.remoteService downloadFileAtPath:file.path withDelegate:delegate];
 }
 
 - (void)cacheFile:(XFile *)file fromTmpPath:(NSString *)tmpPath
 {
-	// Get file size
+	if ([[NSFileManager defaultManager] fileExistsAtPath:[file cachePath]])
+	{
+		// Remove existing cache file
+		[self removeCacheForFile:file];
+	}
+	
+	// Get new file size
 	NSError *error = nil;
 	NSDictionary *fileAttributes = [[NSFileManager defaultManager] attributesOfItemAtPath:tmpPath error:&error];
 	if (error)
@@ -310,6 +354,28 @@
 	
 	// Move file to permanent home
 	[XFileUtils moveFileAtPath:tmpPath toPath:[file cachePath]];
+}
+
+- (void)removeCacheForFile:(XFile *)file
+{
+	// Get existing file size
+	NSError *error = nil;
+	NSDictionary *fileAttributes = [[NSFileManager defaultManager] attributesOfItemAtPath:[file cachePath] error:&error];
+	if (error)
+	{
+		XDrvLog(@"Problem getting attributes of file at path: %@", [file cachePath]);
+		XDrvLog(@"%@", error);
+		return;
+	}
+	
+	// Remove file size from total cached bytes
+	long long fileSize = [[fileAttributes objectForKey:NSFileSize] longLongValue];
+	XDrvDebug(@"Removing %lld bytes from total cache size", fileSize);
+	[XDriveConfig setTotalCachedBytes:[XDriveConfig totalCachedBytes] - fileSize];
+	XDrvDebug(@"New total cache size: %@", [XFileUtils stringByFormattingBytes:[XDriveConfig totalCachedBytes]]);
+	
+	// Delete file
+	[XFileUtils deleteItemAtPath:[file cachePath]];
 }
 
 

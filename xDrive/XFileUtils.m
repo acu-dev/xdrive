@@ -61,10 +61,18 @@
 	
 	// Move file
 	error = nil;
-	[[NSFileManager defaultManager] moveItemAtPath:oldFilePath toPath:newFilePath error:&error];
-	if (error)
+	if (![[NSFileManager defaultManager] moveItemAtPath:oldFilePath toPath:newFilePath error:&error])
 	{
 		XDrvLog(@"Problem moving file: %@", error);
+	}
+}
+
++ (void)deleteItemAtPath:(NSString *)path
+{
+	NSError *error = nil;
+	if (![[NSFileManager defaultManager] removeItemAtPath:path error:&error])
+	{
+		XDrvLog(@"Problem deleting item %@: %@", path, error);
 	}
 }
 

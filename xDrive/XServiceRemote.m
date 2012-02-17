@@ -107,7 +107,7 @@
 - (void)fetchJSONAtURL:(NSString *)url withTarget:(id)target action:(SEL)action
 {
 	// Create connection
-	CGConnection *connection = [[CGNet utils] getJSONAtURL:[NSURL URLWithString:url] withDelegate:self];
+	CGJSONConnection *connection = [[CGNet utils] getJSONAtURL:[NSURL URLWithString:url] withDelegate:self];
 	
 	// Save connection info
 	NSDictionary *request = [[NSDictionary alloc] initWithObjectsAndKeys:
@@ -124,7 +124,7 @@
 - (void)fetchJSONAtURL:(NSString *)url withDelegate:(id<XServiceRemoteDelegate>)delegate
 {
 	// Create connection
-	CGConnection *connection = [[CGNet utils] getJSONAtURL:[NSURL URLWithString:url] withDelegate:self];
+	CGJSONConnection *connection = [[CGNet utils] getJSONAtURL:[NSURL URLWithString:url] withDelegate:self];
 	
 	// Save connection info
 	NSDictionary *request = [[NSDictionary alloc] initWithObjectsAndKeys:
@@ -203,11 +203,12 @@
 	XDrvDebug(@"Downloading file at path: %@", path); 
 	
 	// Create connection
-	CGConnection *connection = nil;
+	CGFileConnection *connection = [[CGNet utils] getFileAtURL:[NSURL URLWithString:path] withDelegate:self];
 	if (cachedDate)
-		connection = [[CGNet utils] getFileAtURL:[NSURL URLWithString:path] ifModifiedSinceCachedDate:cachedDate withDelegate:self];
-	else
-		connection = [[CGNet utils] getFileAtURL:[NSURL URLWithString:path] withDelegate:self];
+	{
+		XDrvLog(@"Setting if modified since date: %@", cachedDate);
+		[connection setIfModifiedSinceDate:cachedDate];
+	}
 	
 	// Save connection info
 	NSDictionary *request = [[NSDictionary alloc] initWithObjectsAndKeys:
@@ -227,7 +228,7 @@
 - (void)cgConnection:(CGConnection *)connection finishedWithResult:(id)result
 {
 	XDrvDebug(@"Connection finished");
-	XDrvLog(@"result: %@", result);
+	//XDrvLog(@"result: %@", result);
 	
 	// Get request details
 	NSDictionary *request = [requests objectForKey:[connection description]];

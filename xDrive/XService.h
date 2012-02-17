@@ -46,11 +46,17 @@
 - (XDirectory *)updateDirectoryDetails:(NSDictionary *)details;
 	// Updates directory contents with the passed details (Usually from the server).
 
+- (void)removeCacheForDirectory:(XDirectory *)directory;
+	// Recursively searches directory contents for cached files to remove
+
 - (void)downloadFile:(XFile *)file withDelegate:(id<XServiceRemoteDelegate>)delegate;
 	// Downloads a file to a temp location and notifies the delegate.
 
 - (void)cacheFile:(XFile *)file fromTmpPath:(NSString *)tmpPath;
-	// Moves a downloaded file to it's cache location and handles local storage requirements
+	// Moves a downloaded file to it's cache location and updates local storage status
+
+- (void)removeCacheForFile:(XFile *)file;
+	// Removes a cached file and updates local storage status
 
 
 @end

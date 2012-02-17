@@ -17,6 +17,9 @@
 + (void)moveFileAtPath:(NSString *)oldFilePath toPath:(NSString *)newFilePath;
 	// Moves a file from one location to another
 
++ (void)deleteItemAtPath:(NSString *)path;
+	// Deletes a file at a given path
+
 + (NSString *)stringByFormattingBytes:(long long)bytes;
 	// Generates a human readable file size string (e.g. '5.7 MB')
 

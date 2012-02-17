@@ -19,4 +19,7 @@
 @property (nonatomic, retain) XDirectory *parent;
 @property (nonatomic, retain) XServer *server;
 
+- (NSString *)cachePath;
+- (NSString *)documentPath;
+
 @end

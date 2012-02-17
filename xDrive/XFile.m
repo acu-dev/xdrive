@@ -7,7 +7,6 @@
 //
 
 #import "XFile.h"
-#import "XService.h"
 
 
 @implementation XFile
@@ -20,16 +19,6 @@
 - (NSString *)extension
 {
 	return [[self.name componentsSeparatedByString:@"."] lastObject];
-}
-
-- (NSString *)cachePath
-{
-	return [[[XService sharedXService] activeServerCachePath] stringByAppendingString:self.path];
-}
-
-- (NSString *)documentPath
-{
-	return [[[XService sharedXService] activeServerDocumentPath] stringByAppendingString:self.path];
 }
 
 @end
