@@ -735,6 +735,10 @@
 		C3FC6C8213BCB90B009FBAA3 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"\"$(SYSTEM_APPS_DIR)/Xcode.app/Contents/Developer/Library/Frameworks\"",
+				);
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "xDrive/xDrive-Prefix.pch";
 				HEADER_SEARCH_PATHS = (
@@ -742,7 +746,7 @@
 					"$(SOURCE_ROOT)/CGNetUtils",
 				);
 				INFOPLIST_FILE = "xDrive/xDrive-Info.plist";
-				OTHER_LDFLAGS = "-ObjC";
+				OTHER_LDFLAGS = "";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				WRAPPER_EXTENSION = app;
 			};
@@ -751,6 +755,10 @@
 		C3FC6C8313BCB90B009FBAA3 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"\"$(SYSTEM_APPS_DIR)/Xcode.app/Contents/Developer/Library/Frameworks\"",
+				);
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "xDrive/xDrive-Prefix.pch";
 				HEADER_SEARCH_PATHS = (
@@ -758,7 +766,7 @@
 					"$(SOURCE_ROOT)/CGNetUtils",
 				);
 				INFOPLIST_FILE = "xDrive/xDrive-Info.plist";
-				OTHER_LDFLAGS = "-ObjC";
+				OTHER_LDFLAGS = "";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				WRAPPER_EXTENSION = app;
 			};

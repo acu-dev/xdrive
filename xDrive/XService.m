@@ -6,11 +6,13 @@
 //  Copyright 2011 Abilene Christian University. All rights reserved.
 //
 
+
 #import "XService.h"
 #import "XFileUtils.h"
 #import "XDriveConfig.h"
 #import "XDefaultPath.h"
 #import "DefaultPathController.h"
+
 
 
 
@@ -313,9 +315,7 @@
 
 - (void)clearCache
 {
-	// Throw this on a background thread?
-	
-	[XFileUtils deleteItemAtPath:[self activeServerCachePath]];
+	//[[DTAsyncFileDeleter sharedInstance] removeItemAtPath:[self activeServerCachePath]];
 	[XDriveConfig setTotalCachedBytes:0];
 }
 
