@@ -1,3 +1,6 @@
 [submodule "CGNetUtils"]
 	path = CGNetUtils
 	url = git://github.com/chrisgibbs/CGNetUtils.git
+[submodule "DTFoundation"]
+	path = DTFoundation
+	url = git@github.com:acu-dev/DTFoundation.git
