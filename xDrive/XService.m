@@ -47,7 +47,6 @@
 @implementation XService
 
 // Public
-static XService *sharedXService;
 @synthesize localService = _localService;
 @synthesize remoteService = _remoteService;
 @synthesize serverStatusDelegate;
@@ -64,14 +63,14 @@ static XService *sharedXService;
 
 + (XService *)sharedXService
 {
-	@synchronized(self)
-	{
-		if (sharedXService == nil)
-		{
-			sharedXService = [[self alloc] init];
-		}
-	}
-	return sharedXService;
+	static dispatch_once_t onceToken;
+	static XService *__sharedXService;
+	
+	dispatch_once(&onceToken, ^{
+		__sharedXService = [[self alloc] init];	
+	});
+	
+	return __sharedXService;
 }
 
 - (id)init
