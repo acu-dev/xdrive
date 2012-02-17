@@ -6,7 +6,7 @@
 //  Copyright 2011 Abilene Christian University. All rights reserved.
 //
 
-
+#import <DTFoundation/DTFoundation.h>
 #import "XService.h"
 #import "XFileUtils.h"
 #import "XDriveConfig.h"
@@ -315,7 +315,7 @@
 
 - (void)clearCache
 {
-	//[[DTAsyncFileDeleter sharedInstance] removeItemAtPath:[self activeServerCachePath]];
+	[[DTAsyncFileDeleter sharedInstance] removeItemAtPath:[self activeServerCachePath]];
 	[XDriveConfig setTotalCachedBytes:0];
 }
 
