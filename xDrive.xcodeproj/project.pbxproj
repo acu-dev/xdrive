@@ -7,6 +7,9 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		A917270F14F227CD00A4FBA0 /* libDTFoundation.a in Frameworks */ = {isa = PBXBuildFile; fileRef = A917270C14F2278C00A4FBA0 /* libDTFoundation.a */; };
+		A917271114F227D900A4FBA0 /* libz.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = A917271014F227D900A4FBA0 /* libz.dylib */; };
+		A917271314F227E500A4FBA0 /* libxml2.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = A917271214F227E500A4FBA0 /* libxml2.dylib */; };
 		A93E36AA13C5630600DE693D /* DirectoryContentsViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = A93E36A913C5630600DE693D /* DirectoryContentsViewController.m */; };
 		A9674E3C14DCE69700464E37 /* UIStoryboard+Xdrive.m in Sources */ = {isa = PBXBuildFile; fileRef = A9674E3B14DCE69700464E37 /* UIStoryboard+Xdrive.m */; };
 		A96CBBD014C9EE2C0069A641 /* SetupController.m in Sources */ = {isa = PBXBuildFile; fileRef = A96CBBCF14C9EE2C0069A641 /* SetupController.m */; };
@@ -95,6 +98,27 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
+		A917270914F2278C00A4FBA0 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = A917270014F2278C00A4FBA0 /* DTFoundation.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = A7BAD10E1483F934000E2B6A;
+			remoteInfo = "Static Framework";
+		};
+		A917270B14F2278C00A4FBA0 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = A917270014F2278C00A4FBA0 /* DTFoundation.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = A70B4CE71486637E00873A4A;
+			remoteInfo = "Static Library";
+		};
+		A917270D14F227C400A4FBA0 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = A917270014F2278C00A4FBA0 /* DTFoundation.xcodeproj */;
+			proxyType = 1;
+			remoteGlobalIDString = A70B4CE61486637E00873A4A;
+			remoteInfo = "Static Library";
+		};
 		C354ABDB1419327A00E88410 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = C354ABD41419327A00E88410 /* CGNetUtils.xcodeproj */;
@@ -112,6 +136,9 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		A917270014F2278C00A4FBA0 /* DTFoundation.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = DTFoundation.xcodeproj; path = DTFoundation/DTFoundation.xcodeproj; sourceTree = "<group>"; };
+		A917271014F227D900A4FBA0 /* libz.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libz.dylib; path = usr/lib/libz.dylib; sourceTree = SDKROOT; };
+		A917271214F227E500A4FBA0 /* libxml2.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libxml2.dylib; path = usr/lib/libxml2.dylib; sourceTree = SDKROOT; };
 		A93E36A813C5630600DE693D /* DirectoryContentsViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DirectoryContentsViewController.h; sourceTree = "<group>"; };
 		A93E36A913C5630600DE693D /* DirectoryContentsViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DirectoryContentsViewController.m; sourceTree = "<group>"; };
 		A9674E3A14DCE69700464E37 /* UIStoryboard+Xdrive.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIStoryboard+Xdrive.h"; sourceTree = "<group>"; };
@@ -236,6 +263,9 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				A917271314F227E500A4FBA0 /* libxml2.dylib in Frameworks */,
+				A917271114F227D900A4FBA0 /* libz.dylib in Frameworks */,
+				A917270F14F227CD00A4FBA0 /* libDTFoundation.a in Frameworks */,
 				C354ABE0141932E600E88410 /* libCGNetUtils.a in Frameworks */,
 				C354ABE2141932F000E88410 /* Security.framework in Frameworks */,
 				C3C9A9C513D9D62F003B5E91 /* QuartzCore.framework in Frameworks */,
@@ -250,6 +280,15 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		A917270114F2278C00A4FBA0 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				A917270A14F2278C00A4FBA0 /* DTFoundation.framework */,
+				A917270C14F2278C00A4FBA0 /* libDTFoundation.a */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
 		A978436813C6847300120A94 /* Directory Contents */ = {
 			isa = PBXGroup;
 			children = (
@@ -416,12 +455,13 @@
 		C3FC6C4813BCB90B009FBAA3 = {
 			isa = PBXGroup;
 			children = (
-				C354ABD41419327A00E88410 /* CGNetUtils.xcodeproj */,
 				C30580331418207400E49727 /* README.md */,
 				C3CF9CDA13D9D54D003F21D1 /* ATMHud */,
 				C3FC6C5D13BCB90B009FBAA3 /* xDrive */,
 				C3FC6C5613BCB90B009FBAA3 /* Frameworks */,
 				C3FC6C5413BCB90B009FBAA3 /* Products */,
+				C354ABD41419327A00E88410 /* CGNetUtils.xcodeproj */,
+				A917270014F2278C00A4FBA0 /* DTFoundation.xcodeproj */,
 			);
 			sourceTree = "<group>";
 		};
@@ -443,6 +483,8 @@
 				C3FC6C5713BCB90B009FBAA3 /* UIKit.framework */,
 				C3FC6C5913BCB90B009FBAA3 /* Foundation.framework */,
 				C3FC6C5B13BCB90B009FBAA3 /* CoreGraphics.framework */,
+				A917271214F227E500A4FBA0 /* libxml2.dylib */,
+				A917271014F227D900A4FBA0 /* libz.dylib */,
 			);
 			name = Frameworks;
 			sourceTree = "<group>";
@@ -500,6 +542,7 @@
 			buildRules = (
 			);
 			dependencies = (
+				A917270E14F227C400A4FBA0 /* PBXTargetDependency */,
 				C354ABDF141932DF00E88410 /* PBXTargetDependency */,
 			);
 			name = xDrive;
@@ -530,6 +573,10 @@
 					ProductGroup = C354ABD51419327A00E88410 /* Products */;
 					ProjectRef = C354ABD41419327A00E88410 /* CGNetUtils.xcodeproj */;
 				},
+				{
+					ProductGroup = A917270114F2278C00A4FBA0 /* Products */;
+					ProjectRef = A917270014F2278C00A4FBA0 /* DTFoundation.xcodeproj */;
+				},
 			);
 			projectRoot = "";
 			targets = (
@@ -539,6 +586,20 @@
 /* End PBXProject section */
 
 /* Begin PBXReferenceProxy section */
+		A917270A14F2278C00A4FBA0 /* DTFoundation.framework */ = {
+			isa = PBXReferenceProxy;
+			fileType = wrapper.cfbundle;
+			path = DTFoundation.framework;
+			remoteRef = A917270914F2278C00A4FBA0 /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		A917270C14F2278C00A4FBA0 /* libDTFoundation.a */ = {
+			isa = PBXReferenceProxy;
+			fileType = archive.ar;
+			path = libDTFoundation.a;
+			remoteRef = A917270B14F2278C00A4FBA0 /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
 		C354ABDC1419327A00E88410 /* libCGNetUtils.a */ = {
 			isa = PBXReferenceProxy;
 			fileType = archive.ar;
@@ -646,6 +707,11 @@
 /* End PBXSourcesBuildPhase section */
 
 /* Begin PBXTargetDependency section */
+		A917270E14F227C400A4FBA0 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			name = "Static Library";
+			targetProxy = A917270D14F227C400A4FBA0 /* PBXContainerItemProxy */;
+		};
 		C354ABDF141932DF00E88410 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
 			name = CGNetUtils;
