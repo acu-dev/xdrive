@@ -767,7 +767,10 @@
 				GCC_WARN_ABOUT_MISSING_PROTOTYPES = YES;
 				GCC_WARN_ABOUT_RETURN_TYPE = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				HEADER_SEARCH_PATHS = "$(SOURCE_ROOT)/CGNetUtils/CGNetUtils";
+				HEADER_SEARCH_PATHS = (
+					"$(SOURCE_ROOT)/CGNetUtils/**",
+					"$(SOURCE_ROOT)/DTFoundation/**",
+				);
 				IPHONEOS_DEPLOYMENT_TARGET = 5.0;
 				SDKROOT = iphoneos;
 				TARGETED_DEVICE_FAMILY = "1,2";
@@ -788,7 +791,10 @@
 				GCC_WARN_ABOUT_MISSING_PROTOTYPES = YES;
 				GCC_WARN_ABOUT_RETURN_TYPE = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				HEADER_SEARCH_PATHS = "$(SOURCE_ROOT)/CGNetUtils/CGNetUtils";
+				HEADER_SEARCH_PATHS = (
+					"$(SOURCE_ROOT)/CGNetUtils/**",
+					"$(SOURCE_ROOT)/DTFoundation/**",
+				);
 				IPHONEOS_DEPLOYMENT_TARGET = 5.0;
 				OTHER_CFLAGS = "-DNS_BLOCK_ASSERTIONS=1";
 				SDKROOT = iphoneos;
@@ -801,18 +807,15 @@
 		C3FC6C8213BCB90B009FBAA3 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				FRAMEWORK_SEARCH_PATHS = (
-					"$(inherited)",
-					"\"$(SYSTEM_APPS_DIR)/Xcode.app/Contents/Developer/Library/Frameworks\"",
-				);
+				FRAMEWORK_SEARCH_PATHS = "";
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "xDrive/xDrive-Prefix.pch";
 				HEADER_SEARCH_PATHS = (
-					"$(SOURCE_ROOT)/DTFoundation/**",
 					"$(SOURCE_ROOT)/CGNetUtils",
+					"$(SOURCE_ROOT)/DTFoundation/**",
 				);
 				INFOPLIST_FILE = "xDrive/xDrive-Info.plist";
-				OTHER_LDFLAGS = "";
+				OTHER_LDFLAGS = "-ObjC";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				WRAPPER_EXTENSION = app;
 			};
@@ -821,18 +824,15 @@
 		C3FC6C8313BCB90B009FBAA3 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				FRAMEWORK_SEARCH_PATHS = (
-					"$(inherited)",
-					"\"$(SYSTEM_APPS_DIR)/Xcode.app/Contents/Developer/Library/Frameworks\"",
-				);
+				FRAMEWORK_SEARCH_PATHS = "";
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "xDrive/xDrive-Prefix.pch";
 				HEADER_SEARCH_PATHS = (
-					"$(SOURCE_ROOT)/DTFoundation/**",
 					"$(SOURCE_ROOT)/CGNetUtils",
+					"$(SOURCE_ROOT)/DTFoundation/**",
 				);
 				INFOPLIST_FILE = "xDrive/xDrive-Info.plist";
-				OTHER_LDFLAGS = "";
+				OTHER_LDFLAGS = "-ObjC";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				WRAPPER_EXTENSION = app;
 			};
