@@ -95,27 +95,6 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
-		A9B1DB3A14EF16CA00F53F15 /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = A9B1DB3114EF16CA00F53F15 /* DTFoundation.xcodeproj */;
-			proxyType = 2;
-			remoteGlobalIDString = A7BAD10E1483F934000E2B6A;
-			remoteInfo = "Static Framework";
-		};
-		A9B1DB3C14EF16CA00F53F15 /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = A9B1DB3114EF16CA00F53F15 /* DTFoundation.xcodeproj */;
-			proxyType = 2;
-			remoteGlobalIDString = A70B4CE71486637E00873A4A;
-			remoteInfo = "Static Library";
-		};
-		A9B1DB3E14EF16D800F53F15 /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = A9B1DB3114EF16CA00F53F15 /* DTFoundation.xcodeproj */;
-			proxyType = 1;
-			remoteGlobalIDString = A7BAD10D1483F934000E2B6A;
-			remoteInfo = "Static Framework";
-		};
 		C354ABDB1419327A00E88410 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = C354ABD41419327A00E88410 /* CGNetUtils.xcodeproj */;
@@ -143,7 +122,6 @@
 		A997F47814EC20820069D3F2 /* AccountViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AccountViewController.m; sourceTree = "<group>"; };
 		A997F47A14EC3ADE0069D3F2 /* XFile.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = XFile.h; sourceTree = "<group>"; };
 		A997F47B14EC3ADE0069D3F2 /* XFile.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = XFile.m; sourceTree = "<group>"; };
-		A9B1DB3114EF16CA00F53F15 /* DTFoundation.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = DTFoundation.xcodeproj; path = DTFoundation/DTFoundation.xcodeproj; sourceTree = "<group>"; };
 		A9C34FCA1426668400E3BC3C /* OpenFileViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OpenFileViewController.h; sourceTree = "<group>"; };
 		A9C34FCB1426668400E3BC3C /* OpenFileViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OpenFileViewController.m; sourceTree = "<group>"; };
 		A9DCAD8714ED6BE70014C8A8 /* LocalStorageViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LocalStorageViewController.h; sourceTree = "<group>"; };
@@ -279,15 +257,6 @@
 				A93E36A913C5630600DE693D /* DirectoryContentsViewController.m */,
 			);
 			name = "Directory Contents";
-			sourceTree = "<group>";
-		};
-		A9B1DB3214EF16CA00F53F15 /* Products */ = {
-			isa = PBXGroup;
-			children = (
-				A9B1DB3B14EF16CA00F53F15 /* DTFoundation.framework */,
-				A9B1DB3D14EF16CA00F53F15 /* libDTFoundation.a */,
-			);
-			name = Products;
 			sourceTree = "<group>";
 		};
 		A9C34FC9142665CA00E3BC3C /* File Info */ = {
@@ -453,7 +422,6 @@
 				C3FC6C5D13BCB90B009FBAA3 /* xDrive */,
 				C3FC6C5613BCB90B009FBAA3 /* Frameworks */,
 				C3FC6C5413BCB90B009FBAA3 /* Products */,
-				A9B1DB3114EF16CA00F53F15 /* DTFoundation.xcodeproj */,
 			);
 			sourceTree = "<group>";
 		};
@@ -532,7 +500,6 @@
 			buildRules = (
 			);
 			dependencies = (
-				A9B1DB3F14EF16D800F53F15 /* PBXTargetDependency */,
 				C354ABDF141932DF00E88410 /* PBXTargetDependency */,
 			);
 			name = xDrive;
@@ -563,10 +530,6 @@
 					ProductGroup = C354ABD51419327A00E88410 /* Products */;
 					ProjectRef = C354ABD41419327A00E88410 /* CGNetUtils.xcodeproj */;
 				},
-				{
-					ProductGroup = A9B1DB3214EF16CA00F53F15 /* Products */;
-					ProjectRef = A9B1DB3114EF16CA00F53F15 /* DTFoundation.xcodeproj */;
-				},
 			);
 			projectRoot = "";
 			targets = (
@@ -576,20 +539,6 @@
 /* End PBXProject section */
 
 /* Begin PBXReferenceProxy section */
-		A9B1DB3B14EF16CA00F53F15 /* DTFoundation.framework */ = {
-			isa = PBXReferenceProxy;
-			fileType = wrapper.cfbundle;
-			path = DTFoundation.framework;
-			remoteRef = A9B1DB3A14EF16CA00F53F15 /* PBXContainerItemProxy */;
-			sourceTree = BUILT_PRODUCTS_DIR;
-		};
-		A9B1DB3D14EF16CA00F53F15 /* libDTFoundation.a */ = {
-			isa = PBXReferenceProxy;
-			fileType = archive.ar;
-			path = libDTFoundation.a;
-			remoteRef = A9B1DB3C14EF16CA00F53F15 /* PBXContainerItemProxy */;
-			sourceTree = BUILT_PRODUCTS_DIR;
-		};
 		C354ABDC1419327A00E88410 /* libCGNetUtils.a */ = {
 			isa = PBXReferenceProxy;
 			fileType = archive.ar;
@@ -697,11 +646,6 @@
 /* End PBXSourcesBuildPhase section */
 
 /* Begin PBXTargetDependency section */
-		A9B1DB3F14EF16D800F53F15 /* PBXTargetDependency */ = {
-			isa = PBXTargetDependency;
-			name = "Static Framework";
-			targetProxy = A9B1DB3E14EF16D800F53F15 /* PBXContainerItemProxy */;
-		};
 		C354ABDF141932DF00E88410 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
 			name = CGNetUtils;
