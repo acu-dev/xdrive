@@ -8,6 +8,6 @@
 
 #import <UIKit/UIKit.h>
 
-@interface RecentViewController : UITableViewController
+@interface RecentViewController : UITableViewController <NSFetchedResultsControllerDelegate>
 
 @end

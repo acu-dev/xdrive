@@ -144,16 +144,21 @@
 
 #pragma mark - Recent entries
 
-- (NSArray *)filesOrderedByLastAccess
+- (NSArray *)cachedFilesOrderedByLastAccessAscending:(BOOL)ascending
 {
-	NSFetchRequest *fetchRequest = [managedObjectModel fetchRequestTemplateForName:@"RecentFiles"];
-
-	// Sort by date ascending (oldest first)
-	//NSSortDescriptor *sortDescriptor = [NSSortDescriptor sortDescriptorWithKey:@"lastAccessed" ascending:YES];
-	//[fetchRequest setSortDescriptors:[NSArray arrayWithObject:sortDescriptor]];
+	NSFetchRequest *fetchRequest = [NSFetchRequest fetchRequestWithEntityName:@"File"];
+	
+	// Search filter
+	NSPredicate *predicateTemplate = [NSPredicate predicateWithFormat:@"lastAccessed > $DATE"];
+	NSPredicate *predicate = [predicateTemplate predicateWithSubstitutionVariables:[NSDictionary dictionaryWithObject:[NSDate distantPast] forKey:@"DATE"]];
+	[fetchRequest setPredicate:predicate];
+	
+	// Sort order
+	NSSortDescriptor *sortDescriptor = [NSSortDescriptor sortDescriptorWithKey:@"lastAccessed" ascending:ascending];
+	[fetchRequest setSortDescriptors:[NSArray arrayWithObject:sortDescriptor]];
 	
 	// Set the batch size to infinite
-	//[fetchRequest setFetchBatchSize:0];
+	[fetchRequest setFetchBatchSize:0];
 	
 	NSError *error = nil;
 	NSArray *fetchedObjects = [managedObjectContext executeFetchRequest:fetchRequest error:&error];
@@ -166,6 +171,7 @@
 	
 	return fetchedObjects;
 }
+
 
 
 #pragma mark - Fetched Results Controllers

@@ -85,9 +85,9 @@
 	}
 	
 	// Recent
-	//UINavigationController *recentNavController = [[UIStoryboard mainStoryboard] instantiateViewControllerWithIdentifier:@"recentNav"];
-	//recentNavController.tabBarItem.image = [UIImage imageNamed:@"clock.png"];
-	//[viewControllers addObject:recentNavController];
+	UINavigationController *recentNavController = [[UIStoryboard mainStoryboard] instantiateViewControllerWithIdentifier:@"recentNav"];
+	recentNavController.tabBarItem.image = [UIImage imageNamed:@"clock.png"];
+	[viewControllers addObject:recentNavController];
 	
 	// Settings
 	UINavigationController *settingsNavController = [[UIStoryboard mainStoryboard] instantiateViewControllerWithIdentifier:@"settingsNav"];

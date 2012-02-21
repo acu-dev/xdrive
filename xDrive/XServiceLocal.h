@@ -23,7 +23,7 @@
 - (XDirectory *)directoryWithPath:(NSString *)path;
 
 // Recent files
-- (NSArray *)filesOrderedByLastAccess;
+- (NSArray *)cachedFilesOrderedByLastAccessAscending:(BOOL)ascending;
 
 
 //- (NSFetchedResultsController *)fetchedResultsControllerForDirectoryContents:(XDirectory *)directory;
