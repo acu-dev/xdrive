@@ -247,8 +247,25 @@
 
 - (void)clearCache
 {
+	// Remove cache directory
+	XDrvDebug(@"Removing entire cache directory");
 	[[DTAsyncFileDeleter sharedInstance] removeItemAtPath:[self cachesPath]];
+	
+	// Reset cached amount
 	[XDriveConfig setTotalCachedBytes:0];
+	
+	// Clear lastAccessed for any cached files
+	NSArray *cachedFiles = [_localService cachedFilesOrderedByLastAccessAscending:YES];
+	[cachedFiles enumerateObjectsUsingBlock:^(id obj, NSUInteger idx, BOOL *stop) {
+		((XFile *)obj).lastAccessed = nil;
+	}];
+	
+	// Save
+	NSError *error = nil;
+	if (![[_localService managedObjectContext] save:&error])
+	{
+		XDrvLog(@"Problem saving context: %@", error);
+	}
 }
 
 - (void)cacheFile:(XFile *)file fromTmpPath:(NSString *)tmpPath
@@ -294,10 +311,20 @@
 	long long fileSize = [[fileAttributes objectForKey:NSFileSize] longLongValue];
 	XDrvDebug(@"Removing %lld bytes from total cache size", fileSize);
 	[XDriveConfig setTotalCachedBytes:[XDriveConfig totalCachedBytes] - fileSize];
+	
+	// Sanity check
+	if ([XDriveConfig totalCachedBytes] < 0) [XDriveConfig setTotalCachedBytes:0];
 	XDrvDebug(@"New total cache size: %@", [NSString stringByFormattingBytes:[XDriveConfig totalCachedBytes]]);
 	
 	// Delete file
 	[[DTAsyncFileDeleter sharedInstance] removeItemAtPath:[file cachePath]];
+	
+	// Remove lastAccessed for file
+	file.lastAccessed = nil;
+	if (![[_localService managedObjectContext] save:&error])
+	{
+		XDrvLog(@"Problem saving context: %@", error);
+	}
 }
 
 - (void)removeCacheForDirectory:(XDirectory *)directory
@@ -320,7 +347,22 @@
 
 - (void)removeOldCacheUntilTotalCacheIsLessThanBytes:(long long)bytes
 {
+	if ([XDriveConfig totalCachedBytes] <= bytes)
+	{
+		XDrvDebug(@"Total cached bytes is already less than new max bytes");
+		return;
+	}
 	
+	XDrvLog(@"Removing cached files until cache is less than: %@", [NSString stringByFormattingBytes:bytes]);
+	NSArray *cachedFiles = [_localService cachedFilesOrderedByLastAccessAscending:YES];
+	[cachedFiles enumerateObjectsUsingBlock:^(id obj, NSUInteger idx, BOOL *stop) {
+		
+		// Remove cached file
+		[self removeCacheForFile:obj];
+		
+		// Check if cache is now less than specified bytes
+		*stop = ([XDriveConfig totalCachedBytes] <= bytes);
+	}];
 }
 
 
