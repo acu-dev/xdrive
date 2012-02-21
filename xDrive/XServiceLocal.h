@@ -22,7 +22,8 @@
 - (XFile *)fileWithPath:(NSString *)path;
 - (XDirectory *)directoryWithPath:(NSString *)path;
 
-
+// Recent files
+- (NSArray *)filesOrderedByLastAccess;
 
 
 //- (NSFetchedResultsController *)fetchedResultsControllerForDirectoryContents:(XDirectory *)directory;

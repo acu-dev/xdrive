@@ -44,6 +44,14 @@
 	 splitViewController.delegate = (id)navigationController.topViewController;
 	 }*/
 	
+	NSArray *lastAccesedFiles = [[XService sharedXService].localService filesOrderedByLastAccess];
+	for (XFile *file in lastAccesedFiles)
+	{
+		NSLog(@"File path: %@", file.path);
+	}
+	
+	
+	
 	// Get root view controller
 
 	if (![[XService sharedXService] activeServer])

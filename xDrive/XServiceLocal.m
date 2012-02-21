@@ -136,7 +136,37 @@
 		NSLog(@"Error creating new directory object at path: %@", path);
 		return nil;
 	}
+	
+	
 }
+
+
+
+#pragma mark - Recent entries
+
+- (NSArray *)filesOrderedByLastAccess
+{
+	NSFetchRequest *fetchRequest = [managedObjectModel fetchRequestTemplateForName:@"RecentFiles"];
+
+	// Sort by date ascending (oldest first)
+	//NSSortDescriptor *sortDescriptor = [NSSortDescriptor sortDescriptorWithKey:@"lastAccessed" ascending:YES];
+	//[fetchRequest setSortDescriptors:[NSArray arrayWithObject:sortDescriptor]];
+	
+	// Set the batch size to infinite
+	//[fetchRequest setFetchBatchSize:0];
+	
+	NSError *error = nil;
+	NSArray *fetchedObjects = [managedObjectContext executeFetchRequest:fetchRequest error:&error];
+	if (error)
+	{
+		// Something went wrong
+		NSLog(@"Error performing fetch request: %@", [error localizedDescription]);
+		return nil;
+	}
+	
+	return fetchedObjects;
+}
+
 
 #pragma mark - Fetched Results Controllers
 
