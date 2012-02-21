@@ -12,7 +12,9 @@
 #import "XDriveConfig.h"
 #import "XDefaultPath.h"
 #import "DefaultPathController.h"
+
 #import "DTAsyncFileDeleter.h"
+#import "NSString+DTPaths.h"
 
 
 
@@ -20,24 +22,9 @@
 
 @interface XService()
 
-@property (nonatomic, strong) NSString *cachesDirPath;
+@property (nonatomic, strong) NSString *_documentsPath, *_cachesPath;
+	// Documents/caches path with the active server hostname appended
 
-/*
-@property (nonatomic, strong) NSURLCredential *validateCredential;
-	// Credential used when validating server info.
-
-@property (nonatomic, strong) DefaultPathController *defaultPathController;
-
-@property (nonatomic, assign) int fetchingDefaultPaths;
-	// Counter that gets decremented as default path fetches return
-*/
-
-/*
-- (void)saveCredentialWithUsername:(NSString *)user password:(NSString *)pass;
-- (void)removeAllCredentialsForProtectionSpace:(NSURLProtectionSpace *)protectionSpace;
-- (NSURLProtectionSpace *)protectionSpace;
-- (NSURLCredential *)storedCredentialForProtectionSpace:(NSURLProtectionSpace *)protectionSpace withUser:(NSString *)user;
-*/
 @end
 
 
@@ -51,14 +38,10 @@
 // Public
 @synthesize localService = _localService;
 @synthesize remoteService = _remoteService;
-@synthesize serverStatusDelegate;
 
 // Private
-@synthesize cachesDirPath;
+@synthesize _documentsPath, _cachesPath;
 
-/*@synthesize validateCredential;
-@synthesize fetchingDefaultPaths;
-@synthesize defaultPathController;*/
 
 
 #pragma mark - Initialization
@@ -89,104 +72,32 @@
 
 
 
-#pragma mark - Server
+#pragma mark - Accessors
 
 - (XServer *)activeServer
 {
 	return [self.localService activeServer];
 }
 
-- (NSString *)activeServerDocumentPath
+- (NSString *)documentsPath
 {
-	return [[XFileUtils documentsPath] stringByAppendingPathComponent:[self activeServer].hostname];
-}
-
-- (NSString *)activeServerCachePath
-{
-	if (!cachesDirPath)
+	if (!_documentsPath)
 	{
-		cachesDirPath = [[XFileUtils cachesPath] stringByAppendingPathComponent:[self activeServer].hostname];
+		_documentsPath = [[NSString documentsPath] stringByAppendingPathComponent:[self activeServer].hostname];
 	}
-	return cachesDirPath;
+	return _documentsPath;
 }
 
-
-
-
-#pragma mark - Credentials
-
-/*- (void)saveCredentialWithUsername:(NSString *)user password:(NSString *)pass
+- (NSString *)cachesPath
 {
-	// Make credential
-	NSURLCredential *credential = [NSURLCredential credentialWithUser:user password:pass persistence:NSURLCredentialPersistencePermanent];
-	
-	// Save credential to be used for protection space
-	XDrvDebug(@"Setting credential for user: %@", user);
-	[[NSURLCredentialStorage sharedCredentialStorage] setCredential:credential forProtectionSpace:[self protectionSpace]];
+	if (!_cachesPath)
+	{
+		_cachesPath = [[NSString cachesPath] stringByAppendingPathComponent:[self activeServer].hostname];
+	}
+	return _cachesPath;
 }
 
-- (void)removeAllCredentialsForProtectionSpace:(NSURLProtectionSpace *)protectionSpace
-{	
-	NSDictionary *allCredentials = [[NSURLCredentialStorage sharedCredentialStorage] credentialsForProtectionSpace:[self protectionSpace]];
-	XDrvDebug(@"Found %i credentials", [allCredentials count]);
-	
-	NSArray *allKeys = [allCredentials allKeys];
-	
-	for (NSString *username in allKeys)
-	{
-		XDrvDebug(@"Removing credential for user: %@", username);
-		NSURLCredential *credential = [allCredentials objectForKey:username];
-		[[NSURLCredentialStorage sharedCredentialStorage] removeCredential:credential forProtectionSpace:protectionSpace];
-	}
-}
 
-- (NSURLProtectionSpace *)protectionSpace
-{
-	XServer *server = [self.localService activeServer];
-	if (!server)
-	{
-		XDrvLog(@"No server found, protection space is nil");
-		return nil;
-	}
-	
-	return [[NSURLProtectionSpace alloc] initWithHost:server.hostname
-												  port:[server.port integerValue]
-											  protocol:server.protocol
-												 realm:server.hostname
-								  authenticationMethod:@"NSURLAuthenticationMethodHTTPBasic"];
-}
-
-- (NSURLCredential *)storedCredentialForProtectionSpace:(NSURLProtectionSpace *)protectionSpace withUser:(NSString *)user
-{
-	// Get all credentials for the protection space
-	NSDictionary *allCredentials = [[NSURLCredentialStorage sharedCredentialStorage] credentialsForProtectionSpace:[self protectionSpace]];
-	if (![allCredentials count])
-	{
-		XDrvLog(@"No credentials were found for given protection space");
-		return nil;
-	}
-	
-	// Look for the credential with a key matching the passed username
-	return [allCredentials objectForKey:user];
-}
-
-- (NSString *)username
-{
-	// Get all credentials for the protection space
-	NSDictionary *allCredentials = [[NSURLCredentialStorage sharedCredentialStorage] credentialsForProtectionSpace:[self protectionSpace]];
-	
-	if (![allCredentials count])
-	{
-		// None found
-		XDrvLog(@"No username was found");
-		return nil;
-	}
-	
-	// Return the first username found
-	NSArray *allKeys = [allCredentials allKeys];
-	XDrvDebug(@"First user found: %@", [allKeys objectAtIndex:0]);
-	return [allKeys objectAtIndex:0];
-}*/
 
 #pragma mark - Directory
 
@@ -295,6 +206,26 @@
 	return directory;
 }
 
+
+
+#pragma mark - File
+
+- (void)downloadFile:(XFile *)file withDelegate:(id<XServiceRemoteDelegate>)delegate;
+{
+	//[self.remoteService downloadFileAtPath:file.path ifModifiedSinceCachedDate:file.lastUpdated withDelegate:delegate];
+	[self.remoteService downloadFileAtPath:file.path withDelegate:delegate];
+}
+
+
+
+#pragma mark - Cache
+
+- (void)clearCache
+{
+	[[DTAsyncFileDeleter sharedInstance] removeItemAtPath:[self cachesPath]];
+	[XDriveConfig setTotalCachedBytes:0];
+}
+
 - (void)removeCacheForDirectory:(XDirectory *)directory
 {
 	for (XEntry *entry in directory.contents)
@@ -311,22 +242,6 @@
 			[self removeCacheForFile:(XFile *)entry];
 		}
 	}
-}
-
-- (void)clearCache
-{
-	[[DTAsyncFileDeleter sharedInstance] removeItemAtPath:[self activeServerCachePath]];
-	[XDriveConfig setTotalCachedBytes:0];
-}
-
-
-
-#pragma mark - File
-
-- (void)downloadFile:(XFile *)file withDelegate:(id<XServiceRemoteDelegate>)delegate;
-{
-	//[self.remoteService downloadFileAtPath:file.path ifModifiedSinceCachedDate:file.lastUpdated withDelegate:delegate];
-	[self.remoteService downloadFileAtPath:file.path withDelegate:delegate];
 }
 
 - (void)cacheFile:(XFile *)file fromTmpPath:(NSString *)tmpPath
