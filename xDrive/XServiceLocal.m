@@ -8,7 +8,7 @@
 
 #import "XServiceLocal.h"
 #import "XDriveConfig.h"
-#import "XFileUtils.h"
+#import "NSString+DTPaths.h"
 
 
 
@@ -231,7 +231,7 @@
 		return persistentStoreCoordinator;
 	}
 	
-	NSString *urlString = [[XFileUtils documentsPath] stringByAppendingPathComponent:@"xDrive.sqlite"];
+	NSString *urlString = [[NSString documentsPath] stringByAppendingPathComponent:@"xDrive.sqlite"];
 	
 	NSError *error = nil;
 	persistentStoreCoordinator = [[NSPersistentStoreCoordinator alloc] initWithManagedObjectModel:[self managedObjectModel]];

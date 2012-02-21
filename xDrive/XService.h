@@ -55,20 +55,26 @@
 - (void)downloadFile:(XFile *)file withDelegate:(id<XServiceRemoteDelegate>)delegate;
 	// Downloads a file to a temp location and notifies the delegate.
 
+- (void)moveFileAtPath:(NSString *)oldFilePath toPath:(NSString *)newFilePath;
+	// Moves a file from one location to another
+
 
 /* Cache */
 
 - (void)clearCache;
 	// Removes all cached content
 
-- (void)removeCacheForDirectory:(XDirectory *)directory;
-	// Recursively searches directory contents for cached files to remove
-
 - (void)cacheFile:(XFile *)file fromTmpPath:(NSString *)tmpPath;
 	// Moves a downloaded file to it's cache location and updates local storage status
 
 - (void)removeCacheForFile:(XFile *)file;
 	// Removes a cached file and updates local storage status
+
+- (void)removeCacheForDirectory:(XDirectory *)directory;
+	// Recursively searches directory contents for cached files to remove
+
+- (void)removeOldCacheUntilTotalCacheIsLessThanBytes:(long long)bytes;
+	// Deletes files until total cache is less than bytes
 
 
 @end

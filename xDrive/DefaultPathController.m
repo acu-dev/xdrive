@@ -9,7 +9,6 @@
 #import "DefaultPathController.h"
 #import "XDriveConfig.h"
 #import "XDefaultPath.h"
-#import "XFileUtils.h"
 
 
 
@@ -197,7 +196,7 @@
 	NSString *fileName = [tmpFilePath lastPathComponent];
 	NSString *newFilePath = [[[[XService sharedXService] documentsPath] stringByAppendingString:@"-meta/icons"] 
 							 stringByAppendingPathComponent:fileName];
-	[XFileUtils moveFileAtPath:tmpFilePath toPath:newFilePath];
+	[[XService sharedXService] moveFileAtPath:tmpFilePath toPath:newFilePath];
 	
 	// Set icon path
 	XDefaultPath *defaultPath = [self defaultPathWithPath:[iconToPathMap objectForKey:fileName]];
