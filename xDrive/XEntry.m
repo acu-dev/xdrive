@@ -25,12 +25,12 @@
 
 - (NSString *)cachePath
 {
-	return [[[XService sharedXService] activeServerCachePath] stringByAppendingString:self.path];
+	return [[[XService sharedXService] cachesPath] stringByAppendingString:self.path];
 }
 
 - (NSString *)documentPath
 {
-	return [[[XService sharedXService] activeServerDocumentPath] stringByAppendingString:self.path];
+	return [[[XService sharedXService] documentsPath] stringByAppendingString:self.path];
 }
 
 @end

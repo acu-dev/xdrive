@@ -195,7 +195,7 @@
 {
 	// Move file to permanent home
 	NSString *fileName = [tmpFilePath lastPathComponent];
-	NSString *newFilePath = [[[[XService sharedXService] activeServerDocumentPath] stringByAppendingString:@"-meta/icons"] 
+	NSString *newFilePath = [[[[XService sharedXService] documentsPath] stringByAppendingString:@"-meta/icons"] 
 							 stringByAppendingPathComponent:fileName];
 	[XFileUtils moveFileAtPath:tmpFilePath toPath:newFilePath];
 	

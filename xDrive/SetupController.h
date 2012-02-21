@@ -9,6 +9,13 @@
 #import <Foundation/Foundation.h>
 
 
+typedef enum {
+	ServerIsOffline,
+	ServerIsOnline,
+	ServerIsIncompatible
+} ServerStatus;
+
+
 @interface SetupController : NSObject
 
 @property (nonatomic, strong) NSString *validateUser, *validatePass;
