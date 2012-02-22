@@ -16,7 +16,7 @@
 
 @property (nonatomic, strong) NSIndexPath *selectedStorageIndexPath;
 
-- (void)updateStorageUsage;
+- (void)updateStorageUsageAnimated:(BOOL)animated;
 - (void)setLocalStorageOption:(NSDictionary *)option;
 - (void)deleteCachedFiles;
 
@@ -56,7 +56,7 @@
 	selectedStorageIndexPath = [NSIndexPath indexPathForRow:selectedIndex inSection:1];
 	
 	// Set amount used
-	[self updateStorageUsage];
+	[self updateStorageUsageAnimated:NO];
 }
 
 - (void)viewDidUnload
@@ -75,6 +75,12 @@
 {
 	[super viewWillAppear:animated];
 	[self.tableView cellForRowAtIndexPath:selectedStorageIndexPath].accessoryType = UITableViewCellAccessoryCheckmark;
+}
+
+- (void)viewDidAppear:(BOOL)animated
+{
+	[super viewDidAppear:animated];
+	[self updateStorageUsageAnimated:YES];
 }
 
 
@@ -110,18 +116,21 @@
 
 #pragma mark - Local Storage
 
-- (void)updateStorageUsage
+- (void)updateStorageUsageAnimated:(BOOL)animated
 {
 	long long maxBytesAvailable = [[[XDriveConfig localStorageOption] objectForKey:@"bytes"] longLongValue];
-	long long bytesCached = [XDriveConfig totalCachedBytes];
-	float percentUsed = (float)bytesCached / (float)maxBytesAvailable;
-	[usageProgressView setProgress:percentUsed animated:NO];
-	
-	usageLabel.text = [NSString stringWithFormat:@"Used %3.2f%% of %@", percentUsed, [[XDriveConfig localStorageOption] objectForKey:@"description"]];
-	
-	XDrvLog(@"maxBytesAvailable: %1.2f", (float)maxBytesAvailable);
-	XDrvLog(@"bytesCached: %1.2f", (float)bytesCached);
-	XDrvLog(@"percentUsed: %1.2f", percentUsed);
+	if (maxBytesAvailable)
+	{
+		long long bytesCached = [XDriveConfig totalCachedBytes];
+		float percentUsed = (float)bytesCached / (float)maxBytesAvailable;
+		[usageProgressView setProgress:percentUsed animated:animated];
+		usageLabel.text = [NSString stringWithFormat:@"Used %1.2f%% of %@", percentUsed * 100, [[XDriveConfig localStorageOption] objectForKey:@"description"]];
+	}
+	else
+	{
+		[usageProgressView setProgress:0 animated:animated];
+		usageLabel.text = @"Local storage is off";
+	}
 }
 
 - (void)setLocalStorageOption:(NSDictionary *)option
@@ -135,14 +144,14 @@
 	else
 	{
 		[[XService sharedXService] removeOldCacheUntilTotalCacheIsLessThanBytes:[[option objectForKey:@"bytes"] longLongValue]];
-		[self updateStorageUsage];
+		[self updateStorageUsageAnimated:YES];
 	}
 }
 
 - (void)deleteCachedFiles
 {
 	[[XService sharedXService] clearCache];
-	[self updateStorageUsage];
+	[self updateStorageUsageAnimated:YES];
 }
 
 @end
