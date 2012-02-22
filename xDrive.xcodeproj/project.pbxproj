@@ -12,6 +12,7 @@
 		A917271314F227E500A4FBA0 /* libxml2.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = A917271214F227E500A4FBA0 /* libxml2.dylib */; };
 		A937884514F55977007F2A1A /* about.html in Resources */ = {isa = PBXBuildFile; fileRef = A937884414F55977007F2A1A /* about.html */; };
 		A937884814F577E6007F2A1A /* WebViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = A937884714F577E5007F2A1A /* WebViewController.m */; };
+		A937884C14F58839007F2A1A /* legal.html in Resources */ = {isa = PBXBuildFile; fileRef = A937884B14F58839007F2A1A /* legal.html */; };
 		A93E36AA13C5630600DE693D /* DirectoryContentsViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = A93E36A913C5630600DE693D /* DirectoryContentsViewController.m */; };
 		A9674E3C14DCE69700464E37 /* UIStoryboard+Xdrive.m in Sources */ = {isa = PBXBuildFile; fileRef = A9674E3B14DCE69700464E37 /* UIStoryboard+Xdrive.m */; };
 		A96CBBD014C9EE2C0069A641 /* SetupController.m in Sources */ = {isa = PBXBuildFile; fileRef = A96CBBCF14C9EE2C0069A641 /* SetupController.m */; };
@@ -143,6 +144,7 @@
 		A937884414F55977007F2A1A /* about.html */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.html; path = about.html; sourceTree = "<group>"; };
 		A937884614F577E5007F2A1A /* WebViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WebViewController.h; sourceTree = "<group>"; };
 		A937884714F577E5007F2A1A /* WebViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WebViewController.m; sourceTree = "<group>"; };
+		A937884B14F58839007F2A1A /* legal.html */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.html; path = legal.html; sourceTree = "<group>"; };
 		A93E36A813C5630600DE693D /* DirectoryContentsViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DirectoryContentsViewController.h; sourceTree = "<group>"; };
 		A93E36A913C5630600DE693D /* DirectoryContentsViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DirectoryContentsViewController.m; sourceTree = "<group>"; };
 		A9674E3A14DCE69700464E37 /* UIStoryboard+Xdrive.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIStoryboard+Xdrive.h"; sourceTree = "<group>"; };
@@ -527,6 +529,7 @@
 				C3224777142A402B005F7C48 /* File-Types.plist */,
 				A9DCAD8A14ED74C90014C8A8 /* LocalStorageOptions.plist */,
 				A937884414F55977007F2A1A /* about.html */,
+				A937884B14F58839007F2A1A /* legal.html */,
 			);
 			name = "Supporting Files";
 			sourceTree = "<group>";
@@ -665,6 +668,7 @@
 				C346C851144784AA00D64F69 /* button-down-bg@2x.png in Resources */,
 				A9DCAD8B14ED74C90014C8A8 /* LocalStorageOptions.plist in Resources */,
 				A937884514F55977007F2A1A /* about.html in Resources */,
+				A937884C14F58839007F2A1A /* legal.html in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

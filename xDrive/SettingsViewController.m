@@ -68,7 +68,7 @@
 	}
 	else if ([segue.identifier isEqualToString:@"ShowLegal"])
 	{
-		NSURL *aboutURL = [NSURL fileURLWithPath:[[NSBundle mainBundle] pathForResource:@"about" ofType:@"html"]];
+		NSURL *aboutURL = [NSURL fileURLWithPath:[[NSBundle mainBundle] pathForResource:@"legal" ofType:@"html"]];
 		[((WebViewController *)segue.destinationViewController) loadContentAtURL:aboutURL withTitle:@"Legal"];
 	}
 }
