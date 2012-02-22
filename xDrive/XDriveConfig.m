@@ -87,7 +87,7 @@
 
 + (NSURLProtectionSpace *)protectionSpaceForServer:(XServer *)server
 {
-	if (!server) server = [XService sharedXService].activeServer;
+	if (!server) server = [[XService sharedXService] activeServer];
 	NSURLProtectionSpace *protectionSpace = [[NSURLProtectionSpace alloc] initWithHost:server.hostname
 																				  port:[server.port integerValue]
 																			  protocol:server.protocol
