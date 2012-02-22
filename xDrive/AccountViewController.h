@@ -10,4 +10,6 @@
 
 @interface AccountViewController : UITableViewController
 
+@property (nonatomic, strong) IBOutlet UILabel *serverLabel, *usernameLabel;
+
 @end
