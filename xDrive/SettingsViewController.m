@@ -9,6 +9,7 @@
 #import "SettingsViewController.h"
 #import "XDriveConfig.h"
 #import "XService.h"
+#import "WebViewController.h"
 
 
 
@@ -56,6 +57,32 @@
 	self.hostnameLabel = nil;
 	self.userLabel = nil;
 	self.storageLabel = nil;
+}
+
+- (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender
+{
+	if ([segue.identifier isEqualToString:@"ShowAbout"])
+	{
+		NSURL *aboutURL = [NSURL fileURLWithPath:[[NSBundle mainBundle] pathForResource:@"about" ofType:@"html"]];
+		[((WebViewController *)segue.destinationViewController) loadContentAtURL:aboutURL withTitle:@"About"];
+	}
+	else if ([segue.identifier isEqualToString:@"ShowLegal"])
+	{
+		NSURL *aboutURL = [NSURL fileURLWithPath:[[NSBundle mainBundle] pathForResource:@"about" ofType:@"html"]];
+		[((WebViewController *)segue.destinationViewController) loadContentAtURL:aboutURL withTitle:@"Legal"];
+	}
+}
+
+
+
+#pragma mark - Table view data source
+
+- (NSString *)tableView:(UITableView *)tableView titleForFooterInSection:(NSInteger)section
+{
+	if (section == 2)
+		return [NSString stringWithFormat:@"Version %@", [XDriveConfig appVersion]];
+	else
+		return nil;
 }
 
 
