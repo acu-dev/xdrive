@@ -71,6 +71,12 @@
 	[(id)segue.destinationViewController setXFile:file];
 }
 
+- (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)toInterfaceOrientation
+{
+	return YES;
+}
+
+
 
 
 #pragma mark - Cell customization
