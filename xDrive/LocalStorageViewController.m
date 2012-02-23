@@ -16,6 +16,7 @@
 
 @property (nonatomic, strong) NSIndexPath *selectedStorageIndexPath;
 
+- (void)updateLocalStorageSelection;
 - (void)updateStorageUsageAnimated:(BOOL)animated;
 - (void)setLocalStorageOption:(NSDictionary *)option;
 - (void)deleteCachedFiles;
@@ -42,6 +43,11 @@
 
 }
 
+- (void)dealloc
+{
+	self.selectedStorageIndexPath = nil;
+}
+
 
 
 #pragma mark - View lifecycle
@@ -51,9 +57,7 @@
     [super viewDidLoad];
 
 	// Set currently selected storage option
-	NSArray *storageOptions = [XDriveConfig localStorageOptions];
-	NSInteger selectedIndex = [storageOptions indexOfObject:[XDriveConfig localStorageOption]];
-	selectedStorageIndexPath = [NSIndexPath indexPathForRow:selectedIndex inSection:1];
+	[self updateLocalStorageSelection];
 	
 	// Set amount used
 	[self updateStorageUsageAnimated:NO];
@@ -67,14 +71,12 @@
 	
 	self.usageLabel = nil;
 	self.usageProgressView = nil;
-	
-	self.selectedStorageIndexPath = nil;
 }
 
 - (void)viewWillAppear:(BOOL)animated
 {
 	[super viewWillAppear:animated];
-	[self.tableView cellForRowAtIndexPath:selectedStorageIndexPath].accessoryType = UITableViewCellAccessoryCheckmark;
+	[self updateLocalStorageSelection];
 }
 
 - (void)viewDidAppear:(BOOL)animated
@@ -115,6 +117,18 @@
 
 
 #pragma mark - Local Storage
+
+- (void)updateLocalStorageSelection
+{
+	if (!selectedStorageIndexPath)
+	{
+		NSArray *storageOptions = [XDriveConfig localStorageOptions];
+		NSInteger selectedIndex = [storageOptions indexOfObject:[XDriveConfig localStorageOption]];
+		selectedStorageIndexPath = [NSIndexPath indexPathForRow:selectedIndex inSection:1];
+	}
+	
+	[self.tableView cellForRowAtIndexPath:selectedStorageIndexPath].accessoryType = UITableViewCellAccessoryCheckmark;
+}
 
 - (void)updateStorageUsageAnimated:(BOOL)animated
 {
