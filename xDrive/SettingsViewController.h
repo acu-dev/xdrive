@@ -6,7 +6,9 @@
 //  Copyright (c) 2011 Abilene Christian University. All rights reserved.
 //
 
-@interface SettingsViewController : UITableViewController
+#import <MessageUI/MessageUI.h>
+
+@interface SettingsViewController : UITableViewController <MFMailComposeViewControllerDelegate>
 
 @property (nonatomic, strong) IBOutlet UILabel *hostnameLabel, *userLabel, *storageLabel;
 

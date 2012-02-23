@@ -14,6 +14,7 @@
 		A937884814F577E6007F2A1A /* WebViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = A937884714F577E5007F2A1A /* WebViewController.m */; };
 		A937884C14F58839007F2A1A /* legal.html in Resources */ = {isa = PBXBuildFile; fileRef = A937884B14F58839007F2A1A /* legal.html */; };
 		A93E36AA13C5630600DE693D /* DirectoryContentsViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = A93E36A913C5630600DE693D /* DirectoryContentsViewController.m */; };
+		A95F17F514F6DBCE00EEA0A2 /* MessageUI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A95F17F414F6DBCE00EEA0A2 /* MessageUI.framework */; };
 		A9674E3C14DCE69700464E37 /* UIStoryboard+Xdrive.m in Sources */ = {isa = PBXBuildFile; fileRef = A9674E3B14DCE69700464E37 /* UIStoryboard+Xdrive.m */; };
 		A96CBBD014C9EE2C0069A641 /* SetupController.m in Sources */ = {isa = PBXBuildFile; fileRef = A96CBBCF14C9EE2C0069A641 /* SetupController.m */; };
 		A997F47914EC20820069D3F2 /* AccountViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = A997F47814EC20820069D3F2 /* AccountViewController.m */; };
@@ -146,6 +147,7 @@
 		A937884B14F58839007F2A1A /* legal.html */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.html; path = legal.html; sourceTree = "<group>"; };
 		A93E36A813C5630600DE693D /* DirectoryContentsViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DirectoryContentsViewController.h; sourceTree = "<group>"; };
 		A93E36A913C5630600DE693D /* DirectoryContentsViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DirectoryContentsViewController.m; sourceTree = "<group>"; };
+		A95F17F414F6DBCE00EEA0A2 /* MessageUI.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MessageUI.framework; path = System/Library/Frameworks/MessageUI.framework; sourceTree = SDKROOT; };
 		A9674E3A14DCE69700464E37 /* UIStoryboard+Xdrive.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIStoryboard+Xdrive.h"; sourceTree = "<group>"; };
 		A9674E3B14DCE69700464E37 /* UIStoryboard+Xdrive.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIStoryboard+Xdrive.m"; sourceTree = "<group>"; };
 		A96CBBCE14C9EE2C0069A641 /* SetupController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SetupController.h; sourceTree = "<group>"; };
@@ -265,6 +267,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				A95F17F514F6DBCE00EEA0A2 /* MessageUI.framework in Frameworks */,
 				A917271314F227E500A4FBA0 /* libxml2.dylib in Frameworks */,
 				A917271114F227D900A4FBA0 /* libz.dylib in Frameworks */,
 				A917270F14F227CD00A4FBA0 /* libDTFoundation.a in Frameworks */,
@@ -478,6 +481,7 @@
 		C3FC6C5613BCB90B009FBAA3 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				A95F17F414F6DBCE00EEA0A2 /* MessageUI.framework */,
 				C354ABE1141932F000E88410 /* Security.framework */,
 				C3C9A9C413D9D62F003B5E91 /* QuartzCore.framework */,
 				C3C9A9C113D9D61B003B5E91 /* AudioToolbox.framework */,

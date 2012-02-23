@@ -13,6 +13,17 @@
 
 
 
+static NSString *FeedbackToAddress = @"xdrive-feedback@acu.edu";
+
+
+@interface SettingsViewController ()
+
+- (void)openFeedbackEmail;
+
+@end
+
+
+
 @implementation SettingsViewController
 
 @synthesize hostnameLabel, userLabel, storageLabel;
@@ -80,15 +91,61 @@
 
 
 
-
-#pragma mark - Table view data source
+#pragma mark - UITableViewDataSource
 
 - (NSString *)tableView:(UITableView *)tableView titleForFooterInSection:(NSInteger)section
 {
-	if (section == 2)
+	if (section == 3)
 		return [NSString stringWithFormat:@"Version %@", [XDriveConfig appVersion]];
 	else
 		return nil;
+}
+
+
+
+#pragma mark - UITableViewDelegate
+
+- (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
+{
+	if (indexPath.section == 3)
+	{
+		if ([MFMailComposeViewController canSendMail])
+		{
+			[self openFeedbackEmail];
+		}
+		else
+		{
+			[tableView deselectRowAtIndexPath:indexPath animated:YES];
+			UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Not Available" message:@"This device is not configured for sending email" delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil];
+			[alert show];
+		}
+	}
+}
+
+
+
+#pragma mark - Feedback
+
+- (void)openFeedbackEmail
+{
+	MFMailComposeViewController *mailViewController = [[MFMailComposeViewController alloc] init];
+	[mailViewController setToRecipients:[NSArray arrayWithObject:FeedbackToAddress]];
+	mailViewController.mailComposeDelegate = self;
+	
+	NSString *device = ([[UIDevice currentDevice] userInterfaceIdiom] == UIUserInterfaceIdiomPhone) ? @"iPhone" : @"iPad";
+	NSString *subject = [NSString stringWithFormat:@"%@ %@ for %@ Feedback", [XDriveConfig appName], [XDriveConfig appVersion], device];
+	[mailViewController setSubject:subject];
+	
+	[self presentModalViewController:mailViewController animated:YES];
+}
+
+
+
+#pragma mark - MFMailComposeViewControllerDelegate
+
+- (void)mailComposeController:(MFMailComposeViewController*)controller didFinishWithResult:(MFMailComposeResult)result error:(NSError*)error
+{
+	[self dismissModalViewControllerAnimated:YES];
 }
 
 
