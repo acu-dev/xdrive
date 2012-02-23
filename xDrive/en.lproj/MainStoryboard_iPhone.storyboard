@@ -274,11 +274,11 @@
                                             <subviews>
                                                 <progressView opaque="NO" contentMode="scaleToFill" progress="0.5" id="rKE-jf-bgx">
                                                     <rect key="frame" x="20" y="48" width="260" height="9"/>
-                                                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                                    <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMaxY="YES"/>
                                                 </progressView>
                                                 <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" text="Using 32% of 500 MB" textAlignment="center" lineBreakMode="tailTruncation" minimumFontSize="10" id="SE5-l6-wID">
                                                     <rect key="frame" x="20" y="16" width="260" height="21"/>
-                                                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                                    <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMaxY="YES"/>
                                                     <fontDescription key="fontDescription" type="boldSystem" pointSize="17"/>
                                                     <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
                                                     <nil key="highlightedColor"/>
@@ -400,7 +400,7 @@
                                             <subviews>
                                                 <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" text="Delete Cached Files" textAlignment="center" lineBreakMode="tailTruncation" minimumFontSize="10" id="sgw-MB-9w5">
                                                     <rect key="frame" x="20" y="13" width="260" height="21"/>
-                                                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                                    <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMaxY="YES"/>
                                                     <fontDescription key="fontDescription" type="boldSystem" pointSize="17"/>
                                                     <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
                                                     <nil key="highlightedColor"/>
@@ -777,7 +777,7 @@
                                             <subviews>
                                                 <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" tag="1" contentMode="left" text="Logout" textAlignment="center" lineBreakMode="tailTruncation" minimumFontSize="10" id="3JK-aa-Vqd">
                                                     <rect key="frame" x="111" y="8" width="78" height="26"/>
-                                                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                                    <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMaxY="YES"/>
                                                     <fontDescription key="fontDescription" type="boldSystem" pointSize="17"/>
                                                     <color key="textColor" red="0.73523198341836737" green="0.0" blue="0.0079780069113540054" alpha="1" colorSpace="calibratedRGB"/>
                                                     <nil key="highlightedColor"/>
