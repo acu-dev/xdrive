@@ -12,6 +12,10 @@
 
 
 
+static NSString *DatabaseFileName = @"XDrive.sqlite";
+
+
+
 @interface XServiceLocal()
 
 @property (nonatomic, strong) XServer *server;
@@ -174,6 +178,43 @@
 
 
 
+#pragma mark - Reset
+
+- (void)resetPersistentStore
+{
+	NSURL *storeURL = [NSURL fileURLWithPath:[[NSString documentsPath] stringByAppendingPathComponent:DatabaseFileName]];
+
+	// Remove persistent store from the coordinator
+	NSPersistentStore *store = [persistentStoreCoordinator persistentStoreForURL:storeURL];
+	NSError *error = nil;
+	if (![persistentStoreCoordinator removePersistentStore:store error:&error])
+	{
+		XDrvLog(@"Error removing persistent store from coordinator: %@", error);
+		return;
+	}
+	
+	// Delete database file
+	if (![[NSFileManager defaultManager] removeItemAtPath:storeURL.path error:&error])
+	{
+		XDrvLog(@"Error deleting database file %@: %@", storeURL.path, error);
+		return;
+	}
+	
+	// Create new persistent store
+	error = nil;
+	[persistentStoreCoordinator addPersistentStoreWithType:NSSQLiteStoreType
+											 configuration:nil
+													   URL:storeURL
+												   options:nil
+													 error:&error];
+	if (error)
+	{
+		XDrvLog(@"Problem creating new persistent store: %@", error);
+	}
+}
+
+
+
 #pragma mark - Fetched Results Controllers
 
 /*- (NSFetchedResultsController *)fetchedResultsControllerForDirectoryContents:(XDirectory *)directory
@@ -267,7 +308,7 @@
 		return persistentStoreCoordinator;
 	}
 	
-	NSString *urlString = [[NSString documentsPath] stringByAppendingPathComponent:@"xDrive.sqlite"];
+	NSString *urlString = [[NSString documentsPath] stringByAppendingPathComponent:DatabaseFileName];
 	
 	NSError *error = nil;
 	persistentStoreCoordinator = [[NSPersistentStoreCoordinator alloc] initWithManagedObjectModel:[self managedObjectModel]];
