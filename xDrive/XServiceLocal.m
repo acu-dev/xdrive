@@ -9,6 +9,7 @@
 #import "XServiceLocal.h"
 #import "XDriveConfig.h"
 #import "NSString+DTPaths.h"
+#import "XService.h"
 
 
 
@@ -183,6 +184,10 @@ static NSString *DatabaseFileName = @"XDrive.sqlite";
 - (void)resetPersistentStore
 {
 	NSURL *storeURL = [NSURL fileURLWithPath:[[NSString documentsPath] stringByAppendingPathComponent:DatabaseFileName]];
+	
+	// Clear references to current server
+	self.server = nil;
+	[XService sharedXService].remoteService.activeServer = nil;
 
 	// Remove persistent store from the coordinator
 	NSPersistentStore *store = [persistentStoreCoordinator persistentStoreForURL:storeURL];

@@ -69,7 +69,7 @@
 	NSString *protocol = defaultServerProtocol;
 	int port = defaultServerPort;
 	
-	if (activeServer)
+	if (!host && activeServer)
 	{
 		protocol = activeServer.protocol;
 		port = [activeServer.port intValue];

@@ -25,6 +25,9 @@
 // Recent files
 - (NSArray *)cachedFilesOrderedByLastAccessAscending:(BOOL)ascending;
 
+- (void)resetPersistentStore;
+	// Deletes the current database and re-creates it
+
 
 //- (NSFetchedResultsController *)fetchedResultsControllerForDirectoryContents:(XDirectory *)directory;
 

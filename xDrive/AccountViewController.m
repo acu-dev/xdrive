@@ -9,6 +9,7 @@
 #import "AccountViewController.h"
 #import "XDriveConfig.h"
 #import "XService.h"
+#import "AppDelegate.h"
 
 
 @interface AccountViewController ()
@@ -94,7 +95,7 @@
 
 - (void)logout
 {
-	XDrvLog(@"Do logout");
+	[(AppDelegate *)[[UIApplication sharedApplication] delegate] logoutAndBeginSetup];
 }
 
 @end

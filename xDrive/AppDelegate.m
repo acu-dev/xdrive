@@ -10,6 +10,7 @@
 #import "XDriveConfig.h"
 #import "XService.h"
 #import "SetupController.h"
+#import "UIStoryboard+Xdrive.h"
 
 
 @interface AppDelegate ()
@@ -46,7 +47,6 @@
 	
 	
 	// Get root view controller
-
 	if (![[XService sharedXService] activeServer])
 	{
 		// No server configured so make setup the root view controller
@@ -57,9 +57,7 @@
 	else
 	{
 		// Load storyboard's initial view controller
-		NSString *storyboardName = ([[UIDevice currentDevice] userInterfaceIdiom] == UIUserInterfaceIdiomPhone) ? @"MainStoryboard_iPhone" : @"MainStoryboard_iPad";
-		UIStoryboard *storyboard = [UIStoryboard storyboardWithName:storyboardName bundle:nil];
-		window.rootViewController = [storyboard instantiateInitialViewController];
+		window.rootViewController = [[UIStoryboard mainStoryboard] instantiateInitialViewController];
 	}
 
 	// Display
@@ -108,6 +106,9 @@
 }
 
 
+
+#pragma mark - Setup cleanup
+
 - (void)tabBarControllerDidAppear:(UITabBarController *)tabBarController
 {
 	self.window.rootViewController = tabBarController;
@@ -121,6 +122,19 @@
 		XDrvDebug(@"Removing setup controller");
 		self.setupController = nil;
 	}
+}
+
+
+
+#pragma mark - Logout and setup
+
+- (void)logoutAndBeginSetup
+{
+	setupController = [[SetupController alloc] init];
+	[setupController resetBeforeSetup];
+	[window.rootViewController presentViewController:[setupController viewController] animated:YES completion:^{
+		self.window.rootViewController = [setupController viewController];
+	}];
 }
 
 

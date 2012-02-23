@@ -21,6 +21,9 @@ typedef enum {
 @property (nonatomic, strong) NSString *validateUser, *validatePass;
 	// User/pass to use when authenticating to server
 
+@property (nonatomic, assign, readonly) BOOL isResetting;
+	// Status of the reset process
+
 - (UIViewController *)viewController;
 	// Initializes the setup view controller for displaying on initial app launch
 
@@ -40,5 +43,8 @@ typedef enum {
 
 - (void)defaultPathsFinished;
 	// Default paths have all been initialized successfully
+
+- (void)resetBeforeSetup;
+	// Restores the app to original state before running setup
 
 @end

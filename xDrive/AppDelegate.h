@@ -11,5 +11,9 @@
 @property (strong, nonatomic) UIWindow *window;
 
 - (void)tabBarControllerDidAppear:(UITabBarController *)tabBarController;
+	// Ensures that the tab bar controller gets set as the root view controller (after setup)
+
+- (void)logoutAndBeginSetup;
+	// Resets the database and launches setup controller
 
 @end

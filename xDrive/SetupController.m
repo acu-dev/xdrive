@@ -12,6 +12,8 @@
 #import "XServiceRemote.h"
 #import "XDriveConfig.h"
 #import "DefaultPathController.h"
+#import "UIStoryboard+Xdrive.h"
+#import "DTAsyncFileDeleter.h"
 
 
 
@@ -44,7 +46,11 @@ typedef enum _SetupStep {
 
 @implementation SetupController
 
+// Public
 @synthesize validateUser, validatePass;
+@synthesize isResetting = _isResetting;
+
+// Private
 @synthesize viewController;
 @synthesize server;
 @synthesize setupStep;
@@ -59,6 +65,7 @@ typedef enum _SetupStep {
 	self.defaultPathController = nil;
 	self.server = nil;
 	self.viewController = nil;
+	XDrvLog(@"Dealloc'd setup controller");
 }
 
 
@@ -67,9 +74,7 @@ typedef enum _SetupStep {
 {
 	if (!viewController)
 	{
-		NSString *storyboardName = ([[UIDevice currentDevice] userInterfaceIdiom] == UIUserInterfaceIdiomPhone) ? @"MainStoryboard_iPhone" : @"MainStoryboard_iPad";
-		UIStoryboard *storyboard = [UIStoryboard storyboardWithName:storyboardName bundle:nil];
-		viewController = [storyboard instantiateViewControllerWithIdentifier:@"SetupView"];
+		viewController = [[UIStoryboard mainStoryboard] instantiateViewControllerWithIdentifier:@"SetupView"];
 		viewController.setupController = self;
 	}
 	return viewController;
@@ -80,7 +85,7 @@ typedef enum _SetupStep {
 #pragma mark - Setup
 
 - (void)setupWithUsername:(NSString *)username password:(NSString *)password forHost:(NSString *)host
-{
+{	
 	// Save user/pass for validation on next step
 	validateUser = username;
 	validatePass = password;
@@ -219,4 +224,40 @@ typedef enum _SetupStep {
 	return [NSURLCredential credentialWithUser:validateUser password:validatePass persistence:NSURLCredentialPersistenceNone];
 }
 
+
+
+#pragma mark - Reset
+
+- (void)resetBeforeSetup
+{
+	_isResetting = YES;
+	
+	// Delete cache files
+	[[XService sharedXService] clearCache];
+	
+	// Delete meta files
+	NSURL *metaURL = [NSURL fileURLWithPath:[[[XService sharedXService] documentsPath] stringByAppendingString:@"-meta"]];
+	XDrvLog(@"Removing meta dir at: %@", metaURL.path);
+	[[DTAsyncFileDeleter sharedInstance] removeItemAtURL:metaURL];
+	
+	// Reset database
+	[[[XService sharedXService] localService] resetPersistentStore];
+	
+	_isResetting = NO;
+}
+
 @end
+
+
+
+
+
+
+
+
+
+
+
+
+
+

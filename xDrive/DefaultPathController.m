@@ -14,7 +14,7 @@
 
 @interface DefaultPathController() <XServiceRemoteDelegate>
 
-@property (nonatomic, strong) SetupController *setupController;
+@property (nonatomic, weak) SetupController *setupController;
 	// View controller to receive status notifications
 
 @property (nonatomic, strong) XServer *xServer;
@@ -78,6 +78,7 @@
 	self.pathDetails = nil;
 	self.xServer = nil;
 	self.setupController = nil;
+	XDrvLog(@"Dealloc'd default path controller");
 }
 
 
@@ -217,6 +218,8 @@
 
 - (XDefaultPath *)defaultPathWithPath:(NSString *)path
 {
+	XDrvLog(@"Default path for path: %@", path);
+	
 	XDefaultPath *defaultPath = nil;
 	NSSet *defaultPaths = [[XService sharedXService] activeServer].defaultPaths;
 	for (XDefaultPath *dPath in defaultPaths)
