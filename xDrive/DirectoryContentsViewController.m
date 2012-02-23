@@ -58,7 +58,6 @@
 	self.fetchedResultsController = nil;
 	self.managedObjectContext = nil;
 	self.iconTypes = nil;
-	XDrvLog(@"DirContents view controller dealloc'd");
 }
 
 #pragma mark - View lifecycle

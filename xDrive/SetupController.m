@@ -65,7 +65,6 @@ typedef enum _SetupStep {
 	self.defaultPathController = nil;
 	self.server = nil;
 	self.viewController = nil;
-	XDrvLog(@"Dealloc'd setup controller");
 }
 
 
@@ -237,7 +236,7 @@ typedef enum _SetupStep {
 	
 	// Delete meta files
 	NSURL *metaURL = [NSURL fileURLWithPath:[[[XService sharedXService] documentsPath] stringByAppendingString:@"-meta"]];
-	XDrvLog(@"Removing meta dir at: %@", metaURL.path);
+	XDrvDebug(@"Removing meta dir at: %@", metaURL.path);
 	[[DTAsyncFileDeleter sharedInstance] removeItemAtURL:metaURL];
 	
 	// Reset database
