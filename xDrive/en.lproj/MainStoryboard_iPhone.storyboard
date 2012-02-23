@@ -56,19 +56,19 @@
                 <placeholder placeholderIdentifier="IBFirstResponder" id="700-wd-rja" userLabel="First Responder" sceneMemberID="firstResponder"/>
                 <viewController storyboardIdentifier="" hidesBottomBarWhenPushed="YES" id="m2V-yS-yfv" customClass="OpenFileViewController" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="2WA-5j-HFA">
-                        <rect key="frame" x="0.0" y="64" width="320" height="416"/>
+                        <rect key="frame" x="0.0" y="64" width="320" height="367"/>
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                         <subviews>
                             <view contentMode="scaleToFill" id="H24-cy-fLZ">
-                                <rect key="frame" x="0.0" y="0.0" width="320" height="416"/>
+                                <rect key="frame" x="0.0" y="0.0" width="320" height="367"/>
                                 <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                 <subviews>
                                     <progressView opaque="NO" contentMode="scaleToFill" id="JLX-cM-1HG">
-                                        <rect key="frame" x="60" y="238" width="200" height="9"/>
+                                        <rect key="frame" x="60" y="209" width="200" height="9"/>
                                         <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMinY="YES" flexibleMaxY="YES"/>
                                     </progressView>
                                     <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" text="File Name" textAlignment="center" lineBreakMode="middleTruncation" numberOfLines="2" minimumFontSize="10" id="h2j-Te-flo">
-                                        <rect key="frame" x="20" y="145" width="280" height="55"/>
+                                        <rect key="frame" x="20" y="125" width="280" height="55"/>
                                         <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMinY="YES" flexibleMaxY="YES"/>
                                         <fontDescription key="fontDescription" type="boldSystem" pointSize="20"/>
                                         <color key="textColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="calibratedRGB"/>
@@ -79,7 +79,7 @@
                                 <color key="backgroundColor" cocoaTouchSystemColor="viewFlipsideBackgroundColor"/>
                             </view>
                             <webView contentMode="center" scalesPageToFit="YES" id="Lbj-Le-8GX">
-                                <rect key="frame" x="0.0" y="0.0" width="320" height="416"/>
+                                <rect key="frame" x="0.0" y="0.0" width="320" height="367"/>
                                 <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                 <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                             </webView>
@@ -656,7 +656,7 @@
             </objects>
             <point key="canvasLocation" x="-9" y="1046"/>
         </scene>
-        <!--Recent View Controller - Recently Viewed-->
+        <!--Recent View Controller - Recent-->
         <scene sceneID="2Gs-tF-DK0">
             <objects>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="oKe-6C-8DD" userLabel="First Responder" sceneMemberID="firstResponder"/>
@@ -684,6 +684,9 @@
                                     <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                                 </view>
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                <connections>
+                                    <segue destination="m2V-yS-yfv" kind="push" id="ZFl-Vv-uPc"/>
+                                </connections>
                             </tableViewCell>
                         </prototypes>
                         <sections/>
@@ -692,7 +695,7 @@
                             <outlet property="delegate" destination="Vgz-3w-uhG" id="MUT-QO-6rk"/>
                         </connections>
                     </tableView>
-                    <navigationItem key="navigationItem" title="Recently Viewed" id="b6C-mu-wmf"/>
+                    <navigationItem key="navigationItem" title="Recent" id="b6C-mu-wmf"/>
                 </tableViewController>
             </objects>
             <point key="canvasLocation" x="458" y="1046"/>
@@ -877,5 +880,6 @@
     </simulatedMetricsContainer>
     <inferredMetricsTieBreakers>
         <segue reference="Vb8-Ce-zF2"/>
+        <segue reference="ZFl-Vv-uPc"/>
     </inferredMetricsTieBreakers>
 </document>

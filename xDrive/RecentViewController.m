@@ -8,6 +8,7 @@
 
 #import "RecentViewController.h"
 #import "XService.h"
+#import "OpenFileViewController.h"
 
 
 
@@ -62,6 +63,12 @@
     [super viewDidUnload];
     // Release any retained subviews of the main view.
     // e.g. self.myOutlet = nil;
+}
+
+- (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender
+{
+	XFile *file = [self.fetchedResultsController objectAtIndexPath:[self.tableView indexPathForSelectedRow]];
+	[(id)segue.destinationViewController setXFile:file];
 }
 
 
@@ -147,10 +154,10 @@
 
 #pragma mark - Table view delegate
 
-- (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
+/*- (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
 	[tableView deselectRowAtIndexPath:indexPath animated:YES];
-}
+}*/
 
 
 #pragma mark - Fetched results controller
