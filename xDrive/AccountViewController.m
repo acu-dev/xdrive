@@ -14,6 +14,7 @@
 @interface AccountViewController ()
 
 - (NSString *)usernameFromDefaultCredential;
+- (void)logout;
 
 @end
 
@@ -70,9 +71,54 @@
 {
     if (indexPath.section)
 	{
-		// do logout
-		XDrvLog(@"Do logout!");
+		UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Logout" message:@"Are you sure?" delegate:self cancelButtonTitle:@"Cancel" otherButtonTitles:@"Logout", nil];
+		[alert show];
 	}
 }
 
+
+
+#pragma mark - UIAlertViewDelegate
+
+- (void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex
+{
+	if (buttonIndex)
+	{
+		[self logout];
+	}
+}
+
+
+
+#pragma mark - Logout
+
+- (void)logout
+{
+	XDrvLog(@"Do logout");
+}
+
 @end
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

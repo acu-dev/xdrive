@@ -8,7 +8,7 @@
 
 #import <UIKit/UIKit.h>
 
-@interface AccountViewController : UITableViewController
+@interface AccountViewController : UITableViewController <UIAlertViewDelegate>
 
 @property (nonatomic, strong) IBOutlet UILabel *serverLabel, *usernameLabel;
 
