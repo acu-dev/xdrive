@@ -64,7 +64,6 @@
 		C3848B71142D0EDA009F55FC /* clock@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = C3848B6E142D0EDA009F55FC /* clock@2x.png */; };
 		C3848B72142D0EDA009F55FC /* gear@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = C3848B6F142D0EDA009F55FC /* gear@2x.png */; };
 		C3848B73142D0EDA009F55FC /* magnify@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = C3848B70142D0EDA009F55FC /* magnify@2x.png */; };
-		C3877011143F790B00E3CE8E /* Settings.bundle in Resources */ = {isa = PBXBuildFile; fileRef = C3877010143F790B00E3CE8E /* Settings.bundle */; };
 		C3877013143F850F00E3CE8E /* XDriveConfig.m in Sources */ = {isa = PBXBuildFile; fileRef = C3877012143F850F00E3CE8E /* XDriveConfig.m */; };
 		C3877016143F8E3F00E3CE8E /* setup-bg.png in Resources */ = {isa = PBXBuildFile; fileRef = C3877014143F8E3F00E3CE8E /* setup-bg.png */; };
 		C3877017143F8E3F00E3CE8E /* setup-bg@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = C3877015143F8E3F00E3CE8E /* setup-bg@2x.png */; };
@@ -205,7 +204,6 @@
 		C3848B6E142D0EDA009F55FC /* clock@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "clock@2x.png"; sourceTree = "<group>"; };
 		C3848B6F142D0EDA009F55FC /* gear@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "gear@2x.png"; sourceTree = "<group>"; };
 		C3848B70142D0EDA009F55FC /* magnify@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "magnify@2x.png"; sourceTree = "<group>"; };
-		C3877010143F790B00E3CE8E /* Settings.bundle */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.plug-in"; path = Settings.bundle; sourceTree = "<group>"; };
 		C3877012143F850F00E3CE8E /* XDriveConfig.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = XDriveConfig.m; sourceTree = "<group>"; };
 		C3877014143F8E3F00E3CE8E /* setup-bg.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "setup-bg.png"; sourceTree = "<group>"; };
 		C3877015143F8E3F00E3CE8E /* setup-bg@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "setup-bg@2x.png"; sourceTree = "<group>"; };
@@ -496,7 +494,6 @@
 		C3FC6C5D13BCB90B009FBAA3 /* xDrive */ = {
 			isa = PBXGroup;
 			children = (
-				C3877010143F790B00E3CE8E /* Settings.bundle */,
 				A9674E3A14DCE69700464E37 /* UIStoryboard+Xdrive.h */,
 				A9674E3B14DCE69700464E37 /* UIStoryboard+Xdrive.m */,
 				C3527A371423CBFB00B830DF /* XDriveConfig.h */,
@@ -658,7 +655,6 @@
 				C3848B71142D0EDA009F55FC /* clock@2x.png in Resources */,
 				C3848B72142D0EDA009F55FC /* gear@2x.png in Resources */,
 				C3848B73142D0EDA009F55FC /* magnify@2x.png in Resources */,
-				C3877011143F790B00E3CE8E /* Settings.bundle in Resources */,
 				C3877016143F8E3F00E3CE8E /* setup-bg.png in Resources */,
 				C3877017143F8E3F00E3CE8E /* setup-bg@2x.png in Resources */,
 				C35B4C6E1444B27C007A61D3 /* button-bg.png in Resources */,
