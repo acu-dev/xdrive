@@ -2,27 +2,49 @@
 <html>
 <head>
 <style type="text/css">
-	body {
-		font-family:Helvetica;
-		color:grey;
+	html {
+		font-family:"Helvetica Neue", Helvetica, Geneva, Arial, serif;
+		color:#46576f;
 	}
 	h2 {
 		text-align:center;
 		font-size:32px;
 		margin-bottom:-6px;
-		color:dark-grey;
+		color:#2d3642;
 	}
 	p, li {
 		font-size:14px;
 		line-height:19px;
 	}
+	a, a:visited {
+		color:#2d3642;
+	}
+	sup {
+		margin:0;
+		padding:0;
+	}
+	#footnotes {
+		margin:50px 20px;
+		font-size:0.76em;
+		font-family:arial;
+		color:gray;
+	}
+	#footnotes a,
+	#footnotes a:visited {
+		color:gray;
+	}
+	footer {
+		margin:50px;
+		text-align:center;
+		font-size:0.8em;
+	}
 </style>
 </head>
 <body>
 
-<h2>xDrive</h2>
-<p><strong>xDrive was created by Chris Gibbs as a "10%" side project while working at Abilene Christian University.</strong> It provides access to files in a Blackboard Xythos&#8482; server via the xService RESTful services. Supported files can be downloaded and viewed in app. After a file is downloaded it is cached and can be viewed when offline.</p>
-<p>xDrive is designed to be customizable by allowing the organization's Xythos application admin to specify a set of default paths to be created as tab bar items. Tab bar items can then be rearranged and saved according to user needs.</p>
+<h2>xDrive</h2>	
+<p>xDrive provides access to files in a Blackboard Xythos<sup>1</sup> server via the xService RESTful services. Supported files can be downloaded and viewed in app. After a file is downloaded it is cached and can be viewed when offline.</p>
+<p>xDrive is designed to be customizable by allowing the organization's Xythos application admin to specify a set of default paths to be created as tab bar items. For instance at ACU, our default paths are Home, Courses, Departments, and Browse. Tab bar items can then be rearranged and saved according to user needs.</p>
 <p>Future features:</p>
 <ul>
 	<li>UI style</li>
@@ -32,11 +54,17 @@
 	<li>Upload files from Photos</li>
 	<li>Import/export files from Dropbox</li>
 </ul>
+<p>xDrive was created by <a href="http://chris.gib.bs">Chris Gibbs</a> as a "10%" side project while working at Abilene Christian University.</p>
 	
 <hr/>
 
 <h2>xService</h2>
-<p><strong>xService is an <a href="https://github.com/acu-dev/xservice">open-source</a> Java webapp that provides the RESTful services for xDrive to access Blackboard Xythos&#8482;.</strong> It can be installed on any Xythos application server and customized to the organization's needs. xService was originally developed for ACU's myMobile Files web interface by Harvey McQueen and later customized by Chris Gibbs for use with xDrive.</p>
+<p>xService is an <a href="https://github.com/acu-dev/xservice">open-source</a> Java webapp that provides the RESTful services for xDrive to access Blackboard Xythos<sup>1</sup>.</p>
+<p>It can be installed on any Xythos application server and customized to the organization's needs. xService was originally developed for ACU's myMobile Files web interface by Harvey McQueen and later customized by Chris Gibbs for use with xDrive.</p>
 
+<ol id="footnotes">
+	<li>Xythos is a trademark or registered trademark of <a href="http://www.blackboard.com/">Blackboard</a></li>
+</ol>
+<footer>Copyright &copy; 2012 Abilene Christian University</footer>
 </body>
 </html>
