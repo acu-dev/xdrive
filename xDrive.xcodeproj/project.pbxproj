@@ -15,6 +15,7 @@
 		A937884C14F58839007F2A1A /* legal.html in Resources */ = {isa = PBXBuildFile; fileRef = A937884B14F58839007F2A1A /* legal.html */; };
 		A93E36AA13C5630600DE693D /* DirectoryContentsViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = A93E36A913C5630600DE693D /* DirectoryContentsViewController.m */; };
 		A95F17F514F6DBCE00EEA0A2 /* MessageUI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A95F17F414F6DBCE00EEA0A2 /* MessageUI.framework */; };
+		A95F180714F846BB00EEA0A2 /* VersionController.m in Sources */ = {isa = PBXBuildFile; fileRef = A95F180614F846BB00EEA0A2 /* VersionController.m */; };
 		A9674E3C14DCE69700464E37 /* UIStoryboard+Xdrive.m in Sources */ = {isa = PBXBuildFile; fileRef = A9674E3B14DCE69700464E37 /* UIStoryboard+Xdrive.m */; };
 		A96CBBD014C9EE2C0069A641 /* SetupController.m in Sources */ = {isa = PBXBuildFile; fileRef = A96CBBCF14C9EE2C0069A641 /* SetupController.m */; };
 		A997F47914EC20820069D3F2 /* AccountViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = A997F47814EC20820069D3F2 /* AccountViewController.m */; };
@@ -148,6 +149,8 @@
 		A93E36A813C5630600DE693D /* DirectoryContentsViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DirectoryContentsViewController.h; sourceTree = "<group>"; };
 		A93E36A913C5630600DE693D /* DirectoryContentsViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DirectoryContentsViewController.m; sourceTree = "<group>"; };
 		A95F17F414F6DBCE00EEA0A2 /* MessageUI.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MessageUI.framework; path = System/Library/Frameworks/MessageUI.framework; sourceTree = SDKROOT; };
+		A95F180514F846BB00EEA0A2 /* VersionController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = VersionController.h; sourceTree = "<group>"; };
+		A95F180614F846BB00EEA0A2 /* VersionController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = VersionController.m; sourceTree = "<group>"; };
 		A9674E3A14DCE69700464E37 /* UIStoryboard+Xdrive.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIStoryboard+Xdrive.h"; sourceTree = "<group>"; };
 		A9674E3B14DCE69700464E37 /* UIStoryboard+Xdrive.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIStoryboard+Xdrive.m"; sourceTree = "<group>"; };
 		A96CBBCE14C9EE2C0069A641 /* SetupController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SetupController.h; sourceTree = "<group>"; };
@@ -508,6 +511,8 @@
 				C3FC6C6C13BCB90B009FBAA3 /* MainStoryboard_iPad.storyboard */,
 				C3ECE29713C3BF2D004FF63F /* RootTabBarController.h */,
 				C3ECE29813C3BF2D004FF63F /* RootTabBarController.m */,
+				A95F180514F846BB00EEA0A2 /* VersionController.h */,
+				A95F180614F846BB00EEA0A2 /* VersionController.m */,
 				C3877018143F98EB00E3CE8E /* Setup */,
 				C3AAF63E142CF948002BC5C8 /* Settings */,
 				C3AAF63F142CFC88002BC5C8 /* Recent */,
@@ -709,6 +714,7 @@
 				A997F47C14EC3ADE0069D3F2 /* XFile.m in Sources */,
 				A9DCAD8914ED6BE70014C8A8 /* LocalStorageViewController.m in Sources */,
 				A937884814F577E6007F2A1A /* WebViewController.m in Sources */,
+				A95F180714F846BB00EEA0A2 /* VersionController.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

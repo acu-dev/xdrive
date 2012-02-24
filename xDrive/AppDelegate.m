@@ -11,11 +11,13 @@
 #import "XService.h"
 #import "SetupController.h"
 #import "UIStoryboard+Xdrive.h"
+#import "VersionController.h"
 
 
 @interface AppDelegate ()
 
 @property (nonatomic, strong) SetupController *setupController;
+@property (nonatomic, strong) VersionController *versionController;
 
 - (void)cleanupSetup;
 
@@ -28,6 +30,7 @@
 
 @synthesize window;
 @synthesize setupController;
+@synthesize versionController;
 
 
 
@@ -64,6 +67,10 @@
 
 	// Display
 	[window makeKeyAndVisible];
+	
+	// Create version controller
+	versionController = [[VersionController alloc] init];
+	
     return YES;
 }
 
@@ -95,6 +102,8 @@
 	/*
 	 Restart any tasks that were paused (or not yet started) while the application was inactive. If the application was previously in the background, optionally refresh the user interface.
 	 */
+	
+	[versionController checkVersion];
 }
 
 - (void)applicationWillTerminate:(UIApplication *)application
