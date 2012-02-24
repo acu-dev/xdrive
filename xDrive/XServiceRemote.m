@@ -29,11 +29,6 @@
 	// (uses the default vars defined in XDriveConfig.h. If host is nil the
 	// details from the active server are used.
 
-- (void)fetchJSONAtURL:(NSString *)url withTarget:(id)target action:(SEL)action;
-- (void)fetchJSONAtURL:(NSString *)url withDelegate:(id<XServiceRemoteDelegate>)delegate;
-	// Creates the connection and saves the target/action in the requests dictionary
-	// to be used when the connection returns.
-
 @end
 
 

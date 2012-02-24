@@ -22,6 +22,11 @@
 - (id)initWithServer:(XServer *)server;
 	// Saves the server to use for requests and initializes the requests storage
 
+- (void)fetchJSONAtURL:(NSString *)url withTarget:(id)target action:(SEL)action;
+- (void)fetchJSONAtURL:(NSString *)url withDelegate:(id<XServiceRemoteDelegate>)delegate;
+	// Creates the connection and saves the target/action in the requests dictionary
+	// to be used when the connection returns.
+
 - (void)fetchInfoAtHost:(NSString *)host withDelegate:(id<XServiceRemoteDelegate>)delegate;
 	// Gets the server info (version, service paths, etc)
 
