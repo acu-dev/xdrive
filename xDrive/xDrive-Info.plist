@@ -28,7 +28,7 @@
 	<true/>
 	<key>SupportedServiceVersions</key>
 	<array>
-		<string>0.1.1-SNAPSHOT</string>
+		<string>0.1.1</string>
 	</array>
 	<key>UIMainStoryboardFile</key>
 	<string>MainStoryboard_iPhone</string>
