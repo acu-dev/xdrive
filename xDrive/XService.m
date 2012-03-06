@@ -23,7 +23,8 @@
 @interface XService()
 
 @property (nonatomic, strong) NSString *_documentsPath, *_cachesPath;
-	// Documents/caches path with the active server hostname appended
+
+@property (nonatomic, strong) NSMutableDictionary *_currentOperations;
 
 @end
 
@@ -41,6 +42,7 @@
 
 // Private
 @synthesize _documentsPath, _cachesPath;
+@synthesize _currentOperations;
 
 
 
@@ -65,25 +67,32 @@
 	{
 		// Init local and remote services
 		_localService = [[XServiceLocal alloc] init];
-		_remoteService = [[XServiceRemote alloc] initWithServer:[self.localService activeServer]];
+		_remoteService = [[XServiceRemote alloc] initWithServer:_localService.server];
+		
+		// Init operation storage
+		_currentOperations = [[NSMutableDictionary alloc] init];
     }
     return self;
+}
+
+- (void)dealloc
+{
+	// cancel curren operations?
+	self._currentOperations = nil;
+	
+	_remoteService = nil;
+	_localService = nil;
 }
 
 
 
 #pragma mark - Accessors
 
-- (XServer *)activeServer
-{
-	return [self.localService activeServer];
-}
-
 - (NSString *)documentsPath
 {
 	if (!_documentsPath)
 	{
-		_documentsPath = [[NSString documentsPath] stringByAppendingPathComponent:[self activeServer].hostname];
+		_documentsPath = [[NSString documentsPath] stringByAppendingPathComponent:_localService.server.hostname];
 	}
 	return _documentsPath;
 }
@@ -92,14 +101,26 @@
 {
 	if (!_cachesPath)
 	{
-		_cachesPath = [[NSString cachesPath] stringByAppendingPathComponent:[self activeServer].hostname];
+		_cachesPath = [[NSString cachesPath] stringByAppendingPathComponent:_localService.server.hostname];
 	}
 	return _cachesPath;
 }
 
 
 
-#pragma mark - Directory
+#pragma mark - Directory Actions
+
+
+
+
+
+
+
+
+
+
+
+
 
 - (XDirectory *)directoryWithPath:(NSString *)path
 {

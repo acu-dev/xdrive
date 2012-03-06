@@ -14,7 +14,21 @@
 
 
 
+typedef enum {
+	XDirectoryContentsFetching,
+	XDirectoryContentsUpdating,
+	XDirectoryContentsDone
+} XDirectoryStatus;
+
+
+
 @interface DirectoryContentsViewController ()
+
+@property (nonatomic, strong) NSFetchedResultsController *contentsController;
+
+@property (nonatomic, assign) XDirectoryStatus directoryStatus;
+
+- (void)evaluateDirectoryStatus;
 
 - (void)configureCell:(UITableViewCell *)cell atIndexPath:(NSIndexPath *)indexPath;
 - (void)configureCell:(UITableViewCell *)cell forEntry:(XEntry *)entry;
@@ -29,19 +43,17 @@
 
 @implementation DirectoryContentsViewController
 
+// Private
+@synthesize contentsController;
+@synthesize directoryStatus;
 
+// Public
 @synthesize directory;
-@synthesize fetchedResultsController = __fetchedResultsController;
-@synthesize managedObjectContext;
 @synthesize iconTypes;
 
 
 
-- (void)setDirectory:(XDirectory *)dir
-{
-	directory = dir;
-	managedObjectContext = [[XService sharedXService] localService].managedObjectContext;
-}
+#pragma mark - Initialization
 
 - (void)didReceiveMemoryWarning
 {
@@ -55,10 +67,26 @@
 - (void)dealloc
 {
 	self.directory = nil;
-	self.fetchedResultsController = nil;
-	self.managedObjectContext = nil;
 	self.iconTypes = nil;
+	self.contentsController = nil;
 }
+
+
+
+#pragma mark - Accessors
+
+- (void)setDirectory:(XDirectory *)dir
+{
+	directory = dir;
+	
+	// Get contents controller
+	contentsController = [[XService sharedXService].localService contentsControllerForDirectory:directory];
+	contentsController.delegate = self;
+	
+	[self evaluateDirectoryStatus];
+}
+
+
 
 #pragma mark - View lifecycle
 
@@ -66,14 +94,14 @@
 {
     [super viewDidLoad];
 
-    // Uncomment the following line to preserve selection between presentations.
-    // self.clearsSelectionOnViewWillAppear = NO;
- 
-    // Uncomment the following line to display an Edit button in the navigation bar for this view controller.
-    // self.navigationItem.rightBarButtonItem = self.editButtonItem;
+	if (!self.title) self.title = directory.name;
 	
-	if (!self.title)
-		self.title = directory.name;
+	// Fetch contents
+	NSError *error = nil;
+	if (![contentsController performFetch:&error])
+	{
+		XDrvLog(@"Error performing directory contents fetch: %@", error);
+	}
 }
 
 - (void)viewDidUnload
@@ -87,7 +115,7 @@
 {
 	if ([segue.identifier isEqualToString:@"ViewFile"])
 	{
-		XFile *file = [self.fetchedResultsController objectAtIndexPath:[self.tableView indexPathForSelectedRow]];
+		XFile *file = [contentsController objectAtIndexPath:[self.tableView indexPathForSelectedRow]];
 		[(id)segue.destinationViewController setXFile:file];
 	}
 }
@@ -99,11 +127,53 @@
 
 
 
+#pragma mark - Directory Status
+
+- (void)evaluateDirectoryStatus
+{
+	if (!directory.contentsLastUpdated)
+	{
+		// Directory contents have never been fetched
+		directoryStatus = XDirectoryContentsFetching;
+		
+		// Fetch contents
+		[[XService sharedXService].remoteService fetchDirectoryContentsAtPath:directory.path withDelegate:self];
+	}
+	else
+	{
+		if ([directory.contentsLastUpdated compare:directory.lastUpdated] == NSOrderedAscending)
+		{
+			// Directory has been updated since contents were last updated
+			directoryStatus = XDirectoryContentsUpdating;
+			
+			// Fetch updates
+			[[XService sharedXService].remoteService fetchDirectoryContentsAtPath:directory.path withDelegate:self];
+		}
+		else
+		{
+			// Directory has no updates
+			directoryStatus = XDirectoryContentsDone;
+		}
+	}
+}
+
+- (void)displayDirectoryStatus
+{
+	
+}
+
+- (void)setDirectoryStatus:(XDirectoryStatus)directoryStatus
+{
+	
+}
+
+
+
 #pragma mark - Cell customization
 
 - (void)configureCell:(UITableViewCell *)cell atIndexPath:(NSIndexPath *)indexPath
 {
-    XEntry *entry = [self.fetchedResultsController objectAtIndexPath:indexPath];
+    XEntry *entry = [contentsController objectAtIndexPath:indexPath];
     [self configureCell:cell forEntry:entry];
 }
 
@@ -154,22 +224,22 @@
 
 
 
-#pragma mark - Table view data source
+#pragma mark - UITableViewDataSource
 
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView
 {
-	return [[self.fetchedResultsController sections] count];
+	return [[contentsController sections] count];
 }
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
 {
-	id <NSFetchedResultsSectionInfo> sectionInfo = [[self.fetchedResultsController sections] objectAtIndex:section];
+	id <NSFetchedResultsSectionInfo> sectionInfo = [[contentsController sections] objectAtIndex:section];
 	return [sectionInfo numberOfObjects];
 }
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
 {
-	XEntry *entry = [self.fetchedResultsController objectAtIndexPath:indexPath];
+	XEntry *entry = [contentsController objectAtIndexPath:indexPath];
 	
 	NSString *cellIdentifier = nil;
 	if ([entry isKindOfClass:[XDirectory class]])
@@ -209,11 +279,11 @@
 */
 
 
-#pragma mark - Table view delegate
+#pragma mark - UITableViewDelegate
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
-	XEntry *entry = [self.fetchedResultsController objectAtIndexPath:indexPath];
+	XEntry *entry = [contentsController objectAtIndexPath:indexPath];
 	
 	if ([entry isKindOfClass:[XDirectory class]])
 	{
@@ -230,58 +300,9 @@
 	}
 }
 
-#pragma mark - Fetched results controller
 
-- (NSFetchedResultsController *)fetchedResultsController
-{
-    if (__fetchedResultsController != nil)
-    {
-        return __fetchedResultsController;
-    }
-    
-    // Create the fetch request for the entity.
-	NSFetchRequest *fetchRequest = [[NSFetchRequest alloc] init];
-	
-	// Edit the entity name as appropriate.
-	NSEntityDescription *entity = [NSEntityDescription entityForName:@"Entry" 
-											  inManagedObjectContext:managedObjectContext];
-	[fetchRequest setEntity:entity];
-	
-	// Apply a filter predicate
-	[fetchRequest setPredicate:[NSPredicate predicateWithFormat:@"parent == %@", directory]];
-	
-	// Set the batch size to a suitable number.
-	[fetchRequest setFetchBatchSize:10];
-	
-	// Edit the sort key as appropriate.
-	NSSortDescriptor *sortDescriptor = [[NSSortDescriptor alloc] initWithKey:@"name" ascending:YES];
-	NSArray *sortDescriptors = [[NSArray alloc] initWithObjects:sortDescriptor, nil];
-	[fetchRequest setSortDescriptors:sortDescriptors];
-	
-	// Edit the section name key path and cache name if appropriate.
-	// nil for section name key path means "no sections".
-	NSFetchedResultsController *aFetchedResultsController = [[NSFetchedResultsController alloc] 
-															initWithFetchRequest:fetchRequest
-															managedObjectContext:managedObjectContext
-															sectionNameKeyPath:nil
-															cacheName:[NSString stringWithFormat:@"%@-contents", directory.path]];
-	aFetchedResultsController.delegate = self;
-	self.fetchedResultsController = aFetchedResultsController;
-	
-	NSError *error = nil;
-	if (![self.fetchedResultsController performFetch:&error])
-	{
-	    /*
-	     Replace this implementation with code to handle the error appropriately.
-		 
-	     abort() causes the application to generate a crash log and terminate. You should not use this function in a shipping application, although it may be useful during development. If it is not possible to recover from the error, display an alert panel that instructs the user to quit the application by pressing the Home button.
-	     */
-	    NSLog(@"Unresolved error %@, %@", error, [error userInfo]);
-	    abort();
-	}
-    
-    return __fetchedResultsController;
-}    
+
+#pragma mark - NSFetchedResultsControllerDelegate   
 
 - (void)controllerWillChangeContent:(NSFetchedResultsController *)controller
 {
@@ -347,29 +368,34 @@
  }
  */
 
-- (void)insertNewObject
+
+
+#pragma mark - XServiceRemoteDelegate
+
+- (void)connectionFinishedWithResult:(NSObject *)result
 {
-    // Create a new instance of the entity managed by the fetched results controller.
-    NSManagedObjectContext *context = [self.fetchedResultsController managedObjectContext];
-    NSEntityDescription *entity = [[self.fetchedResultsController fetchRequest] entity];
-    NSManagedObject *newManagedObject = [NSEntityDescription insertNewObjectForEntityForName:[entity name] inManagedObjectContext:context];
-    
-    // If appropriate, configure the new managed object.
-    // Normally you should use accessor methods, but using KVC here avoids the need to add a custom class to the template.
-    [newManagedObject setValue:[NSDate date] forKey:@"timeStamp"];
-    
-    // Save the context.
-    NSError *error = nil;
-    if (![context save:&error])
-    {
-        /*
-         Replace this implementation with code to handle the error appropriately.
-         
-         abort() causes the application to generate a crash log and terminate. You should not use this function in a shipping application, although it may be useful during development. If it is not possible to recover from the error, display an alert panel that instructs the user to quit the application by pressing the Home button.
-         */
-        NSLog(@"Unresolved error %@, %@", error, [error userInfo]);
-        abort();
-    }
+	XDrvDebug(@"Finished fetching directory details for %@", [(NSDictionary *)result objecForKey:@"path"]);
+	
+	
+}
+
+- (void)connectionFailedWithError:(NSError *)error
+{
+	XDrvLog(@"Connection failed: %@", error);
+	
+	NSString *title = NSLocalizedStringFromTable(@"Unable to download file", 
+												 @"XDrive", 
+												 @"Title of alert displayed when server returned an error while trying to download file.");
+	UIAlertView *alert = [[UIAlertView alloc] initWithTitle:title message:[error localizedDescription] delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil];
+	[alert show];
 }
 
 @end
+
+
+
+
+
+
+
+

@@ -36,7 +36,6 @@
 - (void)fetchDirectoryContentsAtPath:(NSString *)path withDelegate:(id<XServiceRemoteDelegate>)delegate;
 	// Gets the directory contents for a path
 
-/* Deprecated */
 
 - (void)fetchDirectoryContentsAtPath:(NSString *)path withTarget:(id)target action:(SEL)action;
 

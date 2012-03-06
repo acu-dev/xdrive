@@ -9,38 +9,65 @@
 #import "XServiceLocal.h"
 #import "XServiceRemote.h"
 #import "XServer.h"
+#import "DirectoryContentsViewController.h"
 @protocol XServiceRemoteDelegate;
 
 
 
 @interface XService : NSObject
 
+///---------------
+/// @name Services
+///---------------
+
+/**
+ The service object that handles local database operations.
+ */
 @property (nonatomic, strong, readonly) XServiceLocal *localService;
-	// A service object to handle reading/writing objects to local db
 
+/**
+ The service object that handles communication with the server.
+ */
 @property (nonatomic, strong, readonly) XServiceRemote *remoteService;
-	// A service object to handle fetching/pushing data to the server
 
+///---------------------
+/// @name Initialization
+///---------------------
 
-/* Init */
-
+/**
+ Designated initializer and getter. Ensures that only one instance of XService is instantiated.
+ 
+ @discussion One XService to rule them all.
+ */
 + (XService *)sharedXService;
-	// One XService to rule them all
 
+///----------------
+/// @name Accessors
+///----------------
 
-/* Accessors */
-
-- (XServer *)activeServer;
-	// Accessor for the server object saved in db (nil if none saved)
-
+/**
+ The file system path for the server specific documents directory. Used for storing database and metadata files.
+ */
 - (NSString *)documentsPath;
-	// Path for database and metadata files to be stored
 
+/**
+ The file system path for the server specific caches directory. Used for storing cached files.
+ */
 - (NSString *)cachesPath;
-	// Path for files to be cached
+
+///------------------------
+/// @name Directory Actions
+///------------------------
+
+- (void)updateDirectory:(XDirectory *)directory withDetails:(NSDictionary *)details;
 
 
-/* Directories */
+
+
+
+
+
+
 
 - (XDirectory *)directoryWithPath:(NSString *)path;
 	// Gets a directory object at given path. Fires off remote fetch in background

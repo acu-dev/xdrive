@@ -26,6 +26,7 @@
 		A9C34FCC1426668400E3BC3C /* OpenFileViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = A9C34FCB1426668400E3BC3C /* OpenFileViewController.m */; };
 		A9DCAD8914ED6BE70014C8A8 /* LocalStorageViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = A9DCAD8814ED6BE70014C8A8 /* LocalStorageViewController.m */; };
 		A9DCAD8B14ED74C90014C8A8 /* LocalStorageOptions.plist in Resources */ = {isa = PBXBuildFile; fileRef = A9DCAD8A14ED74C90014C8A8 /* LocalStorageOptions.plist */; };
+		A9F626AF1506BEF200B2568E /* UpdateDirectoryOperation.m in Sources */ = {isa = PBXBuildFile; fileRef = A9F626AE1506BEF200B2568E /* UpdateDirectoryOperation.m */; };
 		C30580341418207400E49727 /* README.md in Resources */ = {isa = PBXBuildFile; fileRef = C30580331418207400E49727 /* README.md */; };
 		C3224753142A339C005F7C48 /* file.application@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = C3224748142A339C005F7C48 /* file.application@2x.png */; };
 		C3224754142A339C005F7C48 /* file.archive@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = C3224749142A339C005F7C48 /* file.archive@2x.png */; };
@@ -170,6 +171,8 @@
 		A9DCAD8714ED6BE70014C8A8 /* LocalStorageViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LocalStorageViewController.h; sourceTree = "<group>"; };
 		A9DCAD8814ED6BE70014C8A8 /* LocalStorageViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LocalStorageViewController.m; sourceTree = "<group>"; };
 		A9DCAD8A14ED74C90014C8A8 /* LocalStorageOptions.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = LocalStorageOptions.plist; sourceTree = "<group>"; };
+		A9F626AD1506BEF200B2568E /* UpdateDirectoryOperation.h */ = {isa = PBXFileReference; fileEncoding = 4; path = UpdateDirectoryOperation.h; sourceTree = "<group>"; };
+		A9F626AE1506BEF200B2568E /* UpdateDirectoryOperation.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = UpdateDirectoryOperation.m; sourceTree = "<group>"; };
 		C30580331418207400E49727 /* README.md */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = README.md; sourceTree = "<group>"; };
 		C3224748142A339C005F7C48 /* file.application@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "file.application@2x.png"; sourceTree = "<group>"; };
 		C3224749142A339C005F7C48 /* file.archive@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "file.archive@2x.png"; sourceTree = "<group>"; };
@@ -390,6 +393,8 @@
 				C3D9E88713C34D2B007D1A7C /* XServiceLocal.m */,
 				C3D9E88213C34D1A007D1A7C /* XServiceRemote.h */,
 				C3D9E88313C34D1A007D1A7C /* XServiceRemote.m */,
+				A9F626AD1506BEF200B2568E /* UpdateDirectoryOperation.h */,
+				A9F626AE1506BEF200B2568E /* UpdateDirectoryOperation.m */,
 			);
 			name = Model;
 			sourceTree = "<group>";
@@ -727,6 +732,7 @@
 				A9DCAD8914ED6BE70014C8A8 /* LocalStorageViewController.m in Sources */,
 				A937884814F577E6007F2A1A /* WebViewController.m in Sources */,
 				A95F180714F846BB00EEA0A2 /* VersionController.m in Sources */,
+				A9F626AF1506BEF200B2568E /* UpdateDirectoryOperation.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

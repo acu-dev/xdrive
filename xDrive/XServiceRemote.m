@@ -239,12 +239,17 @@
 		// Send event off to delegate
 		[delegate connectionFinishedWithResult:result];
 	}
-	else
+	else if ([request objectForKey:@"targetObject"])
 	{
 		// Send results off to request's target
 		id target = [request objectForKey:@"targetObject"];
 		SEL action = NSSelectorFromString([request objectForKey:@"selectorString"]);
 		[target performSelector:action withObject:result];
+	}
+	else
+	{
+		// Call completion block
+		
 	}
 	
 	// Clean up request

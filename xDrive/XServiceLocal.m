@@ -14,13 +14,15 @@
 
 
 static NSString *DatabaseFileName = @"XDrive.sqlite";
-
+static NSString *ModelFileName = @"xDrive";
 
 
 @interface XServiceLocal()
 
-@property (nonatomic, strong) XServer *server;
+@property (nonatomic, strong) NSManagedObjectModel *managedObjectModel;
+@property (nonatomic, strong) NSManagedObjectContext *managedObjectContext;
 
+// Get/create entries
 - (XEntry *)entryOfType:(NSString *)type withPath:(NSString *)path;
 - (XEntry *)createEntryOfType:(NSString *)type withPath:(NSString *)path;
 
@@ -32,11 +34,17 @@ static NSString *DatabaseFileName = @"XDrive.sqlite";
 
 @implementation XServiceLocal
 
-@synthesize server;
+// Public
+@synthesize server = _server;
+@synthesize persistentStoreCoordinator = _persistentStoreCoordinator;
 
+// Private
 @synthesize managedObjectModel;
 @synthesize managedObjectContext;
-@synthesize persistentStoreCoordinator;
+
+
+
+#pragma mark - Initialization
 
 - (id)init
 {
@@ -48,11 +56,13 @@ static NSString *DatabaseFileName = @"XDrive.sqlite";
     return self;
 }
 
-#pragma mark - Server
 
-- (XServer *)activeServer
+
+#pragma mark - Accessors
+
+- (XServer *)server
 {
-	if (!server)
+	if (!_server)
 	{
 		NSFetchRequest *fetchRequest = [[NSFetchRequest alloc] init];
 		NSEntityDescription *entity = [NSEntityDescription entityForName:@"Server"
@@ -63,10 +73,12 @@ static NSString *DatabaseFileName = @"XDrive.sqlite";
 		NSArray *fetchedObjects = [managedObjectContext executeFetchRequest:fetchRequest error:&error];
 		if (![fetchedObjects count])
 			return nil;
-		server = [fetchedObjects objectAtIndex:0];
+		_server = [fetchedObjects objectAtIndex:0];
 	}
-	return server;
+	return _server;
 }
+
+
 
 #pragma mark - Get/create entries
 
@@ -101,14 +113,13 @@ static NSString *DatabaseFileName = @"XDrive.sqlite";
 	if (!fetchedObjects)
 	{
 		// Something went wrong
-		NSLog(@"Error performing fetch request: %@", [error localizedDescription]);
+		XDrvLog(@"Error performing fetch request: %@", [error localizedDescription]);
 		return nil;
 	}
 	
 	if (![fetchedObjects count])
 	{
-		// No entries found
-		//NSLog(@"No entries of type %@ with a path of %@ were found; returning a new object", type, path);
+		// No entries found, create one
 		return [self createEntryOfType:type withPath:path];
 	}
 	else
@@ -116,7 +127,7 @@ static NSString *DatabaseFileName = @"XDrive.sqlite";
 		if ([fetchedObjects count] > 1)
 		{
 			// Multiple entries found
-			NSLog(@"Multiple entries of type %@ exist with the same path: %@; returning the first one", type, path);
+			XDrvLog(@"Multiple entries of type %@ exist with the same path: %@; returning the first one", type, path);
 		}
 		return [fetchedObjects objectAtIndex:0];
 	}
@@ -128,21 +139,56 @@ static NSString *DatabaseFileName = @"XDrive.sqlite";
 													 inManagedObjectContext:managedObjectContext];
 	newEntry.path = path;
 	newEntry.name = [self entryNameFromPath:path];
-	newEntry.server = [self activeServer];
+	newEntry.server = _server;
 	
 	NSError *error = nil;
 	if ([managedObjectContext save:&error])
 	{
-		//NSLog(@"Created new object of type %@ at path %@", type, path);
+		XDrvDebug(@"Created new %@ object at path %@", type, path);
 		return newEntry;
 	}
 	else
 	{
-		NSLog(@"Error creating new directory object at path: %@", path);
+		XDrvLog(@"Error creating new directory object at path: %@", path);
 		return nil;
 	}
+}
+
+
+
+#pragma mark - Updating Entries
+
+- (void)mergeChanges:(NSNotification *)notification 
+{
+    [managedObjectContext performSelectorOnMainThread:@selector(mergeChangesFromContextDidSaveNotification:) withObject:notification waitUntilDone:YES];
+}
+
+
+
+#pragma mark - Fetched results controllers
+
+- (NSFetchedResultsController *)contentsControllerForDirectory:(XDirectory *)directory
+{
+	// Fetch all entry objects
+	NSFetchRequest *fetchRequest = [NSFetchRequest fetchRequestWithEntityName:@"Entry"];
+
+	// Whose parent is the directory given
+	[fetchRequest setPredicate:[NSPredicate predicateWithFormat:@"parent == %@", directory]];
 	
+	// Set the batch size to a suitable number
+	[fetchRequest setFetchBatchSize:10];
 	
+	// Sort by name ascending
+	NSSortDescriptor *sortDescriptor = [NSSortDescriptor sortDescriptorWithKey:@"name" ascending:YES];
+	[fetchRequest setSortDescriptors:[NSArray arrayWithObject:sortDescriptor]];
+	
+	// Edit the section name key path and cache name if appropriate.
+	// nil for section name key path means "no sections".
+	NSFetchedResultsController *fetchedResultsController = [[NSFetchedResultsController alloc] initWithFetchRequest:fetchRequest
+																							   managedObjectContext:managedObjectContext
+																								 sectionNameKeyPath:nil
+																										  cacheName:[NSString stringWithFormat:@"%@-contents", directory.path]];
+	return fetchedResultsController;
 }
 
 
@@ -186,7 +232,7 @@ static NSString *DatabaseFileName = @"XDrive.sqlite";
 	NSURL *storeURL = [NSURL fileURLWithPath:[[NSString documentsPath] stringByAppendingPathComponent:DatabaseFileName]];
 	
 	// Clear references to current server
-	self.server = nil;
+	_server = nil;
 	[XService sharedXService].remoteService.activeServer = nil;
 
 	// Remove persistent store from the coordinator
@@ -219,39 +265,6 @@ static NSString *DatabaseFileName = @"XDrive.sqlite";
 }
 
 
-
-#pragma mark - Fetched Results Controllers
-
-/*- (NSFetchedResultsController *)fetchedResultsControllerForDirectoryContents:(XDirectory *)directory
-{
-	// Create the fetch request for the entity.
-	NSFetchRequest *fetchRequest = [[NSFetchRequest alloc] init];
-	
-	// Edit the entity name as appropriate.
-	NSEntityDescription *entity = [NSEntityDescription entityForName:@"Entry" 
-											  inManagedObjectContext:managedObjectContext];
-	[fetchRequest setEntity:entity];
-	
-	// Apply a filter predicate
-	[fetchRequest setPredicate:[NSPredicate predicateWithFormat:@"parent == %@", directory]];
-	
-	// Set the batch size to a suitable number.
-	[fetchRequest setFetchBatchSize:10];
-	
-	// Edit the sort key as appropriate.
-	NSSortDescriptor *sortDescriptor = [[NSSortDescriptor alloc] initWithKey:@"name" ascending:YES];
-	NSArray *sortDescriptors = [[NSArray alloc] initWithObjects:sortDescriptor, nil];
-	[fetchRequest setSortDescriptors:sortDescriptors];
-	
-	// Edit the section name key path and cache name if appropriate.
-	// nil for section name key path means "no sections".
-	NSFetchedResultsController *fetchedResultsController = [[NSFetchedResultsController alloc] 
-															initWithFetchRequest:fetchRequest
-															managedObjectContext:managedObjectContext
-															  sectionNameKeyPath:nil
-																	   cacheName:[NSString stringWithFormat:@"%@-contents", directory.path]];
-	return fetchedResultsController;
-}*/
 
 #pragma mark - Core Data stack
 
@@ -308,26 +321,26 @@ static NSString *DatabaseFileName = @"XDrive.sqlite";
 //
 - (NSPersistentStoreCoordinator *)persistentStoreCoordinator
 {
-	if (persistentStoreCoordinator != nil)
+	if (_persistentStoreCoordinator != nil)
 	{
-		return persistentStoreCoordinator;
+		return _persistentStoreCoordinator;
 	}
 	
 	NSString *urlString = [[NSString documentsPath] stringByAppendingPathComponent:DatabaseFileName];
 	
 	NSError *error = nil;
-	persistentStoreCoordinator = [[NSPersistentStoreCoordinator alloc] initWithManagedObjectModel:[self managedObjectModel]];
-	if (![persistentStoreCoordinator addPersistentStoreWithType:NSSQLiteStoreType
-												  configuration:nil
-															URL:[NSURL fileURLWithPath:urlString]
-														options:nil
-														  error:&error])
+	_persistentStoreCoordinator = [[NSPersistentStoreCoordinator alloc] initWithManagedObjectModel:[self managedObjectModel]];
+	if (![_persistentStoreCoordinator addPersistentStoreWithType:NSSQLiteStoreType
+												   configuration:nil
+															 URL:[NSURL fileURLWithPath:urlString]
+														 options:nil
+														   error:&error])
 	{
 		NSLog(@"Unresolved error %@, %@", error, [error userInfo]);
 		abort();
 	}	
 	
-	return persistentStoreCoordinator;
+	return _persistentStoreCoordinator;
 }
 
 
