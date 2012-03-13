@@ -171,7 +171,7 @@
 		A9DCAD8714ED6BE70014C8A8 /* LocalStorageViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LocalStorageViewController.h; sourceTree = "<group>"; };
 		A9DCAD8814ED6BE70014C8A8 /* LocalStorageViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LocalStorageViewController.m; sourceTree = "<group>"; };
 		A9DCAD8A14ED74C90014C8A8 /* LocalStorageOptions.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = LocalStorageOptions.plist; sourceTree = "<group>"; };
-		A9F626AD1506BEF200B2568E /* UpdateDirectoryOperation.h */ = {isa = PBXFileReference; fileEncoding = 4; path = UpdateDirectoryOperation.h; sourceTree = "<group>"; };
+		A9F626AD1506BEF200B2568E /* UpdateDirectoryOperation.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = UpdateDirectoryOperation.h; sourceTree = "<group>"; };
 		A9F626AE1506BEF200B2568E /* UpdateDirectoryOperation.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = UpdateDirectoryOperation.m; sourceTree = "<group>"; };
 		C30580331418207400E49727 /* README.md */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = README.md; sourceTree = "<group>"; };
 		C3224748142A339C005F7C48 /* file.application@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "file.application@2x.png"; sourceTree = "<group>"; };

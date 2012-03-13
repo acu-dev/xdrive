@@ -9,22 +9,17 @@
 #import "UpdateDirectoryOperation.h"
 #import "XDriveConfig.h"
 
-typedef unsigned short DirectoryOperationState;
-typedef enum {
-	DirectoryOperationReadyState,
-	DirectoryOperationExecutingState,
-	DirectoryOperationFinishedState
-} _DirectoryOperationState;
-
 
 @interface UpdateDirectoryOperation ()
-@property (nonatomic, assign) DirectoryOperationState state;
 @property (nonatomic, strong) NSString *directoryPath;
+- (void)updateDirectoryInBackgroundWithDetails:(NSDictionary *)details;
+- (void)updateDirectoryWithDetails:(NSDictionary *)details;
+- (void)updateDirectoryDidFinish;
 @end
 
 
 @implementation UpdateDirectoryOperation
-@synthesize state;
+@synthesize state = _state;
 @synthesize directoryPath;
 
 
@@ -33,77 +28,112 @@ typedef enum {
     self = [super init];
     if (!self) return nil;
 	
-	directoryPath = path;
-    state = DirectoryOperationReadyState;
+	directoryPath = path;	
+    _state = DirectoryOperationReadyState;
 	
     return self;
 }
 
-- (void)setCompletionBlock:(void (^)(void))block
+
+
+#pragma mark - Update Directory
+
+- (void)updateDirectoryInBackgroundWithDetails:(NSDictionary *)details
 {
-	if (!block)
-	{
-		[super setCompletionBlock:nil];
-	}
-	else
-	{
-		__block id _blockSelf = self;
-		[super setCompletionBlock:^ {
-			block();
-			[_blockSelf setCompletionBlock:nil];
-		}];
-	}
+	_state = DirectoryOperationUpdatingState;
+	
+	dispatch_queue_t updateQueue = dispatch_queue_create("edu.acu.xdrive.updateDirectory", 0);
+	dispatch_queue_t mainQueue = dispatch_get_main_queue();
+	
+	dispatch_async(updateQueue, ^{
+		[self updateDirectoryWithDetails:details];
+		dispatch_async(mainQueue, ^{
+			[self updateDirectoryDidFinish];
+		});
+	});
+	
+	dispatch_release(updateQueue);
+}
+
+- (void)updateDirectoryWithDetails:(NSDictionary *)details
+{
+	
+}
+
+- (void)updateDirectoryDidFinish
+{
+	_state = DirectoryOperationFinishedState;
+	[self finish];
 }
 
 
 
 #pragma mark - NSOperation
 
-- (BOOL)isReady {
-    return self.state == DirectoryOperationReadyState && [super isReady];
+- (BOOL)isReady
+{
+    return _state == DirectoryOperationReadyState && [super isReady];
 }
 
-- (BOOL)isExecuting {
-    return self.state == DirectoryOperationExecutingState;
+- (BOOL)isExecuting
+{
+    return _state == DirectoryOperationFetchingState || _state == DirectoryOperationUpdatingState;
 }
 
-- (BOOL)isFinished {
-    return self.state == DirectoryOperationFinishedState;
+- (BOOL)isFinished
+{
+    return _state == DirectoryOperationFinishedState;
 }
 
-- (BOOL)isConcurrent {
+- (BOOL)isConcurrent
+{
     return YES;
 }
 
-- (void)start {
-    if ([self isReady]) {
-        self.state = DirectoryOperationExecutingState;
-        
-        //[self performSelector:@selector(operationDidStart) onThread:[[self class] networkRequestThread] withObject:nil waitUntilDone:NO modes:[self.runLoopModes allObjects]];
+- (void)start
+{
+    if ([self isReady])
+	{
+		XDrvDebug(@"Starting directory update operation for %@", directoryPath);
+        _state = DirectoryOperationFetchingState;
+		[[XService sharedXService].remoteService fetchDirectoryContentsAtPath:directoryPath withDelegate:self];
     }
+	else
+	{
+		XDrvLog(@"Directory update operation was not initialized properly");
+	}
 }
 
-/*- (void)operationDidStart {
-    [self.lock lock];
-    if ([self isCancelled]) {
-        [self finish];
-    } else {
-        self.connection = [[[NSURLConnection alloc] initWithRequest:self.request delegate:self startImmediately:NO] autorelease];
-        
-        NSRunLoop *runLoop = [NSRunLoop currentRunLoop];
-        for (NSString *runLoopMode in self.runLoopModes) {
-            [self.connection scheduleInRunLoop:runLoop forMode:runLoopMode];
-            [self.outputStream scheduleInRunLoop:runLoop forMode:runLoopMode];
-        }
-        
-        [self.connection start];  
-    }
-    [self.lock unlock];
+- (void)finish
+{
+	self.completionBlock();
 }
 
-- (void)finish {
-    self.state = AFHTTPOperationFinishedState;
-}*/
+
+
+#pragma mark - XServiceRemoteDelegate
+
+- (void)connectionFinishedWithResult:(NSObject *)result
+{
+	if ([result isKindOfClass:[NSDictionary class]])
+	{
+		XDrvDebug(@"Directory fetch finished for %@", directoryPath);
+		[self updateDirectoryInBackgroundWithDetails:(NSDictionary *)result];
+	}
+	else
+	{
+		XDrvLog(@"Directory fetch returned unexpected result: %@", result);
+		_state = DirectoryOperationFailedState;
+		[self finish];
+	}
+}
+
+- (void)connectionFailedWithError:(NSError *)error
+{
+	XDrvLog(@"Directory fetch failed: %@", error);
+	_state = DirectoryOperationFailedState;
+	[self finish];
+}
 
 
 

@@ -7,8 +7,24 @@
 //
 
 #import <Foundation/Foundation.h>
+#import "XService.h"
 
-@interface UpdateDirectoryOperation : NSOperation
+
+typedef enum {
+	DirectoryOperationReadyState,
+	DirectoryOperationFetchingState,
+	DirectoryOperationUpdatingState,
+	DirectoryOperationFinishedState,
+	DirectoryOperationFailedState
+} DirectoryOperationState;
+
+
+@interface UpdateDirectoryOperation : NSOperation <XServiceRemoteDelegate>
+
+/**
+ The current state of the operation.
+ */
+@property (nonatomic, assign, readonly) DirectoryOperationState state;
 
 ///---------------------
 /// @name Initialization
