@@ -236,9 +236,9 @@ static NSString *ModelFileName = @"xDrive";
 	[XService sharedXService].remoteService.activeServer = nil;
 
 	// Remove persistent store from the coordinator
-	NSPersistentStore *store = [persistentStoreCoordinator persistentStoreForURL:storeURL];
+	NSPersistentStore *store = [_persistentStoreCoordinator persistentStoreForURL:storeURL];
 	NSError *error = nil;
-	if (![persistentStoreCoordinator removePersistentStore:store error:&error])
+	if (![_persistentStoreCoordinator removePersistentStore:store error:&error])
 	{
 		XDrvLog(@"Error removing persistent store from coordinator: %@", error);
 		return;
@@ -253,7 +253,7 @@ static NSString *ModelFileName = @"xDrive";
 	
 	// Create new persistent store
 	error = nil;
-	[persistentStoreCoordinator addPersistentStoreWithType:NSSQLiteStoreType
+	[_persistentStoreCoordinator addPersistentStoreWithType:NSSQLiteStoreType
 											 configuration:nil
 													   URL:storeURL
 												   options:nil
