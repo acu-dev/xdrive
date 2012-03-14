@@ -52,7 +52,7 @@
 	
 	
 	// Get root view controller
-	if (![[XService sharedXService] activeServer])
+	if (![XService sharedXService].localService.server)
 	{
 		// No server configured so make setup the root view controller
 		XDrvDebug(@"Loading initial setup");

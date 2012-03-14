@@ -51,7 +51,7 @@ static NSString *FeedbackToAddress = @"xdrive-feedback@acu.edu";
     [super viewDidLoad];
 	
 	// Account
-	hostnameLabel.text = [XService sharedXService].activeServer.hostname;
+	hostnameLabel.text = [XService sharedXService].localService.server.hostname;
 	NSURLCredential *credential = [[NSURLCredentialStorage sharedCredentialStorage] defaultCredentialForProtectionSpace:[XDriveConfig protectionSpaceForServer:nil]];
 	userLabel.text = credential.user;
 	

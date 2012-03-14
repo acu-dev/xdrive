@@ -69,7 +69,7 @@
 	NSMutableArray *viewControllers = [[NSMutableArray alloc] init];
 	
 	// Create nav controller for each default path
-	for (XDefaultPath *defaultPath in [[XService sharedXService] activeServer].defaultPaths)
+	for (XDefaultPath *defaultPath in [XService sharedXService].localService.server.defaultPaths)
 	{
 		XDirectory *directory = [[XService sharedXService] directoryWithPath:defaultPath.path];
 		

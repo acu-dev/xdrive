@@ -218,7 +218,7 @@
 - (XDefaultPath *)defaultPathWithPath:(NSString *)path
 {
 	XDefaultPath *defaultPath = nil;
-	NSSet *defaultPaths = [[XService sharedXService] activeServer].defaultPaths;
+	NSSet *defaultPaths = [XService sharedXService].localService.server.defaultPaths;
 	for (XDefaultPath *dPath in defaultPaths)
 	{
 		if ([dPath.path isEqualToString:path])

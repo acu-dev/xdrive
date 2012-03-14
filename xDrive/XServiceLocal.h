@@ -16,14 +16,27 @@
 ///--------------------
 
 /**
- The persistent store coordinator used by the main managed object context. Use this for creating temporary managed object contexts.
- */
-@property (nonatomic, strong, readonly) NSPersistentStoreCoordinator *persistentStoreCoordinator;
-
-/**
  The server object containing url and service information.
  */
 @property (nonatomic, strong, readonly) XServer *server;
+
+///---------------------
+/// @name Initialization
+///---------------------
+
+/**
+ Designated initializer. Sets up the persistent store coordinator and creates the main queue's managed object context used by fetched results controllers.
+ 
+ @discussion This should only be called once by XService. Changes made with this object should be short and sweet, so as not to block the UI.
+ */
+- (id)init;
+
+/**
+ Creates a new instance of XServiceLocal with a new private managed object context as a child of the receiver's managed object context.
+  
+ @discussion Use this to create instances of the local service that need their own context (i.e. background operations).
+ */
+- (XServiceLocal *)newServiceForOperation;
 
 ///----------------------
 /// @name Getting Entries
@@ -46,12 +59,6 @@
  @discussion If the directory object does not exist locally, it is created.
  */
 - (XDirectory *)directoryWithPath:(NSString *)path;
-
-///-----------------------
-/// @name Updating Entries
-///-----------------------
-
-
 
 ///-----------------------------------
 /// @name Getting a Results Controller

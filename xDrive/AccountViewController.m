@@ -39,7 +39,7 @@
 {
     [super viewDidLoad];
 
-	serverLabel.text = [[XService sharedXService] activeServer].hostname;
+	serverLabel.text = [XService sharedXService].localService.server.hostname;
 	usernameLabel.text = [self usernameFromDefaultCredential];
 }
 

@@ -7,13 +7,13 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		A917270F14F227CD00A4FBA0 /* libDTFoundation.a in Frameworks */ = {isa = PBXBuildFile; fileRef = A917270C14F2278C00A4FBA0 /* libDTFoundation.a */; };
 		A917271114F227D900A4FBA0 /* libz.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = A917271014F227D900A4FBA0 /* libz.dylib */; };
 		A917271314F227E500A4FBA0 /* libxml2.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = A917271214F227E500A4FBA0 /* libxml2.dylib */; };
 		A937884514F55977007F2A1A /* about.html in Resources */ = {isa = PBXBuildFile; fileRef = A937884414F55977007F2A1A /* about.html */; };
 		A937884814F577E6007F2A1A /* WebViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = A937884714F577E5007F2A1A /* WebViewController.m */; };
 		A937884C14F58839007F2A1A /* legal.html in Resources */ = {isa = PBXBuildFile; fileRef = A937884B14F58839007F2A1A /* legal.html */; };
 		A93E36AA13C5630600DE693D /* DirectoryContentsViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = A93E36A913C5630600DE693D /* DirectoryContentsViewController.m */; };
+		A9558828150FE0360038E36B /* libDTFoundation.a in Frameworks */ = {isa = PBXBuildFile; fileRef = A917270C14F2278C00A4FBA0 /* libDTFoundation.a */; };
 		A95F17F514F6DBCE00EEA0A2 /* MessageUI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A95F17F414F6DBCE00EEA0A2 /* MessageUI.framework */; };
 		A95F180714F846BB00EEA0A2 /* VersionController.m in Sources */ = {isa = PBXBuildFile; fileRef = A95F180614F846BB00EEA0A2 /* VersionController.m */; };
 		A9674E3C14DCE69700464E37 /* UIStoryboard+Xdrive.m in Sources */ = {isa = PBXBuildFile; fileRef = A9674E3B14DCE69700464E37 /* UIStoryboard+Xdrive.m */; };
@@ -119,7 +119,7 @@
 			remoteGlobalIDString = A70B4CE71486637E00873A4A;
 			remoteInfo = "Static Library";
 		};
-		A917270D14F227C400A4FBA0 /* PBXContainerItemProxy */ = {
+		A9558826150FE0300038E36B /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = A917270014F2278C00A4FBA0 /* DTFoundation.xcodeproj */;
 			proxyType = 1;
@@ -279,10 +279,10 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				A9558828150FE0360038E36B /* libDTFoundation.a in Frameworks */,
 				A95F17F514F6DBCE00EEA0A2 /* MessageUI.framework in Frameworks */,
 				A917271314F227E500A4FBA0 /* libxml2.dylib in Frameworks */,
 				A917271114F227D900A4FBA0 /* libz.dylib in Frameworks */,
-				A917270F14F227CD00A4FBA0 /* libDTFoundation.a in Frameworks */,
 				C354ABE0141932E600E88410 /* libCGNetUtils.a in Frameworks */,
 				C354ABE2141932F000E88410 /* Security.framework in Frameworks */,
 				C3C9A9C513D9D62F003B5E91 /* QuartzCore.framework in Frameworks */,
@@ -568,7 +568,7 @@
 			buildRules = (
 			);
 			dependencies = (
-				A917270E14F227C400A4FBA0 /* PBXTargetDependency */,
+				A9558827150FE0300038E36B /* PBXTargetDependency */,
 				C354ABDF141932DF00E88410 /* PBXTargetDependency */,
 			);
 			name = xDrive;
@@ -739,10 +739,10 @@
 /* End PBXSourcesBuildPhase section */
 
 /* Begin PBXTargetDependency section */
-		A917270E14F227C400A4FBA0 /* PBXTargetDependency */ = {
+		A9558827150FE0300038E36B /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
 			name = "Static Library";
-			targetProxy = A917270D14F227C400A4FBA0 /* PBXContainerItemProxy */;
+			targetProxy = A9558826150FE0300038E36B /* PBXContainerItemProxy */;
 		};
 		C354ABDF141932DF00E88410 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;

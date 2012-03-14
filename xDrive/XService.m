@@ -131,7 +131,7 @@
 	return [self.localService directoryWithPath:path];
 }
 
-- (XDirectory *)updateDirectoryDetails:(NSDictionary *)details
+/*- (XDirectory *)updateDirectoryDetails:(NSDictionary *)details
 {
 	if ([details isKindOfClass:[NSError class]])
 	{
@@ -225,7 +225,7 @@
 	}
 	
 	return directory;
-}
+}*/
 
 
 
