@@ -11,9 +11,14 @@
 
 @interface DirectoryContentsViewController : UITableViewController <NSFetchedResultsControllerDelegate>
 
+/**
+ Directory object to display the contents of.
+ */
 @property (nonatomic, strong) XDirectory *directory;
 
+/**
+ Mapping of file mime-types to icon file names.
+ */
 @property (nonatomic, strong) NSDictionary *iconTypes;
-	// Mapping of file mime-types to icon file names
 
 @end

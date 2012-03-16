@@ -11,25 +11,14 @@
 #import "XDriveConfig.h"
 #import "XDefaultPath.h"
 #import "DefaultPathController.h"
-
 #import "DTAsyncFileDeleter.h"
 #import "NSString+DTPaths.h"
 #import "NSString+DTFormatNumbers.h"
 
 
-
-
-
 @interface XService()
 
-@property (nonatomic, strong) NSString *_documentsPath, *_cachesPath;
-
 @end
-
-
-
-
-
 
 
 @implementation XService
@@ -37,9 +26,8 @@
 // Public
 @synthesize localService = _localService;
 @synthesize remoteService = _remoteService;
-
-// Private
-@synthesize _documentsPath, _cachesPath;
+@synthesize documentsPath = _documentsPath;
+@synthesize cachesPath = _cachesPath;
 
 
 
@@ -69,12 +57,6 @@
     return self;
 }
 
-- (void)dealloc
-{
-	_remoteService = nil;
-	_localService = nil;
-}
-
 
 
 #pragma mark - Accessors
@@ -99,19 +81,137 @@
 
 
 
+#pragma mark - Caching
+
+- (void)clearCacheWithCompletionBlock:(void (^)(NSError *error))completionBlock
+{
+	// Remove cache directory
+	XDrvDebug(@"Removing entire cache directory");
+	[[DTAsyncFileDeleter sharedInstance] removeItemAtPath:[self cachesPath]];
+	
+	// Reset cached amount
+	[XDriveConfig setTotalCachedBytes:0];
+	
+	// Clear lastAccessed for any cached files
+	NSArray *cachedFiles = [_localService cachedFilesOrderedByLastAccessAscending:YES];
+	[cachedFiles enumerateObjectsUsingBlock:^(id obj, NSUInteger idx, BOOL *stop) {
+		((XFile *)obj).lastAccessed = nil;
+	}];
+	
+	// Save
+	[_localService saveWithCompletionBlock:completionBlock];
+}
+
+- (void)cacheFile:(XFile *)file fromTmpPath:(NSString *)tmpPath
+{
+	if ([[NSFileManager defaultManager] fileExistsAtPath:[file cachePath]])
+	{
+		// Remove existing cache file
+		[self removeCacheForFile:file];
+	}
+	
+	// Get new file size
+	NSError *error = nil;
+	NSDictionary *fileAttributes = [[NSFileManager defaultManager] attributesOfItemAtPath:tmpPath error:&error];
+	if (error)
+	{
+		XDrvLog(@"Problem getting attributes of file at path: %@", tmpPath);
+		XDrvLog(@"%@", error);
+		return;
+	}
+	
+	long long fileSize = [[fileAttributes objectForKey:NSFileSize] longLongValue];
+	XDrvDebug(@"Adding %lld bytes to total cache size", fileSize);
+	[XDriveConfig setTotalCachedBytes:[XDriveConfig totalCachedBytes] + fileSize];
+	XDrvDebug(@"New total cache size: %@", [NSString stringByFormattingBytes:[XDriveConfig totalCachedBytes]]);
+	
+	// Move file to permanent home
+	[self moveFileAtPath:tmpPath toPath:[file cachePath]];
+}
+
+- (void)removeCacheForEntry:(XEntry *)entry
+{
+	if ([entry isKindOfClass:[XDirectory class]])
+		[self removeCacheForDirectory:(XDirectory *)entry];
+	else
+		[self removeCacheForFile:(XFile *)entry];
+}
+
+- (void)removeCacheForFile:(XFile *)file
+{
+	// Get existing file size
+	NSError *error = nil;
+	NSDictionary *fileAttributes = [[NSFileManager defaultManager] attributesOfItemAtPath:[file cachePath] error:&error];
+	if (error)
+	{
+		XDrvLog(@"Problem getting attributes of file at path: %@", [file cachePath]);
+		XDrvLog(@"%@", error);
+		return;
+	}
+	
+	// Remove file size from total cached bytes
+	long long fileSize = [[fileAttributes objectForKey:NSFileSize] longLongValue];
+	XDrvDebug(@"Removing %lld bytes from total cache size", fileSize);
+	[XDriveConfig setTotalCachedBytes:[XDriveConfig totalCachedBytes] - fileSize];
+	
+	// Sanity check
+	if ([XDriveConfig totalCachedBytes] < 0) [XDriveConfig setTotalCachedBytes:0];
+	XDrvDebug(@"New total cache size: %@", [NSString stringByFormattingBytes:[XDriveConfig totalCachedBytes]]);
+	
+	// Delete file
+	[[DTAsyncFileDeleter sharedInstance] removeItemAtPath:[file cachePath]];
+	
+	// Remove lastAccessed for file
+	file.lastAccessed = nil;
+	
+	// This type of change doesn't really need a completion callback
+	//[_localService saveWithCompletionBlock:^(NSError *error) {}];
+}
+
+- (void)removeCacheForDirectory:(XDirectory *)directory
+{
+	for (XEntry *entry in directory.contents)
+	{
+		if ([entry isKindOfClass:[XDirectory class]])
+		{
+			[self removeCacheForDirectory:(XDirectory *)entry];
+			
+			XDrvDebug(@"Deleting cache dir %@", [entry cachePath]);
+			[[DTAsyncFileDeleter sharedInstance] removeItemAtPath:[entry cachePath]];
+		}
+		else
+		{
+			if (((XFile *)entry).lastAccessed)
+			{
+				[self removeCacheForFile:(XFile *)entry];
+			}
+		}
+	}
+}
+
+- (void)removeOldCacheUntilTotalCacheIsLessThanBytes:(long long)bytes
+{
+	if ([XDriveConfig totalCachedBytes] <= bytes)
+	{
+		XDrvDebug(@"Total cached bytes is already less than new max bytes");
+		return;
+	}
+	
+	XDrvLog(@"Removing cached files until cache is less than: %@", [NSString stringByFormattingBytes:bytes]);
+	NSArray *cachedFiles = [_localService cachedFilesOrderedByLastAccessAscending:YES];
+	[cachedFiles enumerateObjectsUsingBlock:^(id obj, NSUInteger idx, BOOL *stop) {
+		
+		// Remove cached file
+		[self removeCacheForFile:obj];
+		
+		// Check if cache is now less than specified bytes
+		*stop = ([XDriveConfig totalCachedBytes] <= bytes);
+	}];
+}
+
+
+/*
 #pragma mark - Directory Actions
-
-
-
-
-
-
-
-
-
-
-
-
 
 - (XDirectory *)directoryWithPath:(NSString *)path
 {
@@ -121,8 +221,7 @@
 	// Return local directory object
 	return [self.localService directoryWithPath:path];
 }
-
-/*- (XDirectory *)updateDirectoryDetails:(NSDictionary *)details
+- (XDirectory *)updateDirectoryDetails:(NSDictionary *)details
 {
 	if ([details isKindOfClass:[NSError class]])
 	{
@@ -255,122 +354,7 @@
 
 
 
-#pragma mark - Cache
 
-- (void)clearCacheWithCompletionBlock:(void (^)(NSError *error))completionBlock
-{
-	// Remove cache directory
-	XDrvDebug(@"Removing entire cache directory");
-	[[DTAsyncFileDeleter sharedInstance] removeItemAtPath:[self cachesPath]];
-	
-	// Reset cached amount
-	[XDriveConfig setTotalCachedBytes:0];
-	
-	// Clear lastAccessed for any cached files
-	NSArray *cachedFiles = [_localService cachedFilesOrderedByLastAccessAscending:YES];
-	[cachedFiles enumerateObjectsUsingBlock:^(id obj, NSUInteger idx, BOOL *stop) {
-		((XFile *)obj).lastAccessed = nil;
-	}];
-	
-	// Save
-	[_localService saveWithCompletionBlock:completionBlock];
-}
-
-- (void)cacheFile:(XFile *)file fromTmpPath:(NSString *)tmpPath
-{
-	if ([[NSFileManager defaultManager] fileExistsAtPath:[file cachePath]])
-	{
-		// Remove existing cache file
-		[self removeCacheForFile:file];
-	}
-	
-	// Get new file size
-	NSError *error = nil;
-	NSDictionary *fileAttributes = [[NSFileManager defaultManager] attributesOfItemAtPath:tmpPath error:&error];
-	if (error)
-	{
-		XDrvLog(@"Problem getting attributes of file at path: %@", tmpPath);
-		XDrvLog(@"%@", error);
-		return;
-	}
-	
-	long long fileSize = [[fileAttributes objectForKey:NSFileSize] longLongValue];
-	XDrvDebug(@"Adding %lld bytes to total cache size", fileSize);
-	[XDriveConfig setTotalCachedBytes:[XDriveConfig totalCachedBytes] + fileSize];
-	XDrvDebug(@"New total cache size: %@", [NSString stringByFormattingBytes:[XDriveConfig totalCachedBytes]]);
-	
-	// Move file to permanent home
-	[self moveFileAtPath:tmpPath toPath:[file cachePath]];
-}
-
-- (void)removeCacheForFile:(XFile *)file
-{
-	// Get existing file size
-	NSError *error = nil;
-	NSDictionary *fileAttributes = [[NSFileManager defaultManager] attributesOfItemAtPath:[file cachePath] error:&error];
-	if (error)
-	{
-		XDrvLog(@"Problem getting attributes of file at path: %@", [file cachePath]);
-		XDrvLog(@"%@", error);
-		return;
-	}
-	
-	// Remove file size from total cached bytes
-	long long fileSize = [[fileAttributes objectForKey:NSFileSize] longLongValue];
-	XDrvDebug(@"Removing %lld bytes from total cache size", fileSize);
-	[XDriveConfig setTotalCachedBytes:[XDriveConfig totalCachedBytes] - fileSize];
-	
-	// Sanity check
-	if ([XDriveConfig totalCachedBytes] < 0) [XDriveConfig setTotalCachedBytes:0];
-	XDrvDebug(@"New total cache size: %@", [NSString stringByFormattingBytes:[XDriveConfig totalCachedBytes]]);
-	
-	// Delete file
-	[[DTAsyncFileDeleter sharedInstance] removeItemAtPath:[file cachePath]];
-	
-	// Remove lastAccessed for file
-	file.lastAccessed = nil;
-	
-	// This type of change doesn't really need a completion callback
-	[_localService saveWithCompletionBlock:^(NSError *error) {}];
-}
-
-- (void)removeCacheForDirectory:(XDirectory *)directory
-{
-	for (XEntry *entry in directory.contents)
-	{
-		if ([entry isKindOfClass:[XDirectory class]])
-		{
-			[self removeCacheForDirectory:(XDirectory *)entry];
-			
-			XDrvDebug(@"Deleting cache dir %@", [entry cachePath]);
-			[[DTAsyncFileDeleter sharedInstance] removeItemAtPath:[entry cachePath]];
-		}
-		else
-		{
-			[self removeCacheForFile:(XFile *)entry];
-		}
-	}
-}
-
-- (void)removeOldCacheUntilTotalCacheIsLessThanBytes:(long long)bytes
-{
-	if ([XDriveConfig totalCachedBytes] <= bytes)
-	{
-		XDrvDebug(@"Total cached bytes is already less than new max bytes");
-		return;
-	}
-	
-	XDrvLog(@"Removing cached files until cache is less than: %@", [NSString stringByFormattingBytes:bytes]);
-	NSArray *cachedFiles = [_localService cachedFilesOrderedByLastAccessAscending:YES];
-	[cachedFiles enumerateObjectsUsingBlock:^(id obj, NSUInteger idx, BOOL *stop) {
-		
-		// Remove cached file
-		[self removeCacheForFile:obj];
-		
-		// Check if cache is now less than specified bytes
-		*stop = ([XDriveConfig totalCachedBytes] <= bytes);
-	}];
-}
 
 
 @end

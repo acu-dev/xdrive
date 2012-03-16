@@ -30,6 +30,16 @@
  */
 @property (nonatomic, strong, readonly) XServiceRemote *remoteService;
 
+/**
+ File system path to the directory that server specific files should be stored.
+ */
+@property (nonatomic, strong, readonly) NSString *documentsPath;
+
+/**
+ File system path to the directory that server specific cache files should be stored.
+ */
+@property (nonatomic, strong, readonly) NSString *cachesPath;
+
 ///---------------------
 /// @name Initialization
 ///---------------------
@@ -41,67 +51,80 @@
  */
 + (XService *)sharedXService;
 
-///----------------
-/// @name Accessors
-///----------------
+///--------------
+/// @name Caching
+///--------------
 
 /**
- The file system path for the server specific documents directory. Used for storing database and metadata files.
+ Completely removes all cached files.
+ 
+ @param completionBlock Block to be executed upon completion.
  */
-- (NSString *)documentsPath;
+- (void)clearCacheWithCompletionBlock:(void (^)(NSError *error))completionBlock;
 
 /**
- The file system path for the server specific caches directory. Used for storing cached files.
+ Moves a file to it's proper cache location and updates local storage status.
+ 
+ @discussion Used for moving downloaded files from a temp directory to the proper cache path.
+ 
+ @param file File object to have file cached for.
+ @param tmpPath Path to file location that needs to be cached.
  */
-- (NSString *)cachesPath;
+- (void)cacheFile:(XFile *)file fromTmpPath:(NSString *)tmpPath;
 
-///------------------------
-/// @name Directory Actions
-///------------------------
+/**
+ Clears cache for the specified entry. If entry is a file and has been cached, cached file will be removed. If entry is a directory, any contents are recursively cleared of their cached files.
+ 
+ @discussion Used to ensure all cached files are cleared from a specified path, wether it's a single file or directory.
+ 
+ @param entry The entry object to have it's cache cleared.
+ */
+- (void)removeCacheForEntry:(XEntry *)entry;
 
-- (void)updateDirectory:(XDirectory *)directory withDetails:(NSDictionary *)details;
+/**
+ Removes a cached file and updates local storage status.
+ 
+ @param file File object to have cached file removed.
+ */
+- (void)removeCacheForFile:(XFile *)file;
 
+/*
+ Recursively searches directory contents for cached files and removes them.
+ 
+ @param directory Directory object to have all cached files cleared from.
+ */
+- (void)removeCacheForDirectory:(XDirectory *)directory;
 
+/*
+ Removes the oldest cached files until total cache size is less than specified amount.
+ 
+ @discussion Used when decreasing local storage amount and when making space to cache new files.
+ 
+ @param bytes Size to make the total cache size less than.
+ */
+- (void)removeOldCacheUntilTotalCacheIsLessThanBytes:(long long)bytes;
 
-
-
-
-
-
-
-- (XDirectory *)directoryWithPath:(NSString *)path;
-	// Gets a directory object at given path. Fires off remote fetch in background
-	// and if necessary, directory contents are updated.
-
-- (XDirectory *)updateDirectoryDetails:(NSDictionary *)details;
-	// Updates directory contents with the passed details (Usually from the server).
-
-
-/* Files */
+///------------
+/// @name Files
+///------------
 
 - (void)downloadFile:(XFile *)file withDelegate:(id<XServiceRemoteDelegate>)delegate;
-	// Downloads a file to a temp location and notifies the delegate.
+// Downloads a file to a temp location and notifies the delegate.
 
 - (void)moveFileAtPath:(NSString *)oldFilePath toPath:(NSString *)newFilePath;
-	// Moves a file from one location to another
+// Moves a file from one location to another
 
 
-/* Cache */
 
-- (void)clearCacheWithCompletionBlock:(void (^)(NSError *error))completionBlock;
-	// Removes all cached content and calls completion block when done.
 
-- (void)cacheFile:(XFile *)file fromTmpPath:(NSString *)tmpPath;
-	// Moves a downloaded file to it's cache location and updates local storage status
 
-- (void)removeCacheForFile:(XFile *)file;
-	// Removes a cached file and updates local storage status
 
-- (void)removeCacheForDirectory:(XDirectory *)directory;
-	// Recursively searches directory contents for cached files to remove
+//- (XDirectory *)directoryWithPath:(NSString *)path;
+// Gets a directory object at given path. Fires off remote fetch in background
+// and if necessary, directory contents are updated.
 
-- (void)removeOldCacheUntilTotalCacheIsLessThanBytes:(long long)bytes;
-	// Deletes files until total cache is less than bytes
+//- (XDirectory *)updateDirectoryDetails:(NSDictionary *)details;
+// Updates directory contents with the passed details (Usually from the server).
 
 
 @end

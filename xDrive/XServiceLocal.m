@@ -50,6 +50,8 @@ static NSString *ModelFileName = @"xDrive";
 	self = [super init];
 	if (!self) return nil;
 	
+	XDrvDebug(@"Initializing local service");
+	
 	// Setup the model
 	NSURL *modelURL = [[NSBundle mainBundle] URLForResource:@"xDrive" withExtension:@"momd"];
 	NSManagedObjectModel *managedObjectModel = [[NSManagedObjectModel alloc] initWithContentsOfURL:modelURL];
@@ -70,6 +72,7 @@ static NSString *ModelFileName = @"xDrive";
 	
 	// Create main managed object context
 	_managedObjectContext = [[NSManagedObjectContext alloc] initWithConcurrencyType:NSMainQueueConcurrencyType];
+	[_managedObjectContext setPersistentStoreCoordinator:_persistentStoreCoordinator];
 	
     return self;
 }
@@ -181,7 +184,7 @@ static NSString *ModelFileName = @"xDrive";
 	defaultPath.name = name;
 	[_server addDefaultPathsObject:defaultPath];
 	
-	[self saveWithCompletionBlock:^(NSError *error) {}];
+	//[self saveWithCompletionBlock:^(NSError *error) {}];
 	return defaultPath;
 }
 
@@ -229,8 +232,17 @@ static NSString *ModelFileName = @"xDrive";
 	newEntry.name = [path lastPathComponent];
 	newEntry.server = _server;
 	
-	[self saveWithCompletionBlock:^(NSError *error) {}];
+	//[self saveWithCompletionBlock:^(NSError *error) {}];
 	return newEntry;
+}
+
+
+
+#pragma mark - Removing Entries
+
+- (void)removeEntry:(XEntry *)entry
+{
+	[_managedObjectContext deleteObject:entry];
 }
 
 

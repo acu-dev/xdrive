@@ -59,9 +59,9 @@
 ///-------------------------------
 
 /**
- Creates a new server object in the local context but does not save. 
+ Creates a new server object in the local context but does not save. This should only ever be called during the inital setup process.
  
- @discussion This should only ever be called during the inital setup process.
+ @discussion The context is not saved, it is up to the sender to call `saveWithCompletionBlock:`.
  
  @param protocol Either http or https
  @param port Port the service is running on
@@ -77,31 +77,46 @@
 /**
  Creates a new default path object at the specified path.
  
+ @discussion The context is not saved, it is up to the sender to call `saveWithCompletionBlock:`.
+ 
  @return The newly-created default path object
  */
 - (XDefaultPath *)createDefaultPathAtPath:(NSString *)path withName:(NSString *)name;
 
 /**
- Gets a file object at the specified path.
+ Gets a file object at the specified path. If the file object does not exist locally, it is created.
  
  @param path The file's path on the remote file system.
  
- @discussion If the file object does not exist locally, it is created.
+ @discussion The context is not saved, it is up to the sender to call `saveWithCompletionBlock:`.
  
  @return The file object at the specified path
  */
 - (XFile *)fileWithPath:(NSString *)path;
 
 /**
- Gets a directory object at the specified path.
+ Gets a directory object at the specified path. If the directory object does not exist locally, it is created.
  
  @param path The directory's path on the remote file system.
  
- @discussion If the directory object does not exist locally, it is created.
+ @discussion The context is not saved, it is up to the sender to call `saveWithCompletionBlock:`.
  
  @return The directory object at the specified path
  */
 - (XDirectory *)directoryWithPath:(NSString *)path;
+
+///-----------------------
+/// @name Removing Entries
+///-----------------------
+
+/**
+ Deletes a specified entry from the context. If entry is a directory, any contents will be deleted as well.
+ 
+ @discussion The context is not saved, it is up to the sender to call `saveWithCompletionBlock:`.
+ 
+ @param entry The entry object to be removed from the store.
+ */
+- (void)removeEntry:(XEntry *)entry;
 
 ///-----------------------------------
 /// @name Getting a Results Controller

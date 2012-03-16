@@ -9,30 +9,47 @@
 #import "DefaultPathController.h"
 #import "XDriveConfig.h"
 #import "XDefaultPath.h"
+#import "UpdateDirectoryOperation.h"
 
 
 
 @interface DefaultPathController() <XServiceRemoteDelegate>
 
-@property (nonatomic, weak) SetupController *setupController;
-	// View controller to receive status notifications
+/**
+ Controller to receive status notifications.
+ */
+@property (nonatomic, weak) SetupController *_setupController;
 
-@property (nonatomic, strong) XServer *xServer;
-	// Server object to fetch default paths from
+/**
+ Server object to fetch default paths from.
+ */
+@property (nonatomic, strong) XServer *_server;
 
-@property (nonatomic, strong) NSMutableArray *pathDetails;
-	// The array of default paths to fetch
+/**
+ The list of default paths to configure.
+ */
+@property (nonatomic, strong) NSMutableArray *_defaultPathsList;
 
-@property (nonatomic, assign) int activeFetchCount;
-	// Counter that gets decremented when fetches return
+/**
+ Storage for the default path directory update operations.
+ */
+@property (nonatomic, strong) NSMutableArray *_updateOperations;
 
-@property (nonatomic, strong) NSMutableDictionary *iconToPathMap;
-	// Map of icon file names and the paths they go to
+/**
+ Counter to keep track of current fetches/operations. Gets decremented as fetches return and operations finish.
+ */
+@property (nonatomic, assign) int _activeFetchCount;
 
-- (void)receiveDefaultPaths:(NSArray *)details;
+/**
+ Maintains a map of icon file names and which default path they belong to.
+ */
+@property (nonatomic, strong) NSMutableDictionary *_iconToPathMap;
+
+
+- (void)receiveDefaultPathsList:(NSArray *)defaultPathsList;
 	// Creates an XDefaultPath object for each path returned and attaches them to the server
 
-- (void)receiveDefaultPathDetails:(NSDictionary *)details;
+//- (void)receiveDefaultPathDetails:(NSDictionary *)details;
 	// Creates the default path directory and associates it with the XDefaultPath object
 
 - (void)receiveDefaultPathIcon:(NSString *)tmpFilePath;
@@ -51,62 +68,102 @@
 
 @implementation DefaultPathController
 
-
-@synthesize setupController;
-@synthesize xServer;
-
-
-@synthesize pathDetails;
-@synthesize activeFetchCount;
-@synthesize iconToPathMap;
+@synthesize _setupController;
+@synthesize _server;
+@synthesize _defaultPathsList;
+@synthesize _updateOperations;
+@synthesize _activeFetchCount;
+@synthesize _iconToPathMap;
 
 
 
-- (id)initWithController:(SetupController *)controller
+#pragma mark - Initializing
+
+- (id)initWithSetupController:(SetupController *)setupController
 {
 	self = [super init];
-	if (self)
-	{
-		self.setupController = controller;
-	}
+	if (!self) return nil;
+	
+	_setupController = setupController;
+	_updateOperations = [[NSMutableArray alloc] init];
+
 	return self;
 }
 
-- (void)dealloc
-{
-	self.iconToPathMap = nil;
-	self.pathDetails = nil;
-	self.xServer = nil;
-	self.setupController = nil;
-}
 
 
-
-#pragma mark - Fetching
+#pragma mark - Default Paths
 
 - (void)fetchDefaultPathsForServer:(XServer *)server
 {
-	xServer	= server;
+	_server	= server;
 	
 	// Get the list of default paths
-	[setupController defaultPathsStatusUpdate:@"Downloading defaults..."];
-	[[XService sharedXService].remoteService fetchDefaultPathsForServer:xServer withDelegate:self];
+	NSString *msg = NSLocalizedStringFromTable(@"Downloading defaults...",
+											   @"XDrive",
+											   @"Message displayed during setup while default paths are being downloaded.");
+	[_setupController defaultPathsStatusUpdate:msg];
+	[[XService sharedXService].remoteService fetchDefaultPathsForServer:_server withDelegate:self];
 }
+
+- (void)receiveDefaultPathsList:(NSArray *)defaultPathsList
+{
+	XDrvDebug(@"Got default paths");
+	_defaultPathsList = [[NSMutableArray alloc] init];
+	NSMutableArray *tabBarOrder = [[NSMutableArray alloc] init];
+	
+	for (NSDictionary *item in defaultPathsList)
+	{
+		NSMutableDictionary *defaultPathDetails = [[NSMutableDictionary alloc] initWithDictionary:item];
+		
+		// Save path order
+		[tabBarOrder addObject:[defaultPathDetails objectForKey:@"name"]];
+		
+		// Replace user placeholder in paths
+		[defaultPathDetails setValue:[[defaultPathDetails objectForKey:@"path"] stringByReplacingOccurrencesOfString:@"${user}" withString:_setupController.validateUser] forKey:@"path"];
+		[_defaultPathsList addObject:defaultPathDetails];
+		
+		// Create default path directory object
+		XDirectory *directory = [[XService sharedXService].localService directoryWithPath:[defaultPathDetails objectForKey:@"path"]];
+		
+		// Create default path object
+		XDefaultPath *defaultPath = [[XService sharedXService].localService createDefaultPathAtPath:[defaultPathDetails objectForKey:@"path"]
+															   withName:[defaultPathDetails objectForKey:@"name"]];
+		defaultPath.directory = directory;
+	}
+		
+	// Add standard tab bar items and save order
+	[tabBarOrder addObject:@"Recent"];
+	[tabBarOrder addObject:@"Settings"];
+	[XDriveConfig saveTabItemOrder:tabBarOrder];
+	
+	// All done
+	[_setupController defaultPathsValidated];
+}
+
+
+
+#pragma mark - Default Path Contents
 
 - (void)initializeDefaultPaths
 {
 	// Map to associate fetched icons with their default path
-	iconToPathMap = [[NSMutableDictionary alloc] init];
+	_iconToPathMap = [[NSMutableDictionary alloc] init];
 	
 	// Start fetching directory contents and icons for each default path
-	for (NSDictionary *defaultPath in pathDetails)
+	for (NSDictionary *defaultPath in _defaultPathsList)
 	{
 		NSString *path = [defaultPath objectForKey:@"path"];
 		
 		// Get the default path's directory contents
 		XDrvDebug(@"Fetching directory details for default path: %@", path);
-		[[XService sharedXService].remoteService fetchDirectoryContentsAtPath:path withDelegate:self];
-		activeFetchCount++;
+		UpdateDirectoryOperation *operation = [[UpdateDirectoryOperation alloc] initWithDirectoryPath:path];
+		[operation setCompletionBlock:^{
+			[self didFinishActiveFetch];
+		}];
+		[_updateOperations addObject:operation];
+		_activeFetchCount++;
+		[operation start];
 		
 		NSString *iconPath = [defaultPath objectForKey:@"icon"];
 		if (iconPath)
@@ -115,8 +172,8 @@
 			iconPath = [[self contextURLString] stringByAppendingString:iconPath];
 			XDrvDebug(@"Fetching icon: %@", iconPath);
 			[[XService sharedXService].remoteService downloadFileAtAbsolutePath:iconPath ifModifiedSinceCachedDate:nil withDelegate:self];
-			[iconToPathMap setObject:path forKey:[iconPath lastPathComponent]];
-			activeFetchCount++;
+			[_iconToPathMap setObject:path forKey:[iconPath lastPathComponent]];
+			_activeFetchCount++;
 			
 			NSString *hiresIconPath = [defaultPath objectForKey:@"icon@2x"];
 			if (hiresIconPath)
@@ -125,62 +182,21 @@
 				hiresIconPath = [[self contextURLString] stringByAppendingString:hiresIconPath];
 				XDrvDebug(@"Fetching @2x icon: %@", hiresIconPath);
 				[[XService sharedXService].remoteService downloadFileAtAbsolutePath:hiresIconPath ifModifiedSinceCachedDate:nil withDelegate:self];
-				[iconToPathMap setObject:path forKey:[iconPath lastPathComponent]];
-				activeFetchCount++;
+				[_iconToPathMap setObject:path forKey:[iconPath lastPathComponent]];
+				_activeFetchCount++;
 			}
 		}
 	}
 }
 
-
-
-#pragma mark - Receiving
-
-- (void)receiveDefaultPaths:(NSArray *)details
+- (void)didFinishActiveFetch
 {
-	XDrvDebug(@"Got default paths");
-	pathDetails = [[NSMutableArray alloc] init];
-	NSMutableArray *tabBarOrder = [NSMutableArray arrayWithCapacity:[details count]];
-	
-	for (NSDictionary *path in details)
+	_activeFetchCount--;
+	if (!_activeFetchCount)
 	{
-		NSMutableDictionary *defaultPathDetails = [[NSMutableDictionary alloc] initWithDictionary:path];
-		
-		// Save path order
-		[tabBarOrder addObject:[defaultPathDetails objectForKey:@"name"]];
-		
-		// Replace user placeholder in paths
-		[defaultPathDetails setValue:[[defaultPathDetails objectForKey:@"path"] stringByReplacingOccurrencesOfString:@"${user}" withString:setupController.validateUser] forKey:@"path"];
-		[pathDetails addObject:defaultPathDetails];
-		
-		// Create default path object
-		[[XService sharedXService].localService createDefaultPathAtPath:[defaultPathDetails objectForKey:@"path"]
-															   withName:[defaultPathDetails objectForKey:@"name"]];
+		// All done getting default paths; notify delegate
+		[_setupController defaultPathsFinished];
 	}
-	
-	// Add standard tab bar items and save order
-	[tabBarOrder addObject:@"Recent"];
-	[tabBarOrder addObject:@"Settings"];
-	[XDriveConfig saveTabItemOrder:tabBarOrder];
-	
-	// All done
-	[setupController defaultPathsValidated];
-}
-
-- (void)receiveDefaultPathDetails:(NSDictionary *)details
-{	
-	// Create directory
-	XDirectory *directory = [[XService sharedXService] updateDirectoryDetails:details];
-	
-	if ([directory.path isEqualToString:@"/"])
-		return;
-	
-	// Associate directory with default path
-	XDefaultPath *defaultPath = [self defaultPathWithPath:directory.path];
-	defaultPath.directory = directory;
-	
-	// Save
-	[[XService sharedXService].localService saveWithCompletionBlock:^(NSError *error) {}];
 }
 
 - (void)receiveDefaultPathIcon:(NSString *)tmpFilePath
@@ -192,12 +208,12 @@
 	[[XService sharedXService] moveFileAtPath:tmpFilePath toPath:newFilePath];
 	
 	// Set icon path
-	XDefaultPath *defaultPath = [self defaultPathWithPath:[iconToPathMap objectForKey:fileName]];
+	XDefaultPath *defaultPath = [self defaultPathWithPath:[_iconToPathMap objectForKey:fileName]];
 	XDrvDebug(@"Attaching icon %@ to default path %@", newFilePath, defaultPath.path);
 	defaultPath.icon = newFilePath;
-	
-	// Save
-	[[XService sharedXService].localService saveWithCompletionBlock:^(NSError *error) {}];
+
+	// This fetch is finished
+	[self didFinishActiveFetch];
 }
 
 
@@ -221,10 +237,10 @@
 - (NSString *)contextURLString
 {
 	return [NSString stringWithFormat:@"%@://%@:%i%@",
-			xServer.protocol,
-			xServer.hostname,
-			[xServer.port intValue],
-			xServer.context];
+			_server.protocol,
+			_server.hostname,
+			[_server.port intValue],
+			_server.context];
 }
 
 
@@ -233,26 +249,17 @@
 
 - (void)connectionFinishedWithResult:(NSObject *)result
 {
-	if (!xServer)
+	if (!_server)
 	{
 		// A connection failed and we're in a reset state; do nothing
 		return;
 	}
 	
 	
-	if (activeFetchCount == 0 && [result isKindOfClass:[NSArray class]])
+	if (_activeFetchCount == 0 && [result isKindOfClass:[NSArray class]])
 	{
 		// List of default paths
-		[self receiveDefaultPaths:(NSArray *)result];
-		return;
-	}
-	
-	activeFetchCount--;
-	
-	if ([result isKindOfClass:[NSDictionary class]])
-	{
-		// Handle directory results
-		[self receiveDefaultPathDetails:(NSDictionary *)result];
+		[self receiveDefaultPathsList:(NSArray *)result];
 	}
 	else if ([result isKindOfClass:[NSString class]])
 	{
@@ -264,12 +271,6 @@
 		// No idea what this is
 		XDrvLog(@"Unrecognized result: %@", result);
 	}
-	
-	if (!activeFetchCount)
-	{
-		// All done getting default paths; notify delegate
-		[setupController defaultPathsFinished];
-	}
 }
 
 - (void)connectionFailedWithError:(NSError *)error
@@ -277,13 +278,13 @@
 	XDrvLog(@"Connection failed: %@", error);
 	
 	// Update view
-	[setupController defaultPathsFailedWithError:error];
+	[_setupController defaultPathsFailedWithError:error];
 	
 	// Reset
-	activeFetchCount = 0;
-	pathDetails = nil;
-	setupController = nil;
-	xServer = nil;
+	_defaultPathsList = nil;
+	_activeFetchCount = 0;
+	_setupController = nil;
+	_server = nil;
 }
 
 

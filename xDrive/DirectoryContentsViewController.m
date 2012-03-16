@@ -17,8 +17,14 @@
 
 @interface DirectoryContentsViewController ()
 
+/**
+ Results controller for the contents of the current directory.
+ */
 @property (nonatomic, strong) NSFetchedResultsController *_contentsController;
 
+/**
+ Operation to handle fetching and updating the directory contents from the server.
+ */
 @property (nonatomic, strong) UpdateDirectoryOperation *_updateDirectoryOperation;
 
 - (void)evaluateDirectoryStatus;
@@ -80,17 +86,7 @@
 - (void)viewDidLoad
 {
     [super viewDidLoad];
-
 	if (!self.title) self.title = directory.name;
-	
-	
-}
-
-- (void)viewDidUnload
-{
-    [super viewDidUnload];
-    // Release any retained subviews of the main view.
-    // e.g. self.myOutlet = nil;
 }
 
 - (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender
@@ -276,7 +272,7 @@
 	
 	if ([entry isKindOfClass:[XDirectory class]])
 	{
-		XDirectory *updatedDir = [[XService sharedXService] directoryWithPath:entry.path];
+		XDirectory *updatedDir = [[XService sharedXService].localService directoryWithPath:entry.path];
 		DirectoryContentsViewController *viewController = [[UIStoryboard mainStoryboard] instantiateViewControllerWithIdentifier:@"directoryContents"];
 		[viewController setDirectory:updatedDir];
 		[self.navigationController pushViewController:viewController animated:YES];
@@ -358,26 +354,6 @@
  */
 
 
-
-#pragma mark - XServiceRemoteDelegate
-
-- (void)connectionFinishedWithResult:(NSObject *)result
-{
-	XDrvDebug(@"Finished fetching directory details for %@", [(NSDictionary *)result objecForKey:@"path"]);
-	
-	
-}
-
-- (void)connectionFailedWithError:(NSError *)error
-{
-	XDrvLog(@"Connection failed: %@", error);
-	
-	NSString *title = NSLocalizedStringFromTable(@"Unable to download file", 
-												 @"XDrive", 
-												 @"Title of alert displayed when server returned an error while trying to download file.");
-	UIAlertView *alert = [[UIAlertView alloc] initWithTitle:title message:[error localizedDescription] delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil];
-	[alert show];
-}
 
 @end
 

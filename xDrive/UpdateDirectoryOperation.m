@@ -16,8 +16,7 @@
 @property (nonatomic, strong) XServiceLocal *_localService;
 
 - (void)updateDirectoryInBackgroundWithDetails:(NSDictionary *)details;
-- (BOOL)updateDirectoryWithDetails:(NSDictionary *)details;
-- (void)updateDirectoryDidFinish:(BOOL)success;
+- (void)updateDirectoryWithDetails:(NSDictionary *)details;
 
 @end
 
@@ -52,26 +51,18 @@
 	_state = DirectoryOperationUpdatingState;
 	
 	dispatch_queue_t updateQueue = dispatch_queue_create("edu.acu.xdrive.updateDirectory", 0);
-	dispatch_queue_t mainQueue = dispatch_get_main_queue();
-	
 	dispatch_async(updateQueue, ^{
-		BOOL success = [self updateDirectoryWithDetails:details];
-		dispatch_async(mainQueue, ^{
-			[self updateDirectoryDidFinish:success];
-		});
+		_localService = [[XService sharedXService].localService newServiceForOperation];
+		[self updateDirectoryWithDetails:details];
 	});
 	
 	dispatch_release(updateQueue);
 }
 
-- (BOOL)updateDirectoryWithDetails:(NSDictionary *)details
+- (void)updateDirectoryWithDetails:(NSDictionary *)details
 {
 	// Get directory
-	XDirectory *directory = [self directoryWithPath:[details objectForKey:@"path"]];
-	if (!directory)
-	{
-		return NO;
-	}
+	XDirectory *directory = [_localService directoryWithPath:[details objectForKey:@"path"]];
 	
 	// Directory's last updated time from server
 	NSTimeInterval lastUpdatedSeconds = [[details objectForKey:@"lastUpdated"] doubleValue] / 1000;
@@ -82,7 +73,7 @@
 		{
 			// Directory has not been updated since last fetch; nothing else to do
 			XDrvDebug(@"Directory has not been updated; using cached object for dir: %@", directory.path);
-			return YES;
+			return;
 		}
 	}
 	XDrvDebug(@"Directory has changes; updating contents for dir: %@", directory.path);
@@ -98,12 +89,12 @@
 		if ([[entryFromJson objectForKey:@"type"] isEqualToString:@"folder"])
 		{
 			// Folder
-			entry = [self directoryWithPath:[entryFromJson objectForKey:@"path"]];
+			entry = [_localService directoryWithPath:[entryFromJson objectForKey:@"path"]];
 		}
 		else
 		{
 			// File
-			XFile *file = [self fileWithPath:[entryFromJson objectForKey:@"path"]];
+			XFile *file = [_localService fileWithPath:[entryFromJson objectForKey:@"path"]];
 			file.type = [entryFromJson objectForKey:@"type"];
 			file.size = [entryFromJson objectForKey:@"size"];
 			file.sizeDescription = [NSString stringByFormattingBytes:[file.size integerValue]];
@@ -129,15 +120,17 @@
 		if (![remoteEntries containsObject:entry])
 		{
 			// Entry does not exist in contents returned from server; needs to be deleted
+			XDrvDebug(@"Entry %@ no longer exists on server; deleting...", entry.path);
 			
 			if ([entry isKindOfClass:[XDirectory class]])
 			{
-				XDrvDebug(@"Directory %@ no longer exists on server; deleting...", entry.path);
+				[[XService sharedXService] removeCacheForDirectory:(XDirectory *)entry];
 			}
 			else
 			{
-				
+				[[XService sharedXService] removeCacheForFile:(XFile *)entry];
 			}
+			[_localService removeEntry:entry];
 		}
 	}
 	
@@ -145,23 +138,23 @@
 	[directory setContents:remoteEntries];
 	
 	// Save changes
-	NSError *error = nil;
-	if ([[self localContext] save:&error])
-	{
-		XDrvDebug(@"Saved local context for %@", directory.path);
-		return YES;
-	}
-	else
-	{
-		XDrvLog(@"Error: Problem saving local context for %@", directory.path);
-		return NO;
-	}
-}
-
-- (void)updateDirectoryDidFinish:(BOOL)success
-{
-	_state = (success) ? DirectoryOperationFinishedState : DirectoryOperationFailedState;
-	[self finish];
+	[_localService saveWithCompletionBlock:^(NSError *error) {
+		if (error)
+		{
+			XDrvLog(@"Error: Problem saving local context for %@", directory.path);
+			_state = DirectoryOperationFailedState;
+		}
+		else
+		{
+			XDrvDebug(@"Saved local context for %@", directory.path);
+			_state = DirectoryOperationFinishedState;
+		}
+		
+		// Run finish on main queue
+		dispatch_async(dispatch_get_main_queue(), ^{
+			[self finish];
+		});
+	}];
 }
 
 
@@ -195,7 +188,7 @@
 {
     if ([self isReady])
 	{
-		XDrvDebug(@"Starting directory update operation for %@", directoryPath);
+		XDrvDebug(@"Starting directory update operation for %@", _directoryPath);
         _state = DirectoryOperationFetchingState;
 		[[XService sharedXService].remoteService fetchDirectoryContentsAtPath:_directoryPath withDelegate:self];
     }
@@ -218,7 +211,7 @@
 {
 	if ([result isKindOfClass:[NSDictionary class]])
 	{
-		XDrvDebug(@"Directory fetch finished for %@", directoryPath);
+		XDrvDebug(@"Directory fetch finished for %@", _directoryPath);
 		[self updateDirectoryInBackgroundWithDetails:(NSDictionary *)result];
 	}
 	else

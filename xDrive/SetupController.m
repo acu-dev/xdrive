@@ -127,7 +127,7 @@ typedef enum _SetupStep {
 	
 	// Fetch default paths
 	setupStep = FetchingDefaultPaths;
-	defaultPathController = [[DefaultPathController alloc] initWithController:self];
+	defaultPathController = [[DefaultPathController alloc] initWithSetupController:self];
 	[defaultPathController fetchDefaultPathsForServer:server];
 }
 
@@ -196,11 +196,15 @@ typedef enum _SetupStep {
 
 - (void)defaultPathsFinished
 {
-	// Set default local storage
-	[XDriveConfig setLocalStorageOption:[XDriveConfig defaultLocalStorageOption]];
+	// Save the context now that the default paths have been initialized
+	[[XService sharedXService].localService saveWithCompletionBlock:^(NSError *error) {
 		
-	// All done
-	[viewController setupFinished];
+		// Set default local storage
+		[XDriveConfig setLocalStorageOption:[XDriveConfig defaultLocalStorageOption]];
+			
+		// All done
+		[viewController setupFinished];
+	}];
 }
 
 
