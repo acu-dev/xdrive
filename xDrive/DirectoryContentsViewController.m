@@ -11,24 +11,18 @@
 #import "XDriveConfig.h"
 #import "OpenFileViewController.h"
 #import "UIStoryboard+Xdrive.h"
-
-
-
-typedef enum {
-	XDirectoryContentsFetching,
-	XDirectoryContentsUpdating,
-	XDirectoryContentsDone
-} XDirectoryStatus;
+#import "UpdateDirectoryOperation.h"
 
 
 
 @interface DirectoryContentsViewController ()
 
-@property (nonatomic, strong) NSFetchedResultsController *contentsController;
+@property (nonatomic, strong) NSFetchedResultsController *_contentsController;
 
-@property (nonatomic, assign) XDirectoryStatus directoryStatus;
+@property (nonatomic, strong) UpdateDirectoryOperation *_updateDirectoryOperation;
 
 - (void)evaluateDirectoryStatus;
+- (void)displayDirectoryContents;
 
 - (void)configureCell:(UITableViewCell *)cell atIndexPath:(NSIndexPath *)indexPath;
 - (void)configureCell:(UITableViewCell *)cell forEntry:(XEntry *)entry;
@@ -44,8 +38,8 @@ typedef enum {
 @implementation DirectoryContentsViewController
 
 // Private
-@synthesize contentsController;
-@synthesize directoryStatus;
+@synthesize _contentsController;
+@synthesize _updateDirectoryOperation;
 
 // Public
 @synthesize directory;
@@ -64,13 +58,6 @@ typedef enum {
 	self.iconTypes = nil;
 }
 
-- (void)dealloc
-{
-	self.directory = nil;
-	self.iconTypes = nil;
-	self.contentsController = nil;
-}
-
 
 
 #pragma mark - Accessors
@@ -80,8 +67,8 @@ typedef enum {
 	directory = dir;
 	
 	// Get contents controller
-	contentsController = [[XService sharedXService].localService contentsControllerForDirectory:directory];
-	contentsController.delegate = self;
+	_contentsController = [[XService sharedXService].localService contentsControllerForDirectory:directory];
+	_contentsController.delegate = self;
 	
 	[self evaluateDirectoryStatus];
 }
@@ -96,12 +83,7 @@ typedef enum {
 
 	if (!self.title) self.title = directory.name;
 	
-	// Fetch contents
-	NSError *error = nil;
-	if (![contentsController performFetch:&error])
-	{
-		XDrvLog(@"Error performing directory contents fetch: %@", error);
-	}
+	
 }
 
 - (void)viewDidUnload
@@ -115,7 +97,7 @@ typedef enum {
 {
 	if ([segue.identifier isEqualToString:@"ViewFile"])
 	{
-		XFile *file = [contentsController objectAtIndexPath:[self.tableView indexPathForSelectedRow]];
+		XFile *file = [_contentsController objectAtIndexPath:[self.tableView indexPathForSelectedRow]];
 		[(id)segue.destinationViewController setXFile:file];
 	}
 }
@@ -127,45 +109,52 @@ typedef enum {
 
 
 
-#pragma mark - Directory Status
+#pragma mark - Directory Contents
 
 - (void)evaluateDirectoryStatus
 {
 	if (!directory.contentsLastUpdated)
 	{
+		XDrvLog(@"Directory contens have never been fetched");
+	}
+	
+	if ([directory.contentsLastUpdated compare:directory.lastUpdated] == NSOrderedDescending)
+	{
+		// Up to date
+		XDrvLog(@"Directory contents are up to date");
+	}
+	
+	
+	
+	/*
+	if (!directory.contentsLastUpdated)
+	{
 		// Directory contents have never been fetched
-		directoryStatus = XDirectoryContentsFetching;
 		
-		// Fetch contents
-		[[XService sharedXService].remoteService fetchDirectoryContentsAtPath:directory.path withDelegate:self];
+	}
+	else if ([directory.contentsLastUpdated compare:directory.lastUpdated] == NSOrderedAscending)
+	{
+		// Directory has updates
+		
 	}
 	else
 	{
-		if ([directory.contentsLastUpdated compare:directory.lastUpdated] == NSOrderedAscending)
-		{
-			// Directory has been updated since contents were last updated
-			directoryStatus = XDirectoryContentsUpdating;
-			
-			// Fetch updates
-			[[XService sharedXService].remoteService fetchDirectoryContentsAtPath:directory.path withDelegate:self];
-		}
-		else
-		{
-			// Directory has no updates
-			directoryStatus = XDirectoryContentsDone;
-		}
+		// Up to date
+		[self displayDirectoryContents];
+	}*/
+}
+
+- (void)displayDirectoryContents
+{
+	// Fetch contents
+	NSError *error = nil;
+	if (![_contentsController performFetch:&error])
+	{
+		XDrvLog(@"Error performing directory contents fetch: %@", error);
 	}
 }
 
-- (void)displayDirectoryStatus
-{
-	
-}
 
-- (void)setDirectoryStatus:(XDirectoryStatus)directoryStatus
-{
-	
-}
 
 
 
@@ -173,7 +162,7 @@ typedef enum {
 
 - (void)configureCell:(UITableViewCell *)cell atIndexPath:(NSIndexPath *)indexPath
 {
-    XEntry *entry = [contentsController objectAtIndexPath:indexPath];
+    XEntry *entry = [_contentsController objectAtIndexPath:indexPath];
     [self configureCell:cell forEntry:entry];
 }
 
@@ -228,18 +217,18 @@ typedef enum {
 
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView
 {
-	return [[contentsController sections] count];
+	return [[_contentsController sections] count];
 }
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
 {
-	id <NSFetchedResultsSectionInfo> sectionInfo = [[contentsController sections] objectAtIndex:section];
+	id <NSFetchedResultsSectionInfo> sectionInfo = [[_contentsController sections] objectAtIndex:section];
 	return [sectionInfo numberOfObjects];
 }
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
 {
-	XEntry *entry = [contentsController objectAtIndexPath:indexPath];
+	XEntry *entry = [_contentsController objectAtIndexPath:indexPath];
 	
 	NSString *cellIdentifier = nil;
 	if ([entry isKindOfClass:[XDirectory class]])
@@ -283,7 +272,7 @@ typedef enum {
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
-	XEntry *entry = [contentsController objectAtIndexPath:indexPath];
+	XEntry *entry = [_contentsController objectAtIndexPath:indexPath];
 	
 	if ([entry isKindOfClass:[XDirectory class]])
 	{

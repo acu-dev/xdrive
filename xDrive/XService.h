@@ -35,9 +35,9 @@
 ///---------------------
 
 /**
- Designated initializer and getter. Ensures that only one instance of XService is instantiated.
+ Designated initializer and getter.
  
- @discussion One XService to rule them all.
+ @discussion One XService to rule them all. Ensures that only one instance of itself is instantiated.
  */
 + (XService *)sharedXService;
 
@@ -88,8 +88,8 @@
 
 /* Cache */
 
-- (void)clearCache;
-	// Removes all cached content
+- (void)clearCacheWithCompletionBlock:(void (^)(NSError *error))completionBlock;
+	// Removes all cached content and calls completion block when done.
 
 - (void)cacheFile:(XFile *)file fromTmpPath:(NSString *)tmpPath;
 	// Moves a downloaded file to it's cache location and updates local storage status

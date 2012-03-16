@@ -164,8 +164,9 @@
 
 - (void)deleteCachedFiles
 {
-	[[XService sharedXService] clearCache];
-	[self updateStorageUsageAnimated:YES];
+	[[XService sharedXService] clearCacheWithCompletionBlock:^(NSError *error) {
+		[self updateStorageUsageAnimated:YES];
+	}];
 }
 
 @end

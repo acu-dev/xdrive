@@ -8,6 +8,7 @@
 
 #import "XFile.h"
 #import "XDirectory.h"
+#import "XDefaultPath.h"
 
 @interface XServiceLocal : NSObject
 
@@ -25,22 +26,60 @@
 ///---------------------
 
 /**
- Designated initializer. Sets up the persistent store coordinator and creates the main queue's managed object context used by fetched results controllers.
+ Creates and initializes an `XServiceLocal` object with a main managed object context. Sets up the persistent store coordinator and creates the main queue's managed object context used by fetched results controllers.
  
- @discussion This should only be called once by XService. Changes made with this object should be short and sweet, so as not to block the UI.
+ @discussion This should only be called once by XService. Provides the context used by fetched results controllers so changes made with this object should be short and sweet, so as not to block the UI. For heavy lifting, use a different `XServiceLocal` object created from `newServiceForOperation`.
+ 
+ @return The newly-initialized service
  */
 - (id)init;
 
 /**
- Creates a new instance of XServiceLocal with a new private managed object context as a child of the receiver's managed object context.
+ Creates and initializes an `XServiceLocal` object with a private managed object context as a child of the receiver's managed object context.
   
  @discussion Use this to create instances of the local service that need their own context (i.e. background operations).
+ 
+ @return The newly-initialized service
  */
 - (XServiceLocal *)newServiceForOperation;
 
-///----------------------
-/// @name Getting Entries
-///----------------------
+///-------------
+/// @name Saving
+///-------------
+
+/**
+ Saves the local and parent (if set) managed object contexts.
+ 
+ @param completion The block to be called when the context completes the save
+ */
+- (void)saveWithCompletionBlock:(void (^)(NSError *error))completionBlock;
+
+///-------------------------------
+/// @name Getting/Creating Entries
+///-------------------------------
+
+/**
+ Creates a new server object in the local context but does not save. 
+ 
+ @discussion This should only ever be called during the inital setup process.
+ 
+ @param protocol Either http or https
+ @param port Port the service is running on
+ @param hostname Server's hostname
+ @param context Webapp's context root
+ @param servicePath Service base path
+ 
+ @return The newly-created server object
+ */
+- (XServer *)createServerWithProtocol:(NSString *)protocol port:(NSNumber *)port hostname:(NSString *)hostname
+							  context:(NSString *)context servicePath:(NSString *)servicePath;
+
+/**
+ Creates a new default path object at the specified path.
+ 
+ @return The newly-created default path object
+ */
+- (XDefaultPath *)createDefaultPathAtPath:(NSString *)path withName:(NSString *)name;
 
 /**
  Gets a file object at the specified path.
@@ -48,6 +87,8 @@
  @param path The file's path on the remote file system.
  
  @discussion If the file object does not exist locally, it is created.
+ 
+ @return The file object at the specified path
  */
 - (XFile *)fileWithPath:(NSString *)path;
 
@@ -57,6 +98,8 @@
  @param path The directory's path on the remote file system.
  
  @discussion If the directory object does not exist locally, it is created.
+ 
+ @return The directory object at the specified path
  */
 - (XDirectory *)directoryWithPath:(NSString *)path;
 
@@ -65,11 +108,20 @@
 ///-----------------------------------
 
 /**
- Gets a contents controller for a specified directory.
+ Creates a results controller for the contents of a specified directory.
  
  @param directory The directory object whose contents need to be controlled.
+ 
+ @return The newly-created fetched results controller
  */
 - (NSFetchedResultsController *)contentsControllerForDirectory:(XDirectory *)directory;
+
+/**
+ Creates a results controller for the most recenctly accessed files.
+ 
+ @return The newly-created fetched results controller
+ */
+- (NSFetchedResultsController *)recentlyAccessedFilesController;
 
 ///---------------------------
 /// @name Getting Recent Files

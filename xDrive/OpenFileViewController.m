@@ -138,12 +138,7 @@
 	
 	// Update file's last access time
 	xFile.lastAccessed = [NSDate date];
-	NSError *error = nil;
-	if (![[XService sharedXService].localService.managedObjectContext save:&error])
-	{
-		XDrvLog(@"Problem saving last access time for file: %@", xFile.path);
-		XDrvLog(@"%@", error);
-	}
+	[[XService sharedXService].localService saveWithCompletionBlock:^(NSError *error) {}];
 }
 
 

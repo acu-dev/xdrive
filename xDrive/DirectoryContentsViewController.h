@@ -9,7 +9,7 @@
 #import "XService.h"
 @class XDirectory;
 
-@interface DirectoryContentsViewController : UITableViewController <NSFetchedResultsControllerDelegate, XServiceRemoteDelegate>
+@interface DirectoryContentsViewController : UITableViewController <NSFetchedResultsControllerDelegate>
 
 @property (nonatomic, strong) XDirectory *directory;
 

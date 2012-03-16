@@ -26,9 +26,6 @@ static NSString *ModelFileName = @"xDrive";
 // Get/create entries
 - (XEntry *)entryOfType:(NSString *)type withPath:(NSString *)path;
 - (XEntry *)createEntryOfType:(NSString *)type withPath:(NSString *)path;
-
-// Utils
-- (NSString *)entryNameFromPath:(NSString *)path;
 @end
 
 
@@ -90,7 +87,7 @@ static NSString *ModelFileName = @"xDrive";
 
 - (XServiceLocal *)newServiceForOperation
 {
-	// Create new private managed object context
+	// Create new private managed object context as a child of the receiver's managed object context
 	NSManagedObjectContext *privateManagedObjectContext = [[NSManagedObjectContext alloc] initWithConcurrencyType:NSPrivateQueueConcurrencyType];
 	[privateManagedObjectContext setParentContext:_managedObjectContext];
 	
@@ -101,21 +98,43 @@ static NSString *ModelFileName = @"xDrive";
 
 #pragma mark - Saving
 
-- (void)save
+- (void)saveWithCompletionBlock:(void (^)(NSError *error))completionBlock
 {
-	/*
-	// Save the child context first
-	[childContext performBlock:^{
-		NSError *error = nil;
-		[childContext save:&error];
+	[_managedObjectContext performBlock:^{
 		
-		// Save the changes on the main context
-		[parentContext performBlock:^{
-			NSError *parentError = nil;
-			[parentContext save:&parentError];
-		}];
+		// Save local context
+		NSError *error = nil;
+		if (![_managedObjectContext save:&error])
+		{
+			XDrvLog(@"Error saving context: %@", error);
+			completionBlock(error);
+		}
+		else
+		{
+			if (_managedObjectContext.parentContext)
+			{
+				[_managedObjectContext.parentContext performBlock:^{
+					// Save parent context
+					NSError *parentError = nil;
+					if (![_managedObjectContext.parentContext save:&parentError])
+					{
+						XDrvLog(@"Error saving parent context: %@", parentError);
+						completionBlock(parentError);
+					}
+					else
+					{
+						// Parent context finished saving
+						completionBlock(nil);
+					}
+				}];
+			}
+			else
+			{
+				// Local context finished saving
+				completionBlock(nil);
+			}
+		}
 	}];
-	 */
 }
 
 
@@ -129,7 +148,7 @@ static NSString *ModelFileName = @"xDrive";
 		NSFetchRequest *fetchRequest = [NSFetchRequest fetchRequestWithEntityName:@"Server"];
 
 		NSError *error = nil;
-		NSArray *fetchedObjects = [[self managedObjectContext] executeFetchRequest:fetchRequest error:&error];
+		NSArray *fetchedObjects = [_managedObjectContext executeFetchRequest:fetchRequest error:&error];
 		if (![fetchedObjects count])
 			return nil;
 		_server = [fetchedObjects objectAtIndex:0];
@@ -140,6 +159,31 @@ static NSString *ModelFileName = @"xDrive";
 
 
 #pragma mark - Get/create entries
+
+- (XServer *)createServerWithProtocol:(NSString *)protocol port:(NSNumber *)port hostname:(NSString *)hostname
+							  context:(NSString *)context servicePath:(NSString *)servicePath
+{	
+	XServer *newServer = [NSEntityDescription insertNewObjectForEntityForName:@"Server" 
+											inManagedObjectContext:_managedObjectContext];
+	newServer.protocol = protocol;
+	newServer.port = port;
+	newServer.hostname = hostname;
+	newServer.context = context;
+	newServer.servicePath = servicePath;
+	return newServer;
+}
+
+- (XDefaultPath *)createDefaultPathAtPath:(NSString *)path withName:(NSString *)name
+{
+	XDefaultPath *defaultPath = [NSEntityDescription insertNewObjectForEntityForName:@"DefaultPath"
+															  inManagedObjectContext:_managedObjectContext];
+	defaultPath.path = path;
+	defaultPath.name = name;
+	[_server addDefaultPathsObject:defaultPath];
+	
+	[self saveWithCompletionBlock:^(NSError *error) {}];
+	return defaultPath;
+}
 
 - (XFile *)fileWithPath:(NSString *)path
 {
@@ -158,7 +202,7 @@ static NSString *ModelFileName = @"xDrive";
 	[fetchRequest setFetchBatchSize:1];
 	
 	NSError *error = nil;
-	NSArray *fetchedObjects = [[self managedObjectContext] executeFetchRequest:fetchRequest error:&error];
+	NSArray *fetchedObjects = [_managedObjectContext executeFetchRequest:fetchRequest error:&error];
 	if (!fetchedObjects)
 	{
 		// Something went wrong
@@ -180,31 +224,13 @@ static NSString *ModelFileName = @"xDrive";
 - (XEntry *)createEntryOfType:(NSString *)type withPath:(NSString *)path
 {
 	XEntry *newEntry = [NSEntityDescription insertNewObjectForEntityForName:type
-													 inManagedObjectContext:[self managedObjectContext]];
+													 inManagedObjectContext:_managedObjectContext];
 	newEntry.path = path;
-	newEntry.name = [self entryNameFromPath:path];
+	newEntry.name = [path lastPathComponent];
 	newEntry.server = _server;
 	
-	NSError *error = nil;
-	if ([[self managedObjectContext] save:&error])
-	{
-		XDrvDebug(@"Created new %@ object at path %@", type, path);
-		return newEntry;
-	}
-	else
-	{
-		XDrvLog(@"Error creating new directory object at path: %@", path);
-		return nil;
-	}
-}
-
-
-
-#pragma mark - Updating Entries
-
-- (void)mergeChanges:(NSNotification *)notification 
-{
-    [[self managedObjectContext] performSelectorOnMainThread:@selector(mergeChangesFromContextDidSaveNotification:) withObject:notification waitUntilDone:YES];
+	[self saveWithCompletionBlock:^(NSError *error) {}];
+	return newEntry;
 }
 
 
@@ -219,20 +245,44 @@ static NSString *ModelFileName = @"xDrive";
 	// Whose parent is the directory given
 	[fetchRequest setPredicate:[NSPredicate predicateWithFormat:@"parent == %@", directory]];
 	
-	// Set the batch size to a suitable number
+	// Only need 10 at a time
 	[fetchRequest setFetchBatchSize:10];
 	
 	// Sort by name ascending
 	NSSortDescriptor *sortDescriptor = [NSSortDescriptor sortDescriptorWithKey:@"name" ascending:YES];
 	[fetchRequest setSortDescriptors:[NSArray arrayWithObject:sortDescriptor]];
 	
-	// Edit the section name key path and cache name if appropriate.
-	// nil for section name key path means "no sections".
+	// Create controller
 	NSFetchedResultsController *fetchedResultsController = [[NSFetchedResultsController alloc] initWithFetchRequest:fetchRequest
-																							   managedObjectContext:[self managedObjectContext]
+																							   managedObjectContext:_managedObjectContext
 																								 sectionNameKeyPath:nil
 																										  cacheName:[NSString stringWithFormat:@"%@-contents", directory.path]];
 	return fetchedResultsController;
+}
+
+- (NSFetchedResultsController *)recentlyAccessedFilesController
+{
+	// Fetch only file objects
+	NSFetchRequest *fetchRequest = [NSFetchRequest fetchRequestWithEntityName:@"File"];
+	
+	// With lastAccessed set
+	NSPredicate *predicateTemplate = [NSPredicate predicateWithFormat:@"lastAccessed > $DATE"];
+	NSPredicate *predicate = [predicateTemplate predicateWithSubstitutionVariables:[NSDictionary dictionaryWithObject:[NSDate distantPast] forKey:@"DATE"]];
+	[fetchRequest setPredicate:predicate];
+	
+	// Only need 10 at a time
+	[fetchRequest setFetchBatchSize:10];
+	
+	// Sort by last access descending
+	NSSortDescriptor *sortDescriptor = [NSSortDescriptor sortDescriptorWithKey:@"lastAccessed" ascending:NO];
+	[fetchRequest setSortDescriptors:[NSArray arrayWithObject:sortDescriptor]];
+	
+	// Create controller
+	NSFetchedResultsController *fetchedResultsController = [[NSFetchedResultsController alloc] initWithFetchRequest:fetchRequest
+																								managedObjectContext:_managedObjectContext
+																								  sectionNameKeyPath:nil
+																										   cacheName:@"recents"];
+    return fetchedResultsController;
 }
 
 
@@ -256,7 +306,7 @@ static NSString *ModelFileName = @"xDrive";
 	[fetchRequest setFetchBatchSize:0];
 	
 	NSError *error = nil;
-	NSArray *fetchedObjects = [[self managedObjectContext] executeFetchRequest:fetchRequest error:&error];
+	NSArray *fetchedObjects = [_managedObjectContext executeFetchRequest:fetchRequest error:&error];
 	if (error)
 	{
 		// Something went wrong
@@ -308,84 +358,13 @@ static NSString *ModelFileName = @"xDrive";
 	}
 }
 
-
-
-#pragma mark - Core Data stack
-
-//
-// managedObjectContext
-//
-// Accessor. If the context doesn't already exist, it is created and bound to
-// the persistent store coordinator for the application
-//
-// returns the managed object context for the application
-//
-- (NSManagedObjectContext *)managedObjectContext
-{
-	if (_managedObjectContext != nil)
-	{
-		return _managedObjectContext;
-	}
-	
-	NSPersistentStoreCoordinator *coordinator = [self persistentStoreCoordinator];
-	if (coordinator != nil)
-	{
-		_managedObjectContext = [[NSManagedObjectContext alloc] init];
-		[_managedObjectContext setPersistentStoreCoordinator:coordinator];
-	}
-	return _managedObjectContext;
-}
-
-//
-// managedObjectModel
-//
-// Accessor. If the model doesn't already exist, it is created by merging all of
-// the models found in the application bundle.
-//
-// returns the managed object model for the application.
-//
-/*- (NSManagedObjectModel *)managedObjectModel
-{
-	if (managedObjectModel != nil)
-	{
-		return managedObjectModel;
-	}
-	NSURL *modelURL = [[NSBundle mainBundle] URLForResource:@"xDrive" withExtension:@"momd"];
-	managedObjectModel = [[NSManagedObjectModel alloc] initWithContentsOfURL:modelURL];
-	return managedObjectModel;
-}*/
-
-//
-// persistentStoreCoordinator
-//
-// Accessor. If the coordinator doesn't already exist, it is created and the
-// application's store added to it.
-//
-// returns the persistent store coordinator for the application.
-//
-/*- (NSPersistentStoreCoordinator *)persistentStoreCoordinator
-{
-	if (_persistentStoreCoordinator != nil)
-	{
-		return _persistentStoreCoordinator;
-	}
-	
-	NSString *urlString = [[NSString documentsPath] stringByAppendingPathComponent:DatabaseFileName];
-	
-	NSError *error = nil;
-	_persistentStoreCoordinator = [[NSPersistentStoreCoordinator alloc] initWithManagedObjectModel:[self managedObjectModel]];
-	if (![_persistentStoreCoordinator addPersistentStoreWithType:NSSQLiteStoreType
-												   configuration:nil
-															 URL:[NSURL fileURLWithPath:urlString]
-														 options:nil
-														   error:&error])
-	{
-		NSLog(@"Unresolved error %@, %@", error, [error userInfo]);
-		abort();
-	}	
-	
-	return _persistentStoreCoordinator;
-}*/
-
-
 @end
+
+
+
+
+
+
+
+
+

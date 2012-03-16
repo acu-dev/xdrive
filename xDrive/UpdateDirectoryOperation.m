@@ -13,17 +13,12 @@
 
 @interface UpdateDirectoryOperation ()
 @property (nonatomic, strong) NSString *_directoryPath;
-@property (nonatomic, strong) NSManagedObjectContext *_localManagedObjectContext;
+@property (nonatomic, strong) XServiceLocal *_localService;
 
 - (void)updateDirectoryInBackgroundWithDetails:(NSDictionary *)details;
 - (BOOL)updateDirectoryWithDetails:(NSDictionary *)details;
 - (void)updateDirectoryDidFinish:(BOOL)success;
 
-- (NSManagedObjectContext *)localContext;
-- (XFile *)fileWithPath:(NSString *)path;
-- (XDirectory *)directoryWithPath:(NSString *)path;
-- (XEntry *)entryOfType:(NSString *)type withPath:(NSString *)path;
-- (XEntry *)createEntryOfType:(NSString *)type withPath:(NSString *)path;
 @end
 
 
@@ -31,7 +26,7 @@
 
 // Private
 @synthesize _directoryPath;
-@synthesize _localManagedObjectContext;
+@synthesize _localService;
 
 // Public
 @synthesize state = _state;
@@ -42,7 +37,7 @@
     self = [super init];
     if (!self) return nil;
 	
-	_directoryPath = path;	
+	_directoryPath = path;
     _state = DirectoryOperationReadyState;
 	
     return self;
@@ -171,65 +166,6 @@
 
 
 
-#pragma mark - Get/create entries
-
-- (NSManagedObjectContext *)localContext
-{
-	if (!_localManagedObjectContext)
-	{
-		_localManagedObjectContext = [[NSManagedObjectContext alloc] init];
-		[_localManagedObjectContext setPersistentStoreCoordinator:[XService sharedXService].localService.persistentStoreCoordinator];
-	}
-	return _localManagedObjectContext;
-}
-
-- (XFile *)fileWithPath:(NSString *)path
-{
-	return (XFile *)[self entryOfType:@"File" withPath:path];
-}
-
-- (XDirectory *)directoryWithPath:(NSString *)path
-{
-	return (XDirectory *)[self entryOfType:@"Directory" withPath:path];
-}
-
-- (XEntry *)entryOfType:(NSString *)type withPath:(NSString *)path
-{
-	NSFetchRequest *fetchRequest = [NSFetchRequest fetchRequestWithEntityName:type];
-	[fetchRequest setPredicate:[NSPredicate predicateWithFormat:@"path == %@", path]];
-	[fetchRequest setFetchBatchSize:1];
-	
-	NSError *error = nil;
-	NSArray *fetchedObjects = [[self localContext] executeFetchRequest:fetchRequest error:&error];
-	if (!fetchedObjects)
-	{
-		// Something went wrong
-		XDrvLog(@"Error performing fetch request: %@", [error localizedDescription]);
-		return nil;
-	}
-	
-	if (![fetchedObjects count])
-	{
-		// No entries found, create one
-		return [self createEntryOfType:type withPath:path];
-	}
-	else
-	{
-		// Return last object found (there should only be one)
-		return [fetchedObjects lastObject];
-	}
-}
-
-- (XEntry *)createEntryOfType:(NSString *)type withPath:(NSString *)path
-{
-	XEntry *newEntry = [NSEntityDescription insertNewObjectForEntityForName:type
-													 inManagedObjectContext:[self localContext]];
-	newEntry.path = path;
-	newEntry.name = [path lastPathComponent];
-	newEntry.server = [XService sharedXService].localService.server;
-	
-	return newEntry;
-}
 
 
 

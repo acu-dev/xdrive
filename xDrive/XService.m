@@ -24,8 +24,6 @@
 
 @property (nonatomic, strong) NSString *_documentsPath, *_cachesPath;
 
-@property (nonatomic, strong) NSMutableDictionary *_currentOperations;
-
 @end
 
 
@@ -42,7 +40,6 @@
 
 // Private
 @synthesize _documentsPath, _cachesPath;
-@synthesize _currentOperations;
 
 
 
@@ -68,18 +65,12 @@
 		// Init local and remote services
 		_localService = [[XServiceLocal alloc] init];
 		_remoteService = [[XServiceRemote alloc] initWithServer:_localService.server];
-		
-		// Init operation storage
-		_currentOperations = [[NSMutableDictionary alloc] init];
     }
     return self;
 }
 
 - (void)dealloc
 {
-	// cancel curren operations?
-	self._currentOperations = nil;
-	
 	_remoteService = nil;
 	_localService = nil;
 }
@@ -266,7 +257,7 @@
 
 #pragma mark - Cache
 
-- (void)clearCache
+- (void)clearCacheWithCompletionBlock:(void (^)(NSError *error))completionBlock
 {
 	// Remove cache directory
 	XDrvDebug(@"Removing entire cache directory");
@@ -282,11 +273,7 @@
 	}];
 	
 	// Save
-	NSError *error = nil;
-	if (![[_localService managedObjectContext] save:&error])
-	{
-		XDrvLog(@"Problem saving context: %@", error);
-	}
+	[_localService saveWithCompletionBlock:completionBlock];
 }
 
 - (void)cacheFile:(XFile *)file fromTmpPath:(NSString *)tmpPath
@@ -342,10 +329,9 @@
 	
 	// Remove lastAccessed for file
 	file.lastAccessed = nil;
-	if (![[_localService managedObjectContext] save:&error])
-	{
-		XDrvLog(@"Problem saving context: %@", error);
-	}
+	
+	// This type of change doesn't really need a completion callback
+	[_localService saveWithCompletionBlock:^(NSError *error) {}];
 }
 
 - (void)removeCacheForDirectory:(XDirectory *)directory

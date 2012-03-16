@@ -15,10 +15,8 @@
 @interface RecentViewController ()
 
 @property (nonatomic, strong) NSFetchedResultsController *_fetchedResultsController;
-	// Controls the recent files caching
 
 @property (nonatomic, strong) NSDictionary *iconTypes;
-	// Mapping of file mime-types to icon file names
 
 @end
 
@@ -35,6 +33,16 @@
 
 
 
+- (id)init
+{
+	self = [super init];
+	if (!self) return nil;
+	
+	_fetchedResultsController = [[XService sharedXService].localService recentlyAccessedFilesController];
+	_fetchedResultsController.delegate = self;
+	
+	return self;
+}
 
 - (void)didReceiveMemoryWarning
 {
@@ -67,7 +75,7 @@
 
 - (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender
 {
-	XFile *file = [self.fetchedResultsController objectAtIndexPath:[self.tableView indexPathForSelectedRow]];
+	XFile *file = [_fetchedResultsController objectAtIndexPath:[self.tableView indexPathForSelectedRow]];
 	[(id)segue.destinationViewController setXFile:file];
 }
 
@@ -138,12 +146,12 @@
 
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView
 {
-    return [[self.fetchedResultsController sections] count];
+    return [[_fetchedResultsController sections] count];
 }
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
 {
-    id <NSFetchedResultsSectionInfo> sectionInfo = [[self.fetchedResultsController sections] objectAtIndex:section];
+    id <NSFetchedResultsSectionInfo> sectionInfo = [[_fetchedResultsController sections] objectAtIndex:section];
 	return [sectionInfo numberOfObjects];
 }
 
@@ -166,54 +174,7 @@
 }*/
 
 
-#pragma mark - Fetched results controller
-
-- (NSFetchedResultsController *)fetchedResultsController
-{
-    if (_fetchedResultsController != nil)
-    {
-        return _fetchedResultsController;
-    }
-    
-    // Create the fetch request for the entity.
-	NSFetchRequest *fetchRequest = [NSFetchRequest fetchRequestWithEntityName:@"File"];
-	
-	// Search filter
-	NSPredicate *predicateTemplate = [NSPredicate predicateWithFormat:@"lastAccessed > $DATE"];
-	NSPredicate *predicate = [predicateTemplate predicateWithSubstitutionVariables:[NSDictionary dictionaryWithObject:[NSDate distantPast] forKey:@"DATE"]];
-	[fetchRequest setPredicate:predicate];
-	
-	// Set the batch size to a suitable number.
-	[fetchRequest setFetchBatchSize:10];
-	
-	// Sort order
-	NSSortDescriptor *sortDescriptor = [NSSortDescriptor sortDescriptorWithKey:@"lastAccessed" ascending:NO];
-	[fetchRequest setSortDescriptors:[NSArray arrayWithObject:sortDescriptor]];
-	
-	// Edit the section name key path and cache name if appropriate.
-	// nil for section name key path means "no sections".
-	NSFetchedResultsController *aFetchedResultsController = [[NSFetchedResultsController alloc] 
-															 initWithFetchRequest:fetchRequest
-															 managedObjectContext:[[XService sharedXService].localService managedObjectContext]
-															 sectionNameKeyPath:nil
-															 cacheName:@"recents"];
-	aFetchedResultsController.delegate = self;
-	_fetchedResultsController = aFetchedResultsController;
-	
-	NSError *error = nil;
-	if (![self.fetchedResultsController performFetch:&error])
-	{
-	    /*
-	     Replace this implementation with code to handle the error appropriately.
-		 
-	     abort() causes the application to generate a crash log and terminate. You should not use this function in a shipping application, although it may be useful during development. If it is not possible to recover from the error, display an alert panel that instructs the user to quit the application by pressing the Home button.
-	     */
-	    NSLog(@"Unresolved error %@, %@", error, [error userInfo]);
-	    abort();
-	}
-    
-    return _fetchedResultsController;
-}    
+#pragma mark - NSFetchedResultsControllerDelegate
 
 - (void)controllerWillChangeContent:(NSFetchedResultsController *)controller
 {
@@ -279,29 +240,15 @@
  }
  */
 
-- (void)insertNewObject
-{
-    // Create a new instance of the entity managed by the fetched results controller.
-    NSManagedObjectContext *context = [self.fetchedResultsController managedObjectContext];
-    NSEntityDescription *entity = [[self.fetchedResultsController fetchRequest] entity];
-    NSManagedObject *newManagedObject = [NSEntityDescription insertNewObjectForEntityForName:[entity name] inManagedObjectContext:context];
-    
-    // If appropriate, configure the new managed object.
-    // Normally you should use accessor methods, but using KVC here avoids the need to add a custom class to the template.
-    [newManagedObject setValue:[NSDate date] forKey:@"timeStamp"];
-    
-    // Save the context.
-    NSError *error = nil;
-    if (![context save:&error])
-    {
-        /*
-         Replace this implementation with code to handle the error appropriately.
-         
-         abort() causes the application to generate a crash log and terminate. You should not use this function in a shipping application, although it may be useful during development. If it is not possible to recover from the error, display an alert panel that instructs the user to quit the application by pressing the Home button.
-         */
-        NSLog(@"Unresolved error %@, %@", error, [error userInfo]);
-        abort();
-    }
-}
 
 @end
+
+
+
+
+
+
+
+
+
+

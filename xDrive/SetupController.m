@@ -116,14 +116,11 @@ typedef enum _SetupStep {
 	}
 
 	// Create server object
-	server = [NSEntityDescription insertNewObjectForEntityForName:@"Server" 
-													   inManagedObjectContext:[[XService sharedXService].localService managedObjectContext]];
-	server.protocol = [xserviceInfo objectForKey:@"protocol"];
-	server.port = [xserviceInfo objectForKey:@"port"];
-	server.hostname = [xserviceInfo objectForKey:@"host"];
-	server.context = [xserviceInfo objectForKey:@"context"];
-	server.servicePath = [xserviceInfo objectForKey:@"serviceBase"];
-	XDrvDebug(@"Created new server object");
+	server = [[XService sharedXService].localService createServerWithProtocol:[xserviceInfo objectForKey:@"protocol"]
+																		 port:[xserviceInfo objectForKey:@"prort"]
+																	 hostname:[xserviceInfo objectForKey:@"host"]
+																	  context:[xserviceInfo objectForKey:@"context"]
+																  servicePath:[xserviceInfo objectForKey:@"serviceBase"]];
 	
 	// Become auth challenge handler
 	[XService sharedXService].remoteService.authDelegate = self;
@@ -173,26 +170,28 @@ typedef enum _SetupStep {
 - (void)defaultPathsValidated
 {
 	// Save the context now that server info has been validated
-	NSError *error = nil;
-	if (![[[XService sharedXService].localService managedObjectContext] save:&error])
-	{
-		// Handle error
-		XDrvLog(@"Error: unable to save context after adding new server - %@", [error localizedDescription]);
-		[viewController setupFailedWithError:error];
-		return;
-	}
-	
-	// Success!
-	XDrvDebug(@"Successfully saved server");
-	
-	// Update remote service
-	[XService sharedXService].remoteService.activeServer = server;
-	
-	// Save the credentials permanently now that they have been validated
-	[self saveCredentials];
-	
-	// Pre-populate default path directory contents
-	[defaultPathController initializeDefaultPaths];
+	[[XService sharedXService].localService saveWithCompletionBlock:^(NSError *error) {
+		
+		if (error)
+		{
+			XDrvLog(@"Error: unable to save context after adding new server - %@", error);
+			[viewController setupFailedWithError:error];
+		}
+		else
+		{
+			// Success!
+			XDrvDebug(@"Successfully saved server");
+			
+			// Update remote service
+			[XService sharedXService].remoteService.activeServer = server;
+			
+			// Save the credentials permanently now that they have been validated
+			[self saveCredentials];
+			
+			// Pre-populate default path directory contents
+			[defaultPathController initializeDefaultPaths];
+		}
+	}];
 }
 
 - (void)defaultPathsFinished
@@ -232,7 +231,7 @@ typedef enum _SetupStep {
 	_isResetting = YES;
 	
 	// Delete cache files
-	[[XService sharedXService] clearCache];
+	[[XService sharedXService] clearCacheWithCompletionBlock:^(NSError *error) {}];
 	
 	// Delete meta files
 	NSURL *metaURL = [NSURL fileURLWithPath:[[[XService sharedXService] documentsPath] stringByAppendingString:@"-meta"]];

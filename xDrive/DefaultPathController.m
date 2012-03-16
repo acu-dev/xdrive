@@ -140,31 +140,28 @@
 {
 	XDrvDebug(@"Got default paths");
 	pathDetails = [[NSMutableArray alloc] init];
-	NSMutableArray *order = [NSMutableArray arrayWithCapacity:[details count]];
+	NSMutableArray *tabBarOrder = [NSMutableArray arrayWithCapacity:[details count]];
 	
 	for (NSDictionary *path in details)
 	{
-		NSMutableDictionary *defaultPath = [[NSMutableDictionary alloc] initWithDictionary:path];
+		NSMutableDictionary *defaultPathDetails = [[NSMutableDictionary alloc] initWithDictionary:path];
 		
 		// Save path order
-		[order addObject:[defaultPath objectForKey:@"name"]];
+		[tabBarOrder addObject:[defaultPathDetails objectForKey:@"name"]];
 		
 		// Replace user placeholder in paths
-		[defaultPath setValue:[[defaultPath objectForKey:@"path"] stringByReplacingOccurrencesOfString:@"${user}" withString:setupController.validateUser] forKey:@"path"];
-		[pathDetails addObject:defaultPath];
+		[defaultPathDetails setValue:[[defaultPathDetails objectForKey:@"path"] stringByReplacingOccurrencesOfString:@"${user}" withString:setupController.validateUser] forKey:@"path"];
+		[pathDetails addObject:defaultPathDetails];
 		
 		// Create default path object
-		XDefaultPath *newDefaultPath = [NSEntityDescription insertNewObjectForEntityForName:@"DefaultPath"
-																	 inManagedObjectContext:[[XService sharedXService].localService managedObjectContext]];
-		newDefaultPath.name = [defaultPath objectForKey:@"name"];
-		newDefaultPath.path = [defaultPath objectForKey:@"path"];
-		[xServer addDefaultPathsObject:newDefaultPath];
+		[[XService sharedXService].localService createDefaultPathAtPath:[defaultPathDetails objectForKey:@"path"]
+															   withName:[defaultPathDetails objectForKey:@"name"]];
 	}
 	
 	// Add standard tab bar items and save order
-	[order addObject:@"Recent"];
-	[order addObject:@"Settings"];
-	[XDriveConfig saveTabItemOrder:order];
+	[tabBarOrder addObject:@"Recent"];
+	[tabBarOrder addObject:@"Settings"];
+	[XDriveConfig saveTabItemOrder:tabBarOrder];
 	
 	// All done
 	[setupController defaultPathsValidated];
@@ -183,11 +180,7 @@
 	defaultPath.directory = directory;
 	
 	// Save
-	NSError *error = nil;
-	if (![[[XService sharedXService].localService managedObjectContext] save:&error])
-	{
-		XDrvLog(@"Error: Unable to attach directory with path %@ to default path", directory.path);
-	}
+	[[XService sharedXService].localService saveWithCompletionBlock:^(NSError *error) {}];
 }
 
 - (void)receiveDefaultPathIcon:(NSString *)tmpFilePath
@@ -204,11 +197,7 @@
 	defaultPath.icon = newFilePath;
 	
 	// Save
-	NSError *error = nil;
-	if (![[[XService sharedXService].localService managedObjectContext] save:&error])
-	{
-		XDrvLog(@"Error: Unable to attach icon path %@ to default path", newFilePath);
-	}
+	[[XService sharedXService].localService saveWithCompletionBlock:^(NSError *error) {}];
 }
 
 
