@@ -52,7 +52,6 @@
 	
 	dispatch_queue_t updateQueue = dispatch_queue_create("edu.acu.xdrive.updateDirectory", 0);
 	dispatch_async(updateQueue, ^{
-		_localService = [[XService sharedXService].localService newServiceForOperation];
 		[self updateDirectoryWithDetails:details];
 	});
 	
@@ -61,6 +60,9 @@
 
 - (void)updateDirectoryWithDetails:(NSDictionary *)details
 {
+	// Create new service
+	_localService = [[XService sharedXService].localService newServiceForOperation];
+	
 	// Get directory
 	XDirectory *directory = [_localService directoryWithPath:[details objectForKey:@"path"]];
 	

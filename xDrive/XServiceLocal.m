@@ -84,6 +84,7 @@ static NSString *ModelFileName = @"xDrive";
 	
 	// Set managed object context (See newServiceForOperation)
 	_managedObjectContext = managedObjectContext;
+	_server = nil;
     
     return self;
 }
@@ -155,6 +156,11 @@ static NSString *ModelFileName = @"xDrive";
 		if (![fetchedObjects count])
 			return nil;
 		_server = [fetchedObjects objectAtIndex:0];
+		XDrvLog(@"Fetched server object");
+	}
+	else
+	{
+		XDrvLog(@"Returning pre-fetched server object");
 	}
 	return _server;
 }
