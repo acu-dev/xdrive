@@ -165,7 +165,7 @@ static NSString *ModelFileName = @"xDrive";
 
 - (XServer *)createServerWithProtocol:(NSString *)protocol port:(NSNumber *)port hostname:(NSString *)hostname
 							  context:(NSString *)context servicePath:(NSString *)servicePath
-{	
+{
 	XServer *newServer = [NSEntityDescription insertNewObjectForEntityForName:@"Server" 
 											inManagedObjectContext:_managedObjectContext];
 	newServer.protocol = protocol;
@@ -230,7 +230,7 @@ static NSString *ModelFileName = @"xDrive";
 													 inManagedObjectContext:_managedObjectContext];
 	newEntry.path = path;
 	newEntry.name = [path lastPathComponent];
-	newEntry.server = _server;
+	newEntry.server = [self server];
 	
 	//[self saveWithCompletionBlock:^(NSError *error) {}];
 	return newEntry;
