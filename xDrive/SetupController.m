@@ -117,7 +117,7 @@ typedef enum _SetupStep {
 
 	// Create server object
 	server = [[XService sharedXService].localService createServerWithProtocol:[xserviceInfo objectForKey:@"protocol"]
-																		 port:[xserviceInfo objectForKey:@"prort"]
+																		 port:[xserviceInfo objectForKey:@"port"]
 																	 hostname:[xserviceInfo objectForKey:@"host"]
 																	  context:[xserviceInfo objectForKey:@"context"]
 																  servicePath:[xserviceInfo objectForKey:@"serviceBase"]];
@@ -180,7 +180,7 @@ typedef enum _SetupStep {
 		else
 		{
 			// Success!
-			XDrvDebug(@"Successfully saved server");
+			XDrvDebug(@"Successfully saved server and default paths");
 			
 			// Update remote service
 			[XService sharedXService].remoteService.activeServer = server;
