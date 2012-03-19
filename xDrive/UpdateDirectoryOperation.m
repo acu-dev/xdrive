@@ -35,7 +35,8 @@
 {
     self = [super init];
     if (!self) return nil;
-	
+
+	XDrvDebug(@"%@", path);
 	_directoryPath = path;
     _state = DirectoryOperationReadyState;
 	
@@ -61,10 +62,13 @@
 - (void)updateDirectoryWithDetails:(NSDictionary *)details
 {
 	// Create new service
+	XDrvDebug(@"%@ Creating new service for operation", _directoryPath);
 	_localService = [[XService sharedXService].localService newServiceForOperation];
 	
 	// Get directory
+	XDrvDebug(@"%@ Fetching directory object from local service", _directoryPath);
 	XDirectory *directory = [_localService directoryWithPath:[details objectForKey:@"path"]];
+	XDrvDebug(@"%@ Directory context: %@", directory.path, directory.managedObjectContext);
 	
 	// Directory's last updated time from server
 	NSTimeInterval lastUpdatedSeconds = [[details objectForKey:@"lastUpdated"] doubleValue] / 1000;
@@ -74,11 +78,11 @@
 		if ([directory.contentsLastUpdated isEqualToDate:lastUpdated])
 		{
 			// Directory has not been updated since last fetch; nothing else to do
-			XDrvDebug(@"Directory has not been updated; using cached object for dir: %@", directory.path);
+			XDrvDebug(@"%@ Directory has not been updated; using cached object", directory.path);
 			return;
 		}
 	}
-	XDrvDebug(@"Directory has changes; updating contents for dir: %@", directory.path);
+	XDrvDebug(@"%@ Has changes; updating contents", directory.path);
 	directory.contentsLastUpdated = lastUpdated;
 	
 	// Go through contents and create a set of remote entries (entries that don't exist are created on the fly)
@@ -112,6 +116,8 @@
 		// Common attributes
 		entry.creator = [entryFromJson objectForKey:@"creator"];
 		entry.lastUpdator = [entryFromJson objectForKey:@"lastUpdator"];
+		XDrvDebug(@"%@ Entry %@ context: %@", directory.path, entry.path, directory.managedObjectContext);
+		XDrvLog(@"%@ Setting parent on content entry %@", directory.path, entry.path);
 		entry.parent = directory;
 		[remoteEntries addObject:entry];
 	}
@@ -122,7 +128,7 @@
 		if (![remoteEntries containsObject:entry])
 		{
 			// Entry does not exist in contents returned from server; needs to be deleted
-			XDrvDebug(@"Entry %@ no longer exists on server; deleting...", entry.path);
+			XDrvDebug(@"%@ Content entry %@ no longer exists on server; removing cache and entry from local store", directory.path, entry.path);
 			
 			if ([entry isKindOfClass:[XDirectory class]])
 			{
@@ -143,12 +149,12 @@
 	[_localService saveWithCompletionBlock:^(NSError *error) {
 		if (error)
 		{
-			XDrvLog(@"Error: Problem saving local context for %@", directory.path);
+			XDrvLog(@"%@ Error: Problem saving local context: %@", directory.path, error);
 			_state = DirectoryOperationFailedState;
 		}
 		else
 		{
-			XDrvDebug(@"Saved local context for %@", directory.path);
+			XDrvDebug(@"%@ Saved local context", directory.path);
 			_state = DirectoryOperationFinishedState;
 		}
 		
@@ -190,13 +196,13 @@
 {
     if ([self isReady])
 	{
-		XDrvDebug(@"Starting directory update operation for %@", _directoryPath);
+		XDrvDebug(@"%@", _directoryPath);
         _state = DirectoryOperationFetchingState;
 		[[XService sharedXService].remoteService fetchDirectoryContentsAtPath:_directoryPath withDelegate:self];
     }
 	else
 	{
-		XDrvLog(@"Directory update operation was not initialized properly");
+		XDrvLog(@"%@ Error: Not initialized properly", _directoryPath);
 	}
 }
 
@@ -213,12 +219,12 @@
 {
 	if ([result isKindOfClass:[NSDictionary class]])
 	{
-		XDrvDebug(@"Directory fetch finished for %@", _directoryPath);
+		XDrvDebug(@"%@ Fetch finished", _directoryPath);
 		[self updateDirectoryInBackgroundWithDetails:(NSDictionary *)result];
 	}
 	else
 	{
-		XDrvLog(@"Directory fetch returned unexpected result: %@", result);
+		XDrvLog(@"%@ Fetch returned unexpected result: %@", _directoryPath, result);
 		_state = DirectoryOperationFailedState;
 		[self finish];
 	}
@@ -226,7 +232,7 @@
 
 - (void)connectionFailedWithError:(NSError *)error
 {
-	XDrvLog(@"Directory fetch failed: %@", error);
+	XDrvLog(@"%@ Fetch failed: %@", _directoryPath, error);
 	_state = DirectoryOperationFailedState;
 	[self finish];
 }

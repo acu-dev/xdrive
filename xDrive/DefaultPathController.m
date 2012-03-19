@@ -197,6 +197,10 @@
 		// All done getting default paths; notify delegate
 		[_setupController defaultPathsFinished];
 	}
+	else
+	{
+		XDrvLog(@"%i active fetches remaining", _activeFetchCount);
+	}
 }
 
 - (void)receiveDefaultPathIcon:(NSString *)tmpFilePath
@@ -208,9 +212,13 @@
 	[[XService sharedXService] moveFileAtPath:tmpFilePath toPath:newFilePath];
 	
 	// Set icon path
-	XDefaultPath *defaultPath = [self defaultPathWithPath:[_iconToPathMap objectForKey:fileName]];
-	XDrvDebug(@"Attaching icon %@ to default path %@", newFilePath, defaultPath.path);
-	defaultPath.icon = newFilePath;
+	NSString *path = [_iconToPathMap objectForKey:fileName];
+	if (path)
+	{
+		XDefaultPath *defaultPath = [self defaultPathWithPath:path];
+		XDrvDebug(@"Attaching icon %@ to default path %@", newFilePath, defaultPath.path);
+		defaultPath.icon = newFilePath;
+	}
 
 	// This fetch is finished
 	[self didFinishActiveFetch];

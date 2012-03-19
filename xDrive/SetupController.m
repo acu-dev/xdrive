@@ -196,6 +196,8 @@ typedef enum _SetupStep {
 
 - (void)defaultPathsFinished
 {
+	XDrvLog(@"Done setting up default paths; saving context...");
+	
 	// Save the context now that the default paths have been initialized
 	[[XService sharedXService].localService saveWithCompletionBlock:^(NSError *error) {
 		
