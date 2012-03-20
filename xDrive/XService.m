@@ -53,6 +53,7 @@
 		// Init local and remote services
 		_localService = [[XServiceLocal alloc] init];
 		_remoteService = [[XServiceRemote alloc] initWithServer:_localService.server];
+		UpdateOperationQueue = dispatch_queue_create("edu.acu.xdrive.updateOperationQueue", 0);
     }
     return self;
 }

@@ -19,7 +19,6 @@ static NSString *ModelFileName = @"xDrive";
 
 @interface XServiceLocal()
 @property (nonatomic, strong) NSPersistentStoreCoordinator *_persistentStoreCoordinator;
-@property (nonatomic, strong) NSManagedObjectContext *_managedObjectContext;
 
 - (id)initForOperationWithManagedObjectContext:(NSManagedObjectContext *)managedObjectContext;
 
@@ -34,9 +33,9 @@ static NSString *ModelFileName = @"xDrive";
 
 // Private
 @synthesize _persistentStoreCoordinator;
-@synthesize _managedObjectContext;
 
 // Public
+@synthesize managedObjectContext = _managedObjectContext;
 @synthesize server = _server;
 
 
@@ -53,7 +52,7 @@ static NSString *ModelFileName = @"xDrive";
 	XDrvDebug(@"Initializing local service");
 	
 	// Setup the model
-	NSURL *modelURL = [[NSBundle mainBundle] URLForResource:@"xDrive" withExtension:@"momd"];
+	NSURL *modelURL = [[NSBundle mainBundle] URLForResource:ModelFileName withExtension:@"momd"];
 	NSManagedObjectModel *managedObjectModel = [[NSManagedObjectModel alloc] initWithContentsOfURL:modelURL];
 	
 	// Setup the persistent store (database) coordinator
@@ -150,16 +149,19 @@ static NSString *ModelFileName = @"xDrive";
 	if (!_server)
 	{
 		NSFetchRequest *fetchRequest = [NSFetchRequest fetchRequestWithEntityName:@"Server"];
-
+		[fetchRequest setFetchBatchSize:1];
+		
 		NSError *error = nil;
 		NSArray *fetchedObjects = [_managedObjectContext executeFetchRequest:fetchRequest error:&error];
 		if (![fetchedObjects count])
 		{
 			XDrvLog(@"No server object found");
-			return nil;
 		}
-		_server = [fetchedObjects objectAtIndex:0];
-		XDrvLog(@"Fetched server object");
+		else
+		{
+			_server = [fetchedObjects lastObject];
+			XDrvLog(@"Fetched server object");
+		}
 	}
 	else
 	{
@@ -191,9 +193,9 @@ static NSString *ModelFileName = @"xDrive";
 															  inManagedObjectContext:_managedObjectContext];
 	defaultPath.path = path;
 	defaultPath.name = name;
-	[_server addDefaultPathsObject:defaultPath];
+	defaultPath.server = [self server];
+	[[self server] addDefaultPathsObject:defaultPath];
 	
-	//[self saveWithCompletionBlock:^(NSError *error) {}];
 	return defaultPath;
 }
 
@@ -229,19 +231,20 @@ static NSString *ModelFileName = @"xDrive";
 	}
 	else
 	{
+		XDrvDebug(@"Found entry at %@", path);
 		return [fetchedObjects lastObject];
 	}
 }
 
 - (XEntry *)createEntryOfType:(NSString *)type withPath:(NSString *)path
 {
+	XDrvDebug(@"Creating %@ entry at %@", type, path);
 	XEntry *newEntry = [NSEntityDescription insertNewObjectForEntityForName:type
-													 inManagedObjectContext:_managedObjectContext];
+											 inManagedObjectContext:_managedObjectContext];
 	newEntry.path = path;
 	newEntry.name = [path lastPathComponent];
 	newEntry.server = [self server];
 	
-	//[self saveWithCompletionBlock:^(NSError *error) {}];
 	return newEntry;
 }
 

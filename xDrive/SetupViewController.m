@@ -347,6 +347,7 @@ static int FormDefaultYPosIpadLandscape = 166;
 
 - (void)dismissSetup
 {
+	XDrvDebug(@"Performing segue DismissSetupView");
 	[self performSegueWithIdentifier:@"DismissSetupView" sender:self];
 }
 
@@ -417,6 +418,7 @@ static int FormDefaultYPosIpadLandscape = 166;
 	activityIndicator.hidden = YES;
 	
 	// Hide view after hud hides
+	XDrvDebug(@"Dismissing setup view");
 	[self performSelector:@selector(dismissSetup) withObject:nil afterDelay:1.0];
 }
 

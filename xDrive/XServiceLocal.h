@@ -12,6 +12,8 @@
 
 @interface XServiceLocal : NSObject
 
+@property (nonatomic, strong, readonly) NSManagedObjectContext *managedObjectContext;
+
 ///--------------------
 /// @name Remote Server
 ///--------------------

@@ -205,6 +205,7 @@ typedef enum _SetupStep {
 		[XDriveConfig setLocalStorageOption:[XDriveConfig defaultLocalStorageOption]];
 			
 		// All done
+		XDrvDebug(@"Setup Finished");
 		[viewController setupFinished];
 	}];
 }

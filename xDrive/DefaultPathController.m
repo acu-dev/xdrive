@@ -31,12 +31,12 @@
 @property (nonatomic, strong) NSMutableArray *_defaultPathsList;
 
 /**
- Storage for the default path directory update operations.
+ Root directory update operation. Required before any other operations fire off.
  */
-@property (nonatomic, strong) NSMutableArray *_updateOperations;
+@property (nonatomic, strong) UpdateDirectoryOperation *_rootUpdateDirectoryOperation;
 
 /**
- Counter to keep track of current fetches/operations. Gets decremented as fetches return and operations finish.
+ Counter used to track active fetches.
  */
 @property (nonatomic, assign) int _activeFetchCount;
 
@@ -71,7 +71,7 @@
 @synthesize _setupController;
 @synthesize _server;
 @synthesize _defaultPathsList;
-@synthesize _updateOperations;
+@synthesize _rootUpdateDirectoryOperation;
 @synthesize _activeFetchCount;
 @synthesize _iconToPathMap;
 
@@ -85,7 +85,6 @@
 	if (!self) return nil;
 	
 	_setupController = setupController;
-	_updateOperations = [[NSMutableArray alloc] init];
 
 	return self;
 }
@@ -147,45 +146,36 @@
 
 - (void)initializeDefaultPaths
 {
+	// Get the root directory contents
+	/*XDrvDebug(@"Updating root directory contents");
+	_rootUpdateDirectoryOperation = [[UpdateDirectoryOperation alloc] initWithDirectoryPath:@"/"];
+	__block typeof(self) bself = self;
+	[_rootUpdateDirectoryOperation setCompletionBlock:^{
+		[bself didFinishActiveFetch];
+	}];
+	[_rootUpdateDirectoryOperation start];*/
+	
 	// Map to associate fetched icons with their default path
 	_iconToPathMap = [[NSMutableDictionary alloc] init];
 	
-	// Start fetching directory contents and icons for each default path
+	// Start downloading icons for each default path
 	for (NSDictionary *defaultPath in _defaultPathsList)
 	{
-		NSString *path = [defaultPath objectForKey:@"path"];
+		// List of icons to download
+		NSArray *iconNames = [NSArray arrayWithObjects:@"icon", @"icon@2x", nil];
 		
-		// Get the default path's directory contents
-		XDrvDebug(@"Fetching directory details for default path: %@", path);
-		UpdateDirectoryOperation *operation = [[UpdateDirectoryOperation alloc] initWithDirectoryPath:path];
-		[operation setCompletionBlock:^{
-			[self didFinishActiveFetch];
-		}];
-		[_updateOperations addObject:operation];
-		_activeFetchCount++;
-		[operation start];
-		
-		NSString *iconPath = [defaultPath objectForKey:@"icon"];
-		if (iconPath)
-		{
-			// Get the default path's icon
-			iconPath = [[self contextURLString] stringByAppendingString:iconPath];
-			XDrvDebug(@"Fetching icon: %@", iconPath);
-			[[XService sharedXService].remoteService downloadFileAtAbsolutePath:iconPath ifModifiedSinceCachedDate:nil withDelegate:self];
-			[_iconToPathMap setObject:path forKey:[iconPath lastPathComponent]];
-			_activeFetchCount++;
-			
-			NSString *hiresIconPath = [defaultPath objectForKey:@"icon@2x"];
-			if (hiresIconPath)
+		[iconNames enumerateObjectsUsingBlock:^(id obj, NSUInteger idx, BOOL *stop){
+			NSString *iconPath = [defaultPath objectForKey:[iconNames objectAtIndex:idx]];
+			if (iconPath)
 			{
-				// Get the default path's @2x icon
-				hiresIconPath = [[self contextURLString] stringByAppendingString:hiresIconPath];
-				XDrvDebug(@"Fetching @2x icon: %@", hiresIconPath);
-				[[XService sharedXService].remoteService downloadFileAtAbsolutePath:hiresIconPath ifModifiedSinceCachedDate:nil withDelegate:self];
-				[_iconToPathMap setObject:path forKey:[iconPath lastPathComponent]];
+				// Get the default path's icon
+				iconPath = [[self contextURLString] stringByAppendingString:iconPath];
+				XDrvDebug(@"Fetching icon: %@", iconPath);
+				[[XService sharedXService].remoteService downloadFileAtAbsolutePath:iconPath ifModifiedSinceCachedDate:nil withDelegate:self];
+				[_iconToPathMap setObject:[defaultPath objectForKey:@"path"] forKey:[iconPath lastPathComponent]];
 				_activeFetchCount++;
 			}
-		}
+		}];
 	}
 }
 

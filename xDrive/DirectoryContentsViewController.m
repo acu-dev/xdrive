@@ -11,7 +11,7 @@
 #import "XDriveConfig.h"
 #import "OpenFileViewController.h"
 #import "UIStoryboard+Xdrive.h"
-#import "UpdateDirectoryOperation.h"
+#import "DirectoryContentsController.h"
 
 
 
@@ -20,15 +20,12 @@
 /**
  Results controller for the contents of the current directory.
  */
-@property (nonatomic, strong) NSFetchedResultsController *_contentsController;
+@property (nonatomic, strong) NSFetchedResultsController *_fetchedResultsController;
 
 /**
- Operation to handle fetching and updating the directory contents from the server.
+ Controller to handle updating the directory contents.
  */
-@property (nonatomic, strong) UpdateDirectoryOperation *_updateDirectoryOperation;
-
-- (void)evaluateDirectoryStatus;
-- (void)displayDirectoryContents;
+@property (nonatomic, strong) DirectoryContentsController *_contentsController;
 
 - (void)configureCell:(UITableViewCell *)cell atIndexPath:(NSIndexPath *)indexPath;
 - (void)configureCell:(UITableViewCell *)cell forEntry:(XEntry *)entry;
@@ -44,12 +41,13 @@
 @implementation DirectoryContentsViewController
 
 // Private
+@synthesize _fetchedResultsController;
 @synthesize _contentsController;
-@synthesize _updateDirectoryOperation;
 
 // Public
 @synthesize directory;
 @synthesize iconTypes;
+@synthesize contentStatus;
 
 
 
@@ -73,10 +71,10 @@
 	directory = dir;
 	
 	// Get contents controller
-	_contentsController = [[XService sharedXService].localService contentsControllerForDirectory:directory];
-	_contentsController.delegate = self;
+	_fetchedResultsController = [[XService sharedXService].localService contentsControllerForDirectory:directory];
+	_fetchedResultsController.delegate = self;
 	
-	[self evaluateDirectoryStatus];
+	_contentsController = [[DirectoryContentsController alloc] initWithDirectory:directory forViewController:self];
 }
 
 
@@ -89,11 +87,26 @@
 	if (!self.title) self.title = directory.name;
 }
 
+- (void)viewWillAppear:(BOOL)animated
+{
+	[super viewWillAppear:animated];
+	
+	if (directory.contentsLastUpdated)
+	{
+		[self displayDirectoryContents];
+	}
+	else
+	{
+		XDrvLog(@"%@ :: Contents not yet loaded. Show activity animation here .....................", directory.path);
+	}
+	[_contentsController updateDirectoryContents];
+}
+
 - (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender
 {
 	if ([segue.identifier isEqualToString:@"ViewFile"])
 	{
-		XFile *file = [_contentsController objectAtIndexPath:[self.tableView indexPathForSelectedRow]];
+		XFile *file = [_fetchedResultsController objectAtIndexPath:[self.tableView indexPathForSelectedRow]];
 		[(id)segue.destinationViewController setXFile:file];
 	}
 }
@@ -105,46 +118,43 @@
 
 
 
+#pragma mark - Content Status
+
+- (void)updateDirectoryStatus:(DirectoryContentStatus)status
+{
+	switch (status)
+	{
+		case DirectoryContentCached:
+			XDrvDebug(@"%@ is cached", directory.path);
+			break;
+			
+		case DirectoryContentFetching:
+		case DirectoryContentUpdating:
+			XDrvDebug(@"%@ is updating", directory.path);
+			break;
+			
+		case DirectoryContentUpdateFinished:
+			XDrvDebug(@"%@ update finished", directory.path);
+			break;
+			
+		case DirectoryContentUpdateFailed:
+		default:
+			XDrvDebug(@"%@ update failed", directory.path);
+			break;
+	}
+}
+
+
+
 #pragma mark - Directory Contents
 
-- (void)evaluateDirectoryStatus
-{
-	if (!directory.contentsLastUpdated)
-	{
-		XDrvLog(@"Directory contens have never been fetched");
-	}
-	
-	if ([directory.contentsLastUpdated compare:directory.lastUpdated] == NSOrderedDescending)
-	{
-		// Up to date
-		XDrvLog(@"Directory contents are up to date");
-	}
-	
-	
-	
-	/*
-	if (!directory.contentsLastUpdated)
-	{
-		// Directory contents have never been fetched
-		
-	}
-	else if ([directory.contentsLastUpdated compare:directory.lastUpdated] == NSOrderedAscending)
-	{
-		// Directory has updates
-		
-	}
-	else
-	{
-		// Up to date
-		[self displayDirectoryContents];
-	}*/
-}
+
 
 - (void)displayDirectoryContents
 {
 	// Fetch contents
 	NSError *error = nil;
-	if (![_contentsController performFetch:&error])
+	if (![_fetchedResultsController performFetch:&error])
 	{
 		XDrvLog(@"Error performing directory contents fetch: %@", error);
 	}
@@ -158,7 +168,7 @@
 
 - (void)configureCell:(UITableViewCell *)cell atIndexPath:(NSIndexPath *)indexPath
 {
-    XEntry *entry = [_contentsController objectAtIndexPath:indexPath];
+    XEntry *entry = [_fetchedResultsController objectAtIndexPath:indexPath];
     [self configureCell:cell forEntry:entry];
 }
 
@@ -213,18 +223,18 @@
 
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView
 {
-	return [[_contentsController sections] count];
+	return [[_fetchedResultsController sections] count];
 }
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
 {
-	id <NSFetchedResultsSectionInfo> sectionInfo = [[_contentsController sections] objectAtIndex:section];
+	id <NSFetchedResultsSectionInfo> sectionInfo = [[_fetchedResultsController sections] objectAtIndex:section];
 	return [sectionInfo numberOfObjects];
 }
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
 {
-	XEntry *entry = [_contentsController objectAtIndexPath:indexPath];
+	XEntry *entry = [_fetchedResultsController objectAtIndexPath:indexPath];
 	
 	NSString *cellIdentifier = nil;
 	if ([entry isKindOfClass:[XDirectory class]])
@@ -268,7 +278,7 @@
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
-	XEntry *entry = [_contentsController objectAtIndexPath:indexPath];
+	XEntry *entry = [_fetchedResultsController objectAtIndexPath:indexPath];
 	
 	if ([entry isKindOfClass:[XDirectory class]])
 	{
@@ -343,15 +353,6 @@
     [self.tableView endUpdates];
 }
 
-/*
- // Implementing the above methods to update the table view in response to individual changes may have performance implications if a large number of changes are made simultaneously. If this proves to be an issue, you can instead just implement controllerDidChangeContent: which notifies the delegate that all section and object changes have been processed. 
- 
- - (void)controllerDidChangeContent:(NSFetchedResultsController *)controller
- {
- // In the simplest, most efficient, case, reload the table view.
- [self.tableView reloadData];
- }
- */
 
 
 

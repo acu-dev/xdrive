@@ -12,11 +12,12 @@
 
 
 @interface UpdateDirectoryOperation ()
-@property (nonatomic, strong) NSString *_directoryPath;
-@property (nonatomic, strong) XServiceLocal *_localService;
 
-- (void)updateDirectoryInBackgroundWithDetails:(NSDictionary *)details;
-- (void)updateDirectoryWithDetails:(NSDictionary *)details;
+@property (nonatomic, strong) NSDictionary *_directoryDetails;
+@property (nonatomic, strong) NSString *_directoryPath;
+@property (nonatomic, assign) BOOL _cancelled;
+@property (nonatomic, strong) NSError *_error;
+@property (nonatomic, copy) UpdateDirectoryOperationFailedBlock _failureBlock;
 
 @end
 
@@ -24,70 +25,67 @@
 @implementation UpdateDirectoryOperation
 
 // Private
+@synthesize _directoryDetails;
 @synthesize _directoryPath;
-@synthesize _localService;
+@synthesize _cancelled;
+@synthesize _error;
+@synthesize _failureBlock;
 
 // Public
 @synthesize state = _state;
 
 
-- (id)initWithDirectoryPath:(NSString *)path
+
+#pragma mark - Initiailization
+
+- (id)initWithDetails:(NSDictionary *)details forDirectoryPath:(NSString *)directoryPath
 {
     self = [super init];
     if (!self) return nil;
 
-	XDrvDebug(@"%@", path);
-	_directoryPath = path;
-    _state = DirectoryOperationReadyState;
+	XDrvDebug(@"%@ :: Creating update operation", directoryPath);
+	_directoryPath = directoryPath;
+	_directoryDetails = details;
+	
+	[self willChangeValueForKey:@"isReady"];
+	_state = DirectoryOperationReadyState;
+	[self didChangeValueForKey:@"isReady"];
 	
     return self;
 }
 
 
 
-#pragma mark - Update Directory
+#pragma mark - Failure
 
-- (void)updateDirectoryInBackgroundWithDetails:(NSDictionary *)details
+- (void)setFailureBlock:(UpdateDirectoryOperationFailedBlock)block
 {
-	_state = DirectoryOperationUpdatingState;
-	
-	dispatch_queue_t updateQueue = dispatch_queue_create("edu.acu.xdrive.updateDirectory", 0);
-	dispatch_async(updateQueue, ^{
-		[self updateDirectoryWithDetails:details];
-	});
-	
-	dispatch_release(updateQueue);
+	_failureBlock = block;
 }
 
-- (void)updateDirectoryWithDetails:(NSDictionary *)details
+
+
+#pragma mark - Update Directory
+
+- (void)main
 {
-	// Create new service
-	XDrvDebug(@"%@ Creating new service for operation", _directoryPath);
-	_localService = [[XService sharedXService].localService newServiceForOperation];
+	// Create new service with it's own context for background operation
+	XDrvDebug(@"%@ :: Creating new service for background operation", _directoryPath);
+	XServiceLocal *localService = [[XService sharedXService].localService newServiceForOperation];
 	
 	// Get directory
-	XDrvDebug(@"%@ Fetching directory object from local service", _directoryPath);
-	XDirectory *directory = [_localService directoryWithPath:[details objectForKey:@"path"]];
-	XDrvDebug(@"%@ Directory context: %@", directory.path, directory.managedObjectContext);
+	XDrvDebug(@"%@ :: Fetching directory object from local service", _directoryPath);
+	XDirectory *directory = [localService directoryWithPath:[_directoryDetails objectForKey:@"path"]];
 	
-	// Directory's last updated time from server
-	NSTimeInterval lastUpdatedSeconds = [[details objectForKey:@"lastUpdated"] doubleValue] / 1000;
+	// Update last updated time (times come from details in milliseconds since epoch)
+	NSTimeInterval lastUpdatedSeconds = [[_directoryDetails objectForKey:@"lastUpdated"] doubleValue] / 1000;
 	NSDate *lastUpdated = [NSDate dateWithTimeIntervalSince1970:lastUpdatedSeconds];
-	if (directory.contentsLastUpdated)
-	{
-		if ([directory.contentsLastUpdated isEqualToDate:lastUpdated])
-		{
-			// Directory has not been updated since last fetch; nothing else to do
-			XDrvDebug(@"%@ Directory has not been updated; using cached object", directory.path);
-			return;
-		}
-	}
-	XDrvDebug(@"%@ Has changes; updating contents", directory.path);
+	directory.lastUpdated = lastUpdated;
 	directory.contentsLastUpdated = lastUpdated;
 	
 	// Go through contents and create a set of remote entries (entries that don't exist are created on the fly)
 	NSMutableSet *remoteEntries = [[NSMutableSet alloc] init];
-	NSArray *contents = [details objectForKey:@"contents"];
+	NSArray *contents = [_directoryDetails objectForKey:@"contents"];
 	for (NSDictionary *entryFromJson in contents)
 	{
 		// Create/get object for each entry in contents
@@ -95,30 +93,26 @@
 		if ([[entryFromJson objectForKey:@"type"] isEqualToString:@"folder"])
 		{
 			// Folder
-			entry = [_localService directoryWithPath:[entryFromJson objectForKey:@"path"]];
+			entry = [localService directoryWithPath:[entryFromJson objectForKey:@"path"]];
 		}
 		else
 		{
 			// File
-			XFile *file = [_localService fileWithPath:[entryFromJson objectForKey:@"path"]];
+			XFile *file = [localService fileWithPath:[entryFromJson objectForKey:@"path"]];
 			file.type = [entryFromJson objectForKey:@"type"];
 			file.size = [entryFromJson objectForKey:@"size"];
 			file.sizeDescription = [NSString stringByFormattingBytes:[file.size integerValue]];
 			entry = file;
 		}
-		
-		// Dates (times come from xservice in milliseconds since epoch)
+		// Common attributes
 		NSTimeInterval createdSeconds = [[entryFromJson objectForKey:@"created"] doubleValue] / 1000;
 		NSTimeInterval lastUpdatedSeconds = [[entryFromJson objectForKey:@"lastUpdated"] doubleValue] / 1000;
 		entry.created = [NSDate dateWithTimeIntervalSince1970:createdSeconds];
 		entry.lastUpdated = [NSDate dateWithTimeIntervalSince1970:lastUpdatedSeconds];
-		
-		// Common attributes
 		entry.creator = [entryFromJson objectForKey:@"creator"];
 		entry.lastUpdator = [entryFromJson objectForKey:@"lastUpdator"];
-		XDrvDebug(@"%@ Entry %@ context: %@", directory.path, entry.path, directory.managedObjectContext);
-		XDrvLog(@"%@ Setting parent on content entry %@", directory.path, entry.path);
 		entry.parent = directory;
+
 		[remoteEntries addObject:entry];
 	}
 	
@@ -128,7 +122,7 @@
 		if (![remoteEntries containsObject:entry])
 		{
 			// Entry does not exist in contents returned from server; needs to be deleted
-			XDrvDebug(@"%@ Content entry %@ no longer exists on server; removing cache and entry from local store", directory.path, entry.path);
+			XDrvDebug(@"%@ :: Content entry %@ no longer exists on server; removing cache and entry from local store", directory.path, entry.path);
 			
 			if ([entry isKindOfClass:[XDirectory class]])
 			{
@@ -138,7 +132,7 @@
 			{
 				[[XService sharedXService] removeCacheForFile:(XFile *)entry];
 			}
-			[_localService removeEntry:entry];
+			[localService removeEntry:entry];
 		}
 	}
 	
@@ -146,16 +140,21 @@
 	[directory setContents:remoteEntries];
 	
 	// Save changes
-	[_localService saveWithCompletionBlock:^(NSError *error) {
+	[localService saveWithCompletionBlock:^(NSError *error) {
 		if (error)
 		{
-			XDrvLog(@"%@ Error: Problem saving local context: %@", directory.path, error);
+			XDrvLog(@"%@ :: Error: Problem saving local context: %@", directory.path, error);
+			_error = error;
+			[self willChangeValueForKey:@"isFinished"];
 			_state = DirectoryOperationFailedState;
+			[self didChangeValueForKey:@"isFinished"];
 		}
 		else
 		{
-			XDrvDebug(@"%@ Saved local context", directory.path);
+			XDrvDebug(@"%@ :: Saved local context", directory.path);
+			[self willChangeValueForKey:@"isFinished"];
 			_state = DirectoryOperationFinishedState;
+			[self didChangeValueForKey:@"isFinished"];
 		}
 		
 		// Run finish on main queue
@@ -164,10 +163,6 @@
 		});
 	}];
 }
-
-
-
-
 
 
 #pragma mark - NSOperation
@@ -179,12 +174,16 @@
 
 - (BOOL)isExecuting
 {
-    return _state == DirectoryOperationFetchingState || _state == DirectoryOperationUpdatingState;
+    return _state == DirectoryOperationUpdatingState;
 }
 
 - (BOOL)isFinished
 {
-    return _state == DirectoryOperationFinishedState;
+    return _state == DirectoryOperationFinishedState || _state == DirectoryOperationFailedState;
+}
+
+- (BOOL)isCancelled {
+    return _cancelled;
 }
 
 - (BOOL)isConcurrent
@@ -194,49 +193,50 @@
 
 - (void)start
 {
-    if ([self isReady])
+	// Always check for cancellation before launching the task.
+	if ([self isCancelled])
 	{
-		XDrvDebug(@"%@", _directoryPath);
-        _state = DirectoryOperationFetchingState;
-		[[XService sharedXService].remoteService fetchDirectoryContentsAtPath:_directoryPath withDelegate:self];
-    }
-	else
-	{
-		XDrvLog(@"%@ Error: Not initialized properly", _directoryPath);
+		// Must move the operation to the finished state if it is canceled, so it will be removed from the queue.
+		[self willChangeValueForKey:@"isFinished"];
+		_state = DirectoryOperationFinishedState;
+		[self didChangeValueForKey:@"isFinished"];
+		return;
 	}
+	
+	// If the operation is not canceled, begin executing the task.
+	XDrvDebug(@"%@ :: Starting update operation", _directoryPath);
+	[self willChangeValueForKey:@"isExecuting"];
+	_state = DirectoryOperationUpdatingState;
+	[self didChangeValueForKey:@"isExecuting"];
+	
+	dispatch_async(UpdateOperationQueue, ^{
+		[self main];
+	});
+}
+
+- (void)cancel
+{
+	_failureBlock = nil;
+	self.completionBlock = nil;
+	
+	[self willChangeValueForKey:@"isCancelled"];
+	_cancelled = YES;
+	[self didChangeValueForKey:@"isCancelled"];
 }
 
 - (void)finish
 {
-	self.completionBlock();
-}
-
-
-
-#pragma mark - XServiceRemoteDelegate
-
-- (void)connectionFinishedWithResult:(NSObject *)result
-{
-	if ([result isKindOfClass:[NSDictionary class]])
+	if (_error)
 	{
-		XDrvDebug(@"%@ Fetch finished", _directoryPath);
-		[self updateDirectoryInBackgroundWithDetails:(NSDictionary *)result];
+		if (_failureBlock)
+			_failureBlock(_error);
 	}
 	else
 	{
-		XDrvLog(@"%@ Fetch returned unexpected result: %@", _directoryPath, result);
-		_state = DirectoryOperationFailedState;
-		[self finish];
+		if (self.completionBlock)
+			self.completionBlock();
 	}
 }
-
-- (void)connectionFailedWithError:(NSError *)error
-{
-	XDrvLog(@"%@ Fetch failed: %@", _directoryPath, error);
-	_state = DirectoryOperationFailedState;
-	[self finish];
-}
-
 
 
 @end
