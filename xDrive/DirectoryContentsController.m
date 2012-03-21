@@ -76,23 +76,6 @@
 
 #pragma mark - Update Directory Contents
 
-/*- (void)updateDirectoryWithDetails:(NSDictionary *)details
-{
-	_updateDirectoryOperation = [[UpdateDirectoryOperation alloc] initWithDetails:details forDirectoryPath:_directory.path];
-	
-	// Callbacks
-	__block typeof(self) bself = self;
-	[_updateDirectoryOperation setCompletionBlock:^{
-		[bself directoryUpdateDidFinish];
-	}];
-	[_updateDirectoryOperation setFailureBlock:^(NSError *error) {
-		[bself directoryUpdateFailedWithError:error];
-	}];
-	
-	// Add to queue
-	
-}*/
-
 - (void)updateDirectoryWithDetails:(NSDictionary *)details
 {
 	// Create new service with it's own context for background operation
@@ -107,7 +90,7 @@
 	NSTimeInterval lastUpdatedSeconds = [[details objectForKey:@"lastUpdated"] doubleValue] / 1000;
 	NSDate *lastUpdated = [NSDate dateWithTimeIntervalSince1970:lastUpdatedSeconds];
 	directory.lastUpdated = lastUpdated;
-	directory.contentsLastUpdated = lastUpdated;
+	directory.contentsLastUpdated = [NSDate date];
 	
 	// Go through contents and create a set of remote entries (entries that don't exist are created on the fly)
 	NSMutableSet *remoteEntries = [[NSMutableSet alloc] init];
@@ -170,16 +153,16 @@
 		if (error)
 		{
 			XDrvLog(@"%@ :: Error: Problem saving local context: %@", directory.path, error);
-			dispatch_async(dispatch_get_main_queue(), ^{
+			//dispatch_async(dispatch_get_main_queue(), ^{
 				[self directoryUpdateFailedWithError:error];
-			});
+			//});
 		}
 		else
 		{
 			XDrvDebug(@"%@ :: Saved local context", directory.path);
-			dispatch_async(dispatch_get_main_queue(), ^{
+			//dispatch_async(dispatch_get_main_queue(), ^{
 				[self directoryUpdateDidFinish];
-			});
+			//});
 		}
 	}];
 }

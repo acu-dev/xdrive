@@ -13,6 +13,8 @@
 #import "UIStoryboard+Xdrive.h"
 #import "DirectoryContentsController.h"
 
+static NSTimeInterval SecondsBetweenContentUpdates = 300;
+
 
 
 @interface DirectoryContentsViewController ()
@@ -26,6 +28,8 @@
  Controller to handle updating the directory contents.
  */
 @property (nonatomic, strong) DirectoryContentsController *_contentsController;
+
+@property (nonatomic, assign) BOOL _isFirstUpdate;
 
 - (void)configureCell:(UITableViewCell *)cell atIndexPath:(NSIndexPath *)indexPath;
 - (void)configureCell:(UITableViewCell *)cell forEntry:(XEntry *)entry;
@@ -43,6 +47,7 @@
 // Private
 @synthesize _fetchedResultsController;
 @synthesize _contentsController;
+@synthesize _isFirstUpdate;
 
 // Public
 @synthesize directory;
@@ -69,12 +74,32 @@
 - (void)setDirectory:(XDirectory *)dir
 {
 	directory = dir;
-	
-	// Get contents controller
-	_fetchedResultsController = [[XService sharedXService].localService contentsControllerForDirectory:directory];
-	_fetchedResultsController.delegate = self;
+	XDrvDebug(@"Setting directory to: %@", dir);
+	contentStatus = DirectoryContentNotChecked;
 	
 	_contentsController = [[DirectoryContentsController alloc] initWithDirectory:directory forViewController:self];
+	
+	if (!directory.contentsLastUpdated)
+	{
+		XDrvDebug(@"%@ :: Directory is fresh; doing first update", directory.path);
+		_isFirstUpdate = YES;
+		[_contentsController updateDirectoryContents];
+	}
+	else
+	{
+		XDrvDebug(@"%@ :: Directory has been fetched before; setting up fetched results controller and displaying contents", directory.path);
+		_fetchedResultsController = [[XService sharedXService].localService contentsControllerForDirectory:directory];
+		_fetchedResultsController.delegate = self;
+	
+		// Fetch contents
+		XDrvDebug(@"%@ :: Fetched results controller performing fetch", directory.path);
+		NSError *error = nil;
+		if (![_fetchedResultsController performFetch:&error])
+		{
+			XDrvLog(@"Error performing directory contents fetch: %@", error);
+		}
+	}
+	
 }
 
 
@@ -85,21 +110,23 @@
 {
     [super viewDidLoad];
 	if (!self.title) self.title = directory.name;
+	
+	XDrvLog(@"%@ :: View did load", directory.path);
 }
 
 - (void)viewWillAppear:(BOOL)animated
 {
 	[super viewWillAppear:animated];
 	
-	if (directory.contentsLastUpdated)
-	{
-		[self displayDirectoryContents];
-	}
-	else
+	if (_isFirstUpdate)
 	{
 		XDrvLog(@"%@ :: Contents not yet loaded. Show activity animation here .....................", directory.path);
 	}
-	[_contentsController updateDirectoryContents];
+	
+	/*if ([self shouldUpdateContentAutomatically])
+	{
+		[_contentsController updateDirectoryContents];
+	}*/
 }
 
 - (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender
@@ -120,26 +147,73 @@
 
 #pragma mark - Content Status
 
+- (BOOL)isUpdateInProgress
+{
+	return (contentStatus == DirectoryContentFetching || contentStatus == DirectoryContentUpdating);
+}
+
+- (BOOL)shouldUpdateContentAutomatically
+{
+	if ([self isUpdateInProgress])
+	{
+		return NO;
+	}
+	
+	if (!directory.contentsLastUpdated)
+	{
+		// Directory contents have never been fetched
+		return YES;
+	}
+
+	if ([directory.contentsLastUpdated timeIntervalSinceNow] < (SecondsBetweenContentUpdates * -1))
+	{
+		// Last content update was longer ago than time specified between updates
+		return YES;
+	}
+
+	return NO;
+}
+
 - (void)updateDirectoryStatus:(DirectoryContentStatus)status
 {
+	contentStatus = status;
+	
 	switch (status)
 	{
 		case DirectoryContentCached:
-			XDrvDebug(@"%@ is cached", directory.path);
+			XDrvDebug(@"%@ :: Status is cached", directory.path);
 			break;
 			
 		case DirectoryContentFetching:
 		case DirectoryContentUpdating:
-			XDrvDebug(@"%@ is updating", directory.path);
+			XDrvDebug(@"%@ :: Status is updating", directory.path);
 			break;
 			
 		case DirectoryContentUpdateFinished:
-			XDrvDebug(@"%@ update finished", directory.path);
+			XDrvDebug(@"%@ :: Status is update finished", directory.path);
+			if (_isFirstUpdate)
+			{
+				XDrvDebug(@"%@ :: Update was first update; setting up fetched results controller and displaying contents", directory.path);
+				_fetchedResultsController = [[XService sharedXService].localService contentsControllerForDirectory:directory];
+				_fetchedResultsController.delegate = self;
+				
+				// Fetch contents
+				XDrvDebug(@"%@ :: Fetched results controller performing fetch", directory.path);
+				NSError *error = nil;
+				if (![_fetchedResultsController performFetch:&error])
+				{
+					XDrvLog(@"Error performing directory contents fetch: %@", error);
+				}
+				
+				// Reload table
+				[self.tableView reloadData];
+				_isFirstUpdate = NO;
+			}
 			break;
 			
 		case DirectoryContentUpdateFailed:
 		default:
-			XDrvDebug(@"%@ update failed", directory.path);
+			XDrvLog(@"%@ :: Status is update failed", directory.path);
 			break;
 	}
 }
@@ -149,15 +223,21 @@
 #pragma mark - Directory Contents
 
 
-
 - (void)displayDirectoryContents
 {
+	//XDrvDebug(@"%@ :: Creating fetched results controller for directory", directory.path);
+	//_fetchedResultsController = [[XService sharedXService].localService contentsControllerForDirectory:directory];
+	//_fetchedResultsController.delegate = self;
+	
 	// Fetch contents
+	XDrvDebug(@"%@ :: Performing fetch results", directory.path);
 	NSError *error = nil;
 	if (![_fetchedResultsController performFetch:&error])
 	{
 		XDrvLog(@"Error performing directory contents fetch: %@", error);
 	}
+	
+	//[self.tableView reloadData];
 }
 
 

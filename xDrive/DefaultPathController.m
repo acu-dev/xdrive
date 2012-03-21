@@ -124,11 +124,15 @@
 		
 		// Create default path directory object
 		XDirectory *directory = [[XService sharedXService].localService directoryWithPath:[defaultPathDetails objectForKey:@"path"]];
+		directory.server = _server;
 		
 		// Create default path object
 		XDefaultPath *defaultPath = [[XService sharedXService].localService createDefaultPathAtPath:[defaultPathDetails objectForKey:@"path"]
 															   withName:[defaultPathDetails objectForKey:@"name"]];
 		defaultPath.directory = directory;
+		
+		// Add default path to server
+		[_server addDefaultPathsObject:defaultPath];
 	}
 		
 	// Add standard tab bar items and save order
@@ -221,7 +225,7 @@
 - (XDefaultPath *)defaultPathWithPath:(NSString *)path
 {
 	XDefaultPath *defaultPath = nil;
-	NSSet *defaultPaths = [XService sharedXService].localService.server.defaultPaths;
+	NSSet *defaultPaths = [[XService sharedXService].localService server].defaultPaths;
 	for (XDefaultPath *dPath in defaultPaths)
 	{
 		if ([dPath.path isEqualToString:path])

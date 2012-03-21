@@ -21,7 +21,7 @@
 /**
  The server object containing url and service information.
  */
-@property (nonatomic, strong, readonly) XServer *server;
+//@property (nonatomic, strong, readonly) XServer *server;
 
 ///---------------------
 /// @name Initialization
@@ -35,6 +35,8 @@
  @return The newly-initialized service
  */
 - (id)init;
+
+- (XServer *)server;
 
 /**
  Creates and initializes an `XServiceLocal` object with a private managed object context as a child of the receiver's managed object context.

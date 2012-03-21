@@ -19,6 +19,7 @@ static NSString *ModelFileName = @"xDrive";
 
 @interface XServiceLocal()
 @property (nonatomic, strong) NSPersistentStoreCoordinator *_persistentStoreCoordinator;
+@property (nonatomic, strong) XServer *_server;
 
 - (id)initForOperationWithManagedObjectContext:(NSManagedObjectContext *)managedObjectContext;
 
@@ -33,10 +34,11 @@ static NSString *ModelFileName = @"xDrive";
 
 // Private
 @synthesize _persistentStoreCoordinator;
+@synthesize _server;
 
 // Public
 @synthesize managedObjectContext = _managedObjectContext;
-@synthesize server = _server;
+//@synthesize server = _server;
 
 
 
@@ -106,6 +108,7 @@ static NSString *ModelFileName = @"xDrive";
 	[_managedObjectContext performBlock:^{
 		
 		// Save local context
+		XDrvDebug(@"Saving local context...");
 		NSError *error = nil;
 		if (![_managedObjectContext save:&error])
 		{
@@ -116,20 +119,23 @@ static NSString *ModelFileName = @"xDrive";
 		{
 			if (_managedObjectContext.parentContext)
 			{
-				[_managedObjectContext.parentContext performBlock:^{
-					// Save parent context
-					NSError *parentError = nil;
-					if (![_managedObjectContext.parentContext save:&parentError])
-					{
-						XDrvLog(@"Error saving parent context: %@", parentError);
-						completionBlock(parentError);
-					}
-					else
-					{
-						// Parent context finished saving
-						completionBlock(nil);
-					}
-				}];
+				//dispatch_async(dispatch_get_main_queue(), ^{
+					[_managedObjectContext.parentContext performBlock:^{
+						// Save parent context
+						XDrvDebug(@"Saving parent context...");
+						NSError *parentError = nil;
+						if (![_managedObjectContext.parentContext save:&parentError])
+						{
+							XDrvLog(@"Error saving parent context: %@", parentError);
+							completionBlock(parentError);
+						}
+						else
+						{
+							// Parent context finished saving
+							completionBlock(nil);
+						}
+					}];
+				//});
 			}
 			else
 			{
@@ -160,13 +166,9 @@ static NSString *ModelFileName = @"xDrive";
 		else
 		{
 			_server = [fetchedObjects lastObject];
-			XDrvLog(@"Fetched server object");
 		}
 	}
-	else
-	{
-		XDrvLog(@"Returning pre-fetched server object");
-	}
+
 	return _server;
 }
 
@@ -193,8 +195,8 @@ static NSString *ModelFileName = @"xDrive";
 															  inManagedObjectContext:_managedObjectContext];
 	defaultPath.path = path;
 	defaultPath.name = name;
-	defaultPath.server = [self server];
-	[[self server] addDefaultPathsObject:defaultPath];
+	//defaultPath.server = [self server];
+	//[[self server] addDefaultPathsObject:defaultPath];
 	
 	return defaultPath;
 }

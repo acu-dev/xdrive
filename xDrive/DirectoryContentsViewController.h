@@ -10,6 +10,7 @@
 @class XDirectory;
 
 typedef enum {
+	DirectoryContentNotChecked,
 	DirectoryContentFetching,
 	DirectoryContentFetchFailed,
 	DirectoryContentCached,
