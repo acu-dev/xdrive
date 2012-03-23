@@ -81,7 +81,7 @@ static NSTimeInterval SecondsBetweenContentUpdates = 300;
 	
 	if (!directory.contentsLastUpdated)
 	{
-		XDrvDebug(@"%@ :: Directory is fresh; doing first update", directory.path);
+		XDrvDebug(@"%@ :: Directory is new; doing first update", directory.path);
 		_isFirstUpdate = YES;
 		[_contentsController updateDirectoryContents];
 	}

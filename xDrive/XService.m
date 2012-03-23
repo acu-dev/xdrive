@@ -14,14 +14,18 @@
 #import "DTAsyncFileDeleter.h"
 #import "NSString+DTPaths.h"
 #import "NSString+DTFormatNumbers.h"
+#import "UpdateDirectoryOperation.h"
 
 
 @interface XService()
-
+@property (nonatomic, strong) NSOperationQueue *_operationQueue;
 @end
 
 
 @implementation XService
+
+// Private
+@synthesize _operationQueue;
 
 // Public
 @synthesize localService = _localService;
@@ -53,7 +57,7 @@
 		// Init local and remote services
 		_localService = [[XServiceLocal alloc] init];
 		_remoteService = [[XServiceRemote alloc] initWithServer:_localService.server];
-		UpdateOperationQueue = dispatch_queue_create("edu.acu.xdrive.updateOperationQueue", 0);
+		_operationQueue = [[NSOperationQueue alloc] init];
     }
     return self;
 }
@@ -78,6 +82,15 @@
 		_cachesPath = [[NSString cachesPath] stringByAppendingPathComponent:_localService.server.hostname];
 	}
 	return _cachesPath;
+}
+
+
+
+#pragma mark - Directory Updates
+
+- (void)updateDirectoryAtPath:(NSString *)path forContentsViewController:(DirectoryContentsViewController *)viewController
+{
+	
 }
 
 
@@ -209,114 +222,6 @@
 		*stop = ([XDriveConfig totalCachedBytes] <= bytes);
 	}];
 }
-
-
-/*
-#pragma mark - Directory Actions
-
-- (XDirectory *)directoryWithPath:(NSString *)path
-{
-	// Fire off remote directory fetch
-	[self.remoteService fetchDirectoryContentsAtPath:path withTarget:self action:@selector(updateDirectoryDetails:)];
-	
-	// Return local directory object
-	return [self.localService directoryWithPath:path];
-}
-- (XDirectory *)updateDirectoryDetails:(NSDictionary *)details
-{
-	if ([details isKindOfClass:[NSError class]])
-	{
-		XDrvLog(@"Error updating directory details: %@", details);
-		return nil;
-	}
-	
-	// Get directory
-	XDirectory *directory = [self.localService directoryWithPath:[details objectForKey:@"path"]];
-	
-	// Directory's last updated time from server
-	NSTimeInterval lastUpdatedSeconds = [[details objectForKey:@"lastUpdated"] doubleValue] / 1000;
-	NSDate *lastUpdated = [NSDate dateWithTimeIntervalSince1970:lastUpdatedSeconds];
-	if (directory.contentsLastUpdated)
-	{
-		if ([directory.contentsLastUpdated isEqualToDate:lastUpdated])
-		{
-			// Directory has not been updated since last fetch; nothing else to do
-			XDrvDebug(@"Directory has not been updated; using cached object for dir: %@", directory.path);
-			return directory;
-		}
-	}
-	XDrvDebug(@"Directory has changes; updating contents for dir: %@", directory.path);
-	directory.contentsLastUpdated = lastUpdated;
-	
-	// Go through contents and create a set of remote entries (entries that don't exist are created on the fly)
-	NSMutableSet *remoteEntries = [[NSMutableSet alloc] init];
-	NSArray *contents = [details objectForKey:@"contents"];
-	for (NSDictionary *entryFromJson in contents)
-	{
-		// Create/get object for each entry in contents
-		XEntry *entry = nil;
-		if ([[entryFromJson objectForKey:@"type"] isEqualToString:@"folder"])
-		{
-			// Folder
-			entry = [self.localService directoryWithPath:[entryFromJson objectForKey:@"path"]];
-		}
-		else
-		{
-			// File
-			XFile *file = [self.localService fileWithPath:[entryFromJson objectForKey:@"path"]];
-			file.type = [entryFromJson objectForKey:@"type"];
-			file.size = [entryFromJson objectForKey:@"size"];
-			file.sizeDescription = [NSString stringByFormattingBytes:[file.size integerValue]];
-			entry = file;
-		}
-		
-		// Dates (times come from xservice in milliseconds since epoch)
-		NSTimeInterval createdSeconds = [[entryFromJson objectForKey:@"created"] doubleValue] / 1000;
-		NSTimeInterval lastUpdatedSeconds = [[entryFromJson objectForKey:@"lastUpdated"] doubleValue] / 1000;
-		entry.created = [NSDate dateWithTimeIntervalSince1970:createdSeconds];
-		entry.lastUpdated = [NSDate dateWithTimeIntervalSince1970:lastUpdatedSeconds];
-
-		// Common attributes
-		entry.creator = [entryFromJson objectForKey:@"creator"];
-		entry.lastUpdator = [entryFromJson objectForKey:@"lastUpdator"];
-		entry.parent = directory;
-		[remoteEntries addObject:entry];
-	}
-	
-	// Entries to delete
-	for (XEntry *entry in [directory contents])
-	{
-		if (![remoteEntries containsObject:entry])
-		{
-			// Entry does not exist in contents returned from server; needs to be deleted
-			
-			if ([entry isKindOfClass:[XDirectory class]])
-			{
-				XDrvDebug(@"Directory %@ no longer exists on server; deleting...", entry.path);
-			}
-			else
-			{
-				
-			}
-		}
-	}
-	
-	// Update directory's contents with set of entries from server
-	[directory setContents:remoteEntries];
-	
-	// Save changes
-	NSError *error = nil;
-	if ([[_localService managedObjectContext] save:&error])
-	{
-		XDrvDebug(@"Successfully updated directory: %@", directory.path);
-	}
-	else
-	{
-		XDrvLog(@"Error: problem saving changes to directory: %@", directory.path);
-	}
-	
-	return directory;
-}*/
 
 
 

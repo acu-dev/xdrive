@@ -13,9 +13,6 @@
 @protocol XServiceRemoteDelegate;
 
 
-dispatch_queue_t UpdateOperationQueue;
-
-
 @interface XService : NSObject
 
 ///---------------

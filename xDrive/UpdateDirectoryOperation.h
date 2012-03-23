@@ -51,3 +51,5 @@ typedef void (^UpdateDirectoryOperationFailedBlock)(NSError *error);
 - (void)setFailureBlock:(UpdateDirectoryOperationFailedBlock)block;
 
 @end
+
+

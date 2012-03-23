@@ -15,8 +15,15 @@
 
 @interface XServiceRemote() <CGConnectionDelegate, CGChallengeResponseDelegate>
 
+/**
+ Server object to use when building request URLs
+ */
+@property (nonatomic, strong) XServer *_server;
+
+/**
+ Container for each request's connection info
+ */
 @property (nonatomic, strong) NSMutableDictionary *requests;
-	// Container for each request's connection info
 
 - (NSString *)serverURLStringForHost:(NSString *)host;
 - (NSString *)serverURLString;
@@ -38,24 +45,59 @@
 
 @implementation XServiceRemote
 
+// Private
+@synthesize _server;
 
-@synthesize activeServer;
+// Public
 @synthesize authDelegate;
 @synthesize requests;
 
 
-
-- (id)initWithServer:(XServer *)server
+- (id)init
 {
-    self = [super init];
+	self = [super init];
     if (self)
 	{
-		activeServer = server;
 		requests = [[NSMutableDictionary alloc] init];
 		[CGNet utils].challengeResponseDelegate = self;
     }
     return self;
 }
+
+- (id)initWithServer:(XServer *)server
+{
+	self = [self init];
+    if (!self) return nil;
+	_server = server;
+	return self;
+}
+
+
+
+#pragma mark - Setters
+
+- (void)setServer:(XServer *)server
+{
+	_server = server;
+}
+
+
+
+#pragma mark - Fetching
+
+- (void)fetchEntryDetailsAtPath:(NSString *)path withCompletionBlock:(void (^)(NSError *))completionBlock
+{
+	NSString *encodedPath = (__bridge_transfer NSString *)CFURLCreateStringByAddingPercentEscapes(
+																								  NULL,
+																								  (__bridge CFStringRef)path,
+																								  NULL,
+																								  (CFStringRef)@"!*'();:@&=+$,/?%#[]",
+																								  kCFStringEncodingUTF8);
+	NSURL *entryURL = [NSURL URLWithString:[[self serviceURLString] stringByAppendingFormat:@"/entry/%@", encodedPath]];
+	NSURLRequest *request = [NSURLRequest requestWithURL:entryURL];
+}
+
+
 
 #pragma mark - Utils
 
@@ -64,11 +106,11 @@
 	NSString *protocol = defaultServerProtocol;
 	int port = defaultServerPort;
 	
-	if (!host && activeServer)
+	if (!host && _server)
 	{
-		protocol = activeServer.protocol;
-		port = [activeServer.port intValue];
-		host = activeServer.hostname;
+		protocol = _server.protocol;
+		port = [_server.port intValue];
+		host = _server.hostname;
 	}
 	
 	if (!host)
@@ -90,7 +132,7 @@
 
 - (NSString *)serviceURLStringForServer:(XServer *)server
 {	
-	if (!server) server = activeServer;
+	if (!server) server = _server;
 	return [[[self serverURLStringForHost:server.hostname] stringByAppendingString:server.context] stringByAppendingString:server.servicePath];
 }
 

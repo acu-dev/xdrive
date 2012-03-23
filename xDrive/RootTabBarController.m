@@ -71,6 +71,8 @@
 	// Create nav controller for each default path
 	for (XDefaultPath *defaultPath in [[XService sharedXService].localService server].defaultPaths)
 	{
+		if (![defaultPath.path isEqualToString:@"/users/cjs00c"]) continue;
+		
 		DirectoryContentsViewController *viewController = [[UIStoryboard mainStoryboard] instantiateViewControllerWithIdentifier:@"directoryContents"];
 		viewController.directory = defaultPath.directory;
 		viewController.title = defaultPath.name;

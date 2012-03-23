@@ -13,14 +13,36 @@
 
 @interface XServiceRemote : NSObject
 
-@property (strong, nonatomic) XServer *activeServer;
-	// Server info to use when building request URLs
-
+/**
+ Special delegate to handle authentication challenges instead of the connection's delegate
+ */
 @property (nonatomic, weak) id<XServiceRemoteDelegate> authDelegate;
-	// Special delegate to handle authentication challenges instead of the connection's delegate
 
+///---------------------
+/// @name Initialization
+///---------------------
+
+/**
+ Initializes the remote service and sets the server object to use.
+ 
+ @param server The server object to build URLs from
+ */
 - (id)initWithServer:(XServer *)server;
-	// Saves the server to use for requests and initializes the requests storage
+
+///---------------
+/// @name Fetching
+///---------------
+
+- (void)fetchEntryDetailsAtPath:(NSString *)path withCompletionBlock:(void (^)(NSError *))completionBlock;
+
+
+
+
+
+///------------------------------------
+/// @name Old code that uses CGNetUtils
+///------------------------------------
+
 
 - (void)fetchJSONAtURL:(NSString *)url withTarget:(id)target action:(SEL)action;
 - (void)fetchJSONAtURL:(NSString *)url withDelegate:(id<XServiceRemoteDelegate>)delegate;
