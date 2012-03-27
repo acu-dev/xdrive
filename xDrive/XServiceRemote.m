@@ -15,26 +15,16 @@
 
 @interface XServiceRemote() <CGConnectionDelegate, CGChallengeResponseDelegate>
 
-/**
- Server object to use when building request URLs
- */
 @property (nonatomic, strong) XServer *_server;
+@property (nonatomic, assign) BOOL _isRunning;
+@property (nonatomic, copy) XServiceCompletionBlock _completionBlock;
+@property (nonatomic, copy) XServiceUpdateBlock _updateBlock;
 
-/**
- Container for each request's connection info
- */
-@property (nonatomic, strong) NSMutableDictionary *requests;
+- (void)fetchJSONAtURL:(NSURL *)url;
+- (void)downloadFileAtURL:(NSURL *)url ifModifiedSinceCachedDate:(NSDate *)cachedDate;
 
-- (NSString *)serverURLStringForHost:(NSString *)host;
 - (NSString *)serverURLString;
-	// Generates an absolute URL to the host using default protocol and port.
-	// If no host is passed and an activeServer is present, activeServer is used.
-
-- (NSString *)serviceURLStringForServer:(XServer *)server;
 - (NSString *)serviceURLString;
-	// Generates an absolute URL to the service base path of the passed host
-	// (uses the default vars defined in XDriveConfig.h. If host is nil the
-	// details from the active server are used.
 
 @end
 
@@ -47,26 +37,19 @@
 
 // Private
 @synthesize _server;
+@synthesize _isRunning;
+@synthesize _completionBlock;
+@synthesize _updateBlock;
 
 // Public
-@synthesize authDelegate;
-@synthesize requests;
+@synthesize failureBlock;
+@synthesize authenticationChallengeBlock;
 
 
-- (id)init
-{
-	self = [super init];
-    if (self)
-	{
-		requests = [[NSMutableDictionary alloc] init];
-		[CGNet utils].challengeResponseDelegate = self;
-    }
-    return self;
-}
 
 - (id)initWithServer:(XServer *)server
 {
-	self = [self init];
+	self = [super init];
     if (!self) return nil;
 	_server = server;
 	return self;
@@ -74,188 +57,113 @@
 
 
 
-#pragma mark - Setters
+#pragma mark - Actions
 
-- (void)setServer:(XServer *)server
+- (BOOL)isRunning
 {
-	_server = server;
+	return _isRunning;
+}
+
+- (BOOL)start
+{
+	if ([self isRunning])
+	{
+		XDrvLog(@"Error: Unable to start - remote service is currently running");
+		return NO;
+	}
+	_isRunning = YES;
+	return YES;
+}
+
+- (void)finished
+{
+	_completionBlock = nil;
+	_updateBlock = nil;
+	
+	_isRunning = NO;
 }
 
 
 
-#pragma mark - Fetching
+#pragma mark - Getting Entry Details
 
-- (void)fetchEntryDetailsAtPath:(NSString *)path withCompletionBlock:(void (^)(NSError *))completionBlock
+- (void)fetchJSONAtURL:(NSURL *)url
 {
-	NSString *encodedPath = (__bridge_transfer NSString *)CFURLCreateStringByAddingPercentEscapes(
-																								  NULL,
+	// Create connection
+	CGJSONConnection *connection = [[CGNet utils] getJSONAtURL:url withDelegate:self];
+	
+	// Start request
+	[connection start];
+}
+
+- (void)fetchDefaultPathsWithCompletionBlock:(XServiceCompletionBlock)completionBlock
+{
+	if (![self start]) return;
+	_completionBlock = completionBlock;
+	
+	NSURL *defaultPathsURL = [NSURL URLWithString:[[self serviceURLString] stringByAppendingString:@"/paths"]];
+	[self fetchJSONAtURL:defaultPathsURL];
+}
+
+- (void)fetchEntryDetailsAtPath:(NSString *)path withCompletionBlock:(XServiceCompletionBlock)completionBlock
+{
+	if (![self start]) return;
+	_completionBlock = completionBlock;
+	
+	// Encode entry URL
+	NSString *encodedPath = (__bridge_transfer NSString *)CFURLCreateStringByAddingPercentEscapes(NULL,
 																								  (__bridge CFStringRef)path,
 																								  NULL,
 																								  (CFStringRef)@"!*'();:@&=+$,/?%#[]",
 																								  kCFStringEncodingUTF8);
 	NSURL *entryURL = [NSURL URLWithString:[[self serviceURLString] stringByAppendingFormat:@"/entry/%@", encodedPath]];
-	NSURLRequest *request = [NSURLRequest requestWithURL:entryURL];
-}
-
-
-
-#pragma mark - Utils
-
-- (NSString *)serverURLStringForHost:(NSString *)host
-{
-	NSString *protocol = defaultServerProtocol;
-	int port = defaultServerPort;
 	
-	if (!host && _server)
-	{
-		protocol = _server.protocol;
-		port = [_server.port intValue];
-		host = _server.hostname;
-	}
-	
-	if (!host)
-		return nil;
-	
-	NSString *serverURL = [NSString stringWithFormat:@"%@://%@:%i",
-			protocol,
-			host,
-			port];
-	//XDrvDebug(@"serverURL: %@", serverURL);
-	
-	return serverURL;
+	// Fetch
+	[self fetchJSONAtURL:entryURL];
 }
 
-- (NSString *)serverURLString
-{
-	return [self serverURLStringForHost:nil];
-}
 
-- (NSString *)serviceURLStringForServer:(XServer *)server
-{	
-	if (!server) server = _server;
-	return [[[self serverURLStringForHost:server.hostname] stringByAppendingString:server.context] stringByAppendingString:server.servicePath];
-}
 
-- (NSString *)serviceURLString
-{
-	return [self serviceURLStringForServer:nil];
-}
+#pragma mark - Downloading Files
 
-- (void)fetchJSONAtURL:(NSString *)url withTarget:(id)target action:(SEL)action
+- (void)downloadFileAtURL:(NSURL *)url ifModifiedSinceCachedDate:(NSDate *)cachedDate
 {
 	// Create connection
-	CGJSONConnection *connection = [[CGNet utils] getJSONAtURL:[NSURL URLWithString:url] withDelegate:self];
-	
-	// Save connection info
-	NSDictionary *request = [[NSDictionary alloc] initWithObjectsAndKeys:
-							 target, @"targetObject",
-							 NSStringFromSelector(action), @"selectorString",
-							 connection, @"connection",
-							 nil];
-	[requests setObject:request forKey:[connection description]];
-	
-	// Start request
-	[connection start];
-}
-
-- (void)fetchJSONAtURL:(NSString *)url withDelegate:(id<XServiceRemoteDelegate>)delegate
-{
-	// Create connection
-	CGJSONConnection *connection = [[CGNet utils] getJSONAtURL:[NSURL URLWithString:url] withDelegate:self];
-	
-	// Save connection info
-	NSDictionary *request = [[NSDictionary alloc] initWithObjectsAndKeys:
-							 delegate, @"delegate",
-							 connection, @"connection",
-							 nil];
-	[requests setObject:request forKey:[connection description]];
-	
-	// Start request
-	[connection start];
-}
-
-
-
-#pragma mark - Fetches
-
-- (void)fetchInfoAtHost:(NSString *)host withDelegate:(id<XServiceRemoteDelegate>)delegate
-{
-	NSString *infoServiceURLString = [[self serverURLStringForHost:host] stringByAppendingString:@"/xservice"];
-	XDrvDebug(@"Getting info from URL: %@", infoServiceURLString);
-	[self fetchJSONAtURL:infoServiceURLString withDelegate:delegate];
-}
-
-- (void)fetchDefaultPathsForServer:(XServer *)server withDelegate:(id<XServiceRemoteDelegate>)delegate
-{
-	NSString *infoServiceURLString = [[self serviceURLStringForServer:server] stringByAppendingString:@"/paths"];
-	XDrvDebug(@"Getting paths from URL: %@", infoServiceURLString);
-	[self fetchJSONAtURL:infoServiceURLString withDelegate:delegate];
-}
-
-- (void)fetchDirectoryContentsAtPath:(NSString *)path withDelegate:(id<XServiceRemoteDelegate>)delegate
-{
-	NSString *encodedPath = (__bridge_transfer NSString *)CFURLCreateStringByAddingPercentEscapes(
-																						 NULL,
-																						 (__bridge CFStringRef)path,
-																						 NULL,
-																						 (CFStringRef)@"!*'();:@&=+$,/?%#[]",
-																						 kCFStringEncodingUTF8);
-	NSString *directoryService = [[self serviceURLString] stringByAppendingFormat:@"/entry/%@", encodedPath];
-	XDrvDebug(@"Getting directory contents at path: %@", directoryService);
-	[self fetchJSONAtURL:directoryService withDelegate:delegate];
-}
-
-- (void)fetchDirectoryContentsAtPath:(NSString *)path withTarget:(id)target action:(SEL)action
-{
-	NSString *encodedPath = (__bridge_transfer NSString *)CFURLCreateStringByAddingPercentEscapes(
-																						 NULL,
-																						 (__bridge CFStringRef)path,
-																						 NULL,
-																						 (CFStringRef)@"!*'();:@&=+$,/?%#[]",
-																						 kCFStringEncodingUTF8);
-	NSString *directoryService = [[self serviceURLString] stringByAppendingFormat:@"/entry/%@", encodedPath];
-	XDrvDebug(@"Getting directory contents at path: %@", directoryService);
-	[self fetchJSONAtURL:directoryService withTarget:target action:action];
-}
-
-
-
-
-#pragma mark - Downloads
-
-- (void)downloadFileAtPath:(NSString *)path withDelegate:(id<XServiceRemoteDelegate>)delegate
-{
-	NSString *absolutePath = [[self serverURLString] stringByAppendingString:[path stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding]];
-	[self downloadFileAtAbsolutePath:absolutePath ifModifiedSinceCachedDate:nil withDelegate:delegate];
-}
-
-- (void)downloadFileAtPath:(NSString *)path ifModifiedSinceCachedDate:(NSDate *)cachedDate withDelegate:(id<XServiceRemoteDelegate>)delegate
-{
-	NSString *absolutePath = [[self serverURLString] stringByAppendingString:[path stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding]];
-	[self downloadFileAtAbsolutePath:absolutePath ifModifiedSinceCachedDate:cachedDate withDelegate:delegate];
-}
-
-- (void)downloadFileAtAbsolutePath:(NSString *)path ifModifiedSinceCachedDate:(NSDate *)cachedDate withDelegate:(id<XServiceRemoteDelegate>)delegate
-{
-	XDrvDebug(@"Downloading file at path: %@", path); 
-	
-	// Create connection
-	CGFileConnection *connection = [[CGNet utils] getFileAtURL:[NSURL URLWithString:path] withDelegate:self];
+	CGFileConnection *connection = [[CGNet utils] getFileAtURL:url withDelegate:self];
 	if (cachedDate)
 	{
 		XDrvLog(@"Setting if modified since date: %@", cachedDate);
 		[connection setIfModifiedSinceDate:cachedDate];
 	}
 	
-	// Save connection info
-	NSDictionary *request = [[NSDictionary alloc] initWithObjectsAndKeys:
-							 delegate, @"delegate",
-							 connection, @"connection",
-							 nil];
-	[requests setObject:request forKey:[connection description]];
-	
 	// Start request
 	[connection start];
+}
+
+- (void)downloadFileAtPath:(NSString *)path ifModifiedSinceCachedDate:(NSDate *)cachedDate
+		   withUpdateBlock:(XServiceUpdateBlock)updateBlock
+		   completionBlock:(XServiceCompletionBlock)completionBlock
+{
+	if (![self start]) return;
+	_updateBlock = updateBlock;
+	_completionBlock = completionBlock;
+	
+	NSURL *absoluteURL = [NSURL URLWithString:[[self serverURLString] stringByAppendingString:[path stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding]]];
+	[self downloadFileAtURL:absoluteURL ifModifiedSinceCachedDate:cachedDate];
+}
+
+
+
+#pragma mark - Utils
+
+- (NSString *)serverURLString
+{
+	return [NSString stringWithFormat:@"%@://%@:%i", _server.protocol, _server.hostname, [_server.port intValue]];
+}
+
+- (NSString *)serviceURLString
+{
+	return [[self serverURLString] stringByAppendingFormat:@"%@%@", _server.context, _server.servicePath];
 }
 
 
@@ -265,93 +173,26 @@
 - (void)cgConnection:(CGConnection *)connection finishedWithResult:(id)result
 {
 	XDrvDebug(@"Connection finished");
-	//XDrvLog(@"result: %@", result);
-	
-	// Get request details
-	NSDictionary *request = [requests objectForKey:[connection description]];
-	if (!request)
-	{
-		XDrvLog(@"- Error: Unable to find details for connection: %@; nothing to do", [connection description]);
-		return;
-	}
-	
-	id<XServiceRemoteDelegate> delegate = [request objectForKey:@"delegate"];
-	if (delegate)
-	{
-		// Send event off to delegate
-		[delegate connectionFinishedWithResult:result];
-	}
-	else if ([request objectForKey:@"targetObject"])
-	{
-		// Send results off to request's target
-		id target = [request objectForKey:@"targetObject"];
-		SEL action = NSSelectorFromString([request objectForKey:@"selectorString"]);
-		[target performSelector:action withObject:result];
-	}
-	else
-	{
-		// Call completion block
-		
-	}
-	
-	// Clean up request
-	request = nil;
-	[requests removeObjectForKey:[connection description]];
+	_completionBlock(result);
+	[self finished];
 }
 
 - (void)cgConnection:(CGConnection *)connection failedWithError:(NSError *)error
 {
 	XDrvDebug(@"Connection failed");
-	
-	// Get request details
-	NSDictionary *request = [requests objectForKey:[connection description]];
-	if (!request)
+	if (failureBlock)
 	{
-		XDrvLog(@"- Error: Unable to find details for connection: %@; nothing to do", [connection description]);
-		return;
+		failureBlock(error);
 	}
-	
-	id<XServiceRemoteDelegate> delegate = [request objectForKey:@"delegate"];
-	if ([delegate respondsToSelector:@selector(connectionFailedWithError:)])
-	{
-		// Send event off to delegate
-		[delegate connectionFailedWithError:error];
-	}
-	
-	/*else
-	{
-		// Send results off to request's target
-		id target = [request objectForKey:@"targetObject"];
-		SEL action = NSSelectorFromString([request objectForKey:@"selectorString"]);
-		[target performSelector:action withObject:error];
-	}*/
-	
-	// Clean up request
-	request = nil;
-	[requests removeObjectForKey:[connection description]];
+	[self finished];
 }
 
 - (void)cgConnection:(CGConnection *)connection didReceiveData:(long long)receivedDataBytes 
   totalReceivedBytes:(long long)totalReceivedBytes expectedTotalBytes:(long long)expectedTotalBytes
 {
-	// Get request details
-	NSDictionary *request = [requests objectForKey:[connection description]];
-	if (!request)
-	{
-		XDrvLog(@"- Error: Unable to find details for connection: %@; nothing to do", [connection description]);
-		return;
-	}
-	
-	// Calculate percent of file downloaded
 	float percent = (float)totalReceivedBytes / (float)expectedTotalBytes;
 	XDrvDebug(@"Download file percent done: %f", percent);
-	
-	id<XServiceRemoteDelegate> delegate = [request objectForKey:@"delegate"];
-	if ([delegate respondsToSelector:@selector(connectionDownloadPercentUpdate:)])
-	{
-		// Send event off to delegate
-		[delegate connectionDownloadPercentUpdate:percent];
-	}
+	_updateBlock(percent);
 }
 
 
@@ -362,33 +203,14 @@
 							  forHandler:(CGAuthenticationChallengeHandler *)challengeHandler
 {
 	XDrvDebug(@"Received auth challenge");
-	
-	if (authDelegate)
+	if (authenticationChallengeBlock)
 	{
-		// Get credential from auth delegate
-		XDrvDebug(@"Asking auth delegate for credential");
-		[challengeHandler resolveWithCredential:[authDelegate credentialForAuthenticationChallenge]];
-		return;
-	}
-	
-	
-	// Get request details
-	NSDictionary *request = [requests objectForKey:[challengeHandler.connection description]];
-	if (!request)
-	{
-		XDrvLog(@"- Error: Unable to find details for connection: %@; nothing to do", [challengeHandler.connection description]);
-		return;
-	}
-	id<XServiceRemoteDelegate> delegate = [request objectForKey:@"delegate"];
-	
-	if ([delegate respondsToSelector:@selector(credentialForAuthenticationChallenge)])
-	{
-		// Get credential to use from delegate
-		[challengeHandler resolveWithCredential:[delegate credentialForAuthenticationChallenge]];
+		XDrvDebug(@"Resolving challenge with credential from authentication challenge block");
+		[challengeHandler resolveWithCredential:authenticationChallengeBlock(challenge)];
 	}
 	else
 	{
-		XDrvLog(@"No credential found; probably need to raise an authentication screen...");
+		XDrvLog(@"No authentication challenge block set");
 	}
 }
 

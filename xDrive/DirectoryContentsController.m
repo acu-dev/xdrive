@@ -49,7 +49,7 @@
 - (void)updateDirectoryContents
 {
 	[_viewController updateDirectoryStatus:DirectoryContentFetching];
-	[[XService sharedXService].remoteService fetchDirectoryContentsAtPath:_directory.path withDelegate:self];
+	//[[XService sharedXService].remoteService fetchDirectoryContentsAtPath:_directory.path withDelegate:self];
 }
 
 - (void)evaluateFetchedDirectoryDetails:(NSDictionary *)fetchedDirectoryDetails
@@ -68,9 +68,9 @@
 		}
 	}
 	
-	dispatch_async(UpdateOperationQueue, ^{
+	/*dispatch_async(UpdateOperationQueue, ^{
 		[self updateDirectoryWithDetails:fetchedDirectoryDetails];
-	});
+	});*/
 }
 
 

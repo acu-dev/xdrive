@@ -353,7 +353,7 @@ static NSString *ModelFileName = @"xDrive";
 	
 	// Clear references to current server
 	_server = nil;
-	[XService sharedXService].remoteService.activeServer = nil;
+	//[XService sharedXService].remoteService.activeServer = nil;
 
 	// Remove persistent store from the coordinator
 	NSPersistentStore *store = [_persistentStoreCoordinator persistentStoreForURL:storeURL];

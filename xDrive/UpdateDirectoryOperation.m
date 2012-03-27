@@ -15,9 +15,6 @@
 
 @property (nonatomic, strong) NSDictionary *_directoryDetails;
 @property (nonatomic, strong) NSString *_directoryPath;
-@property (nonatomic, assign) BOOL _cancelled;
-@property (nonatomic, strong) NSError *_error;
-@property (nonatomic, copy) UpdateDirectoryOperationFailedBlock _failureBlock;
 
 @end
 
@@ -27,13 +24,6 @@
 // Private
 @synthesize _directoryDetails;
 @synthesize _directoryPath;
-@synthesize _cancelled;
-@synthesize _error;
-@synthesize _failureBlock;
-
-// Public
-@synthesize state = _state;
-
 
 
 #pragma mark - Initiailization
@@ -47,20 +37,7 @@
 	_directoryPath = directoryPath;
 	_directoryDetails = details;
 	
-	[self willChangeValueForKey:@"isReady"];
-	_state = DirectoryOperationReadyState;
-	[self didChangeValueForKey:@"isReady"];
-	
     return self;
-}
-
-
-
-#pragma mark - Failure
-
-- (void)setFailureBlock:(UpdateDirectoryOperationFailedBlock)block
-{
-	_failureBlock = block;
 }
 
 
@@ -144,100 +121,19 @@
 		if (error)
 		{
 			XDrvLog(@"%@ :: Error: Problem saving local context: %@", directory.path, error);
-			_error = error;
-			[self willChangeValueForKey:@"isFinished"];
-			_state = DirectoryOperationFailedState;
-			[self didChangeValueForKey:@"isFinished"];
+			dispatch_async(dispatch_get_main_queue(), ^{
+				[[XService sharedXService] updateEntryFailedWithError:error];
+			});
 		}
 		else
 		{
 			XDrvDebug(@"%@ :: Saved local context", directory.path);
-			[self willChangeValueForKey:@"isFinished"];
-			_state = DirectoryOperationFinishedState;
-			[self didChangeValueForKey:@"isFinished"];
+			dispatch_async(dispatch_get_main_queue(), ^{
+				[[XService sharedXService] operationDidFinishUpdatingDirectoryAtPath:directory.path];
+			});
 		}
-		
-		// Run finish on main queue
-		dispatch_async(dispatch_get_main_queue(), ^{
-			[self finish];
-		});
 	}];
 }
-
-
-#pragma mark - NSOperation
-
-- (BOOL)isReady
-{
-    return _state == DirectoryOperationReadyState && [super isReady];
-}
-
-- (BOOL)isExecuting
-{
-    return _state == DirectoryOperationUpdatingState;
-}
-
-- (BOOL)isFinished
-{
-    return _state == DirectoryOperationFinishedState || _state == DirectoryOperationFailedState;
-}
-
-- (BOOL)isCancelled {
-    return _cancelled;
-}
-
-- (BOOL)isConcurrent
-{
-    return YES;
-}
-
-- (void)start
-{
-	// Always check for cancellation before launching the task.
-	if ([self isCancelled])
-	{
-		// Must move the operation to the finished state if it is canceled, so it will be removed from the queue.
-		[self willChangeValueForKey:@"isFinished"];
-		_state = DirectoryOperationFinishedState;
-		[self didChangeValueForKey:@"isFinished"];
-		return;
-	}
-	
-	// If the operation is not canceled, begin executing the task.
-	XDrvDebug(@"%@ :: Starting update operation", _directoryPath);
-	[self willChangeValueForKey:@"isExecuting"];
-	_state = DirectoryOperationUpdatingState;
-	[self didChangeValueForKey:@"isExecuting"];
-	
-	dispatch_async(UpdateOperationQueue, ^{
-		[self main];
-	});
-}
-
-- (void)cancel
-{
-	_failureBlock = nil;
-	self.completionBlock = nil;
-	
-	[self willChangeValueForKey:@"isCancelled"];
-	_cancelled = YES;
-	[self didChangeValueForKey:@"isCancelled"];
-}
-
-- (void)finish
-{
-	if (_error)
-	{
-		if (_failureBlock)
-			_failureBlock(_error);
-	}
-	else
-	{
-		if (self.completionBlock)
-			self.completionBlock();
-	}
-}
-
 
 @end
 

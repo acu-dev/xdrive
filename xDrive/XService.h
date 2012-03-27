@@ -9,7 +9,7 @@
 #import "XServiceLocal.h"
 #import "XServiceRemote.h"
 #import "XServer.h"
-#import "DirectoryContentsViewController.h"
+@class DirectoryContentsViewController;
 @protocol XServiceRemoteDelegate;
 
 
@@ -49,6 +49,17 @@
  @discussion One XService to rule them all. Ensures that only one instance of itself is instantiated.
  */
 + (XService *)sharedXService;
+
+///------------------------
+/// @name Directory Updates
+///------------------------
+
+- (void)updateEntryAtPath:(NSString *)path forContentsViewController:(DirectoryContentsViewController *)viewController;
+- (void)receivedEntryDetails:(NSDictionary *)details;
+- (void)operationDidFinishUpdatingDirectoryAtPath:(NSString *)path;
+- (void)updateEntryFailedWithError:(NSError *)error;
+
+
 
 ///--------------
 /// @name Caching

@@ -13,7 +13,7 @@
 
 
 
-@interface OpenFileViewController() <XServiceRemoteDelegate>
+@interface OpenFileViewController() //<XServiceRemoteDelegate>
 
 - (void)downloadFile;
 - (void)loadFile;

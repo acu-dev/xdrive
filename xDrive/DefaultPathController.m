@@ -13,37 +13,15 @@
 
 
 
-@interface DefaultPathController() <XServiceRemoteDelegate>
+@interface DefaultPathController()
 
-/**
- Controller to receive status notifications.
- */
 @property (nonatomic, weak) SetupController *_setupController;
-
-/**
- Server object to fetch default paths from.
- */
-@property (nonatomic, strong) XServer *_server;
-
-/**
- The list of default paths to configure.
- */
+@property (nonatomic, strong) XServiceRemote *_remoteService;
 @property (nonatomic, strong) NSMutableArray *_defaultPathsList;
-
-/**
- Root directory update operation. Required before any other operations fire off.
- */
 @property (nonatomic, strong) UpdateDirectoryOperation *_rootUpdateDirectoryOperation;
-
-/**
- Counter used to track active fetches.
- */
-@property (nonatomic, assign) int _activeFetchCount;
-
-/**
- Maintains a map of icon file names and which default path they belong to.
- */
-@property (nonatomic, strong) NSMutableDictionary *_iconToPathMap;
+@property (nonatomic, assign) int _fetchCount;
+@property (nonatomic, strong) NSMutableArray *_iconsToDownload;
+@property (nonatomic, strong) NSMutableArray *_iconDownloads;
 
 
 - (void)receiveDefaultPathsList:(NSArray *)defaultPathsList;
@@ -52,14 +30,13 @@
 //- (void)receiveDefaultPathDetails:(NSDictionary *)details;
 	// Creates the default path directory and associates it with the XDefaultPath object
 
-- (void)receiveDefaultPathIcon:(NSString *)tmpFilePath;
+//- (void)receiveDefaultPathIcon:(NSString *)tmpFilePath;
 	// Moves the icon file to a permanent home and sets the path on the XDefaultPath object
 
 - (XDefaultPath *)defaultPathWithPath:(NSString *)path;
 	// Searches the XDefaultPath objects for one that matches the given path
 
-- (NSString *)contextURLString;
-	// Generates a URL to the configured server's context
+
 
 @end
 
@@ -69,17 +46,18 @@
 @implementation DefaultPathController
 
 @synthesize _setupController;
-@synthesize _server;
+@synthesize _remoteService;
 @synthesize _defaultPathsList;
 @synthesize _rootUpdateDirectoryOperation;
-@synthesize _activeFetchCount;
-@synthesize _iconToPathMap;
+@synthesize _fetchCount;
+@synthesize _iconsToDownload;
+@synthesize _iconDownloads;
 
 
 
 #pragma mark - Initializing
 
-- (id)initWithSetupController:(SetupController *)setupController
+- (id)initWithController:(SetupController *)setupController
 {
 	self = [super init];
 	if (!self) return nil;
@@ -93,16 +71,29 @@
 
 #pragma mark - Default Paths
 
-- (void)fetchDefaultPathsForServer:(XServer *)server
-{
-	_server	= server;
-	
+- (void)fetchDefaultPaths
+{	
 	// Get the list of default paths
 	NSString *msg = NSLocalizedStringFromTable(@"Downloading defaults...",
 											   @"XDrive",
 											   @"Message displayed during setup while default paths are being downloaded.");
 	[_setupController defaultPathsStatusUpdate:msg];
-	[[XService sharedXService].remoteService fetchDefaultPathsForServer:_server withDelegate:self];
+	
+	_remoteService = [[XServiceRemote alloc] initWithServer:_setupController.server];
+
+	_remoteService.authenticationChallengeBlock = ^ NSURLCredential * (NSURLAuthenticationChallenge *challenge){
+		return [NSURLCredential credentialWithUser:_setupController.validateUser password:_setupController.validatePass persistence:NSURLCredentialPersistenceNone];
+	};
+	
+	__block typeof(_setupController) bSetupController = _setupController;
+	_remoteService.failureBlock = ^(NSError *error) {
+		XDrvLog(@"Error encountered: %@", error);
+		[bSetupController defaultPathsFailedWithError:error];
+	};
+	
+	[_remoteService fetchDefaultPathsWithCompletionBlock:^(id result) {
+		[self receiveDefaultPathsList:result];
+	}];
 }
 
 - (void)receiveDefaultPathsList:(NSArray *)defaultPathsList
@@ -124,7 +115,7 @@
 		
 		// Create default path directory object
 		XDirectory *directory = [[XService sharedXService].localService directoryWithPath:[defaultPathDetails objectForKey:@"path"]];
-		directory.server = _server;
+		directory.server = _setupController.server;
 		
 		// Create default path object
 		XDefaultPath *defaultPath = [[XService sharedXService].localService createDefaultPathAtPath:[defaultPathDetails objectForKey:@"path"]
@@ -132,7 +123,7 @@
 		defaultPath.directory = directory;
 		
 		// Add default path to server
-		[_server addDefaultPathsObject:defaultPath];
+		[_setupController.server addDefaultPathsObject:defaultPath];
 	}
 		
 	// Add standard tab bar items and save order
@@ -146,76 +137,70 @@
 
 
 
-#pragma mark - Default Path Contents
+#pragma mark - Default Path Icons
 
 - (void)initializeDefaultPaths
-{
-	// Get the root directory contents
-	/*XDrvDebug(@"Updating root directory contents");
-	_rootUpdateDirectoryOperation = [[UpdateDirectoryOperation alloc] initWithDirectoryPath:@"/"];
-	__block typeof(self) bself = self;
-	[_rootUpdateDirectoryOperation setCompletionBlock:^{
-		[bself didFinishActiveFetch];
-	}];
-	[_rootUpdateDirectoryOperation start];*/
+{	
+	_iconDownloads = [[NSMutableArray alloc] init];
 	
-	// Map to associate fetched icons with their default path
-	_iconToPathMap = [[NSMutableDictionary alloc] init];
-	
-	// Start downloading icons for each default path
-	for (NSDictionary *defaultPath in _defaultPathsList)
+	for (NSDictionary *defaultPathDetails in _defaultPathsList)
 	{
-		// List of icons to download
-		NSArray *iconNames = [NSArray arrayWithObjects:@"icon", @"icon@2x", nil];
-		
-		[iconNames enumerateObjectsUsingBlock:^(id obj, NSUInteger idx, BOOL *stop){
-			NSString *iconPath = [defaultPath objectForKey:[iconNames objectAtIndex:idx]];
-			if (iconPath)
-			{
-				// Get the default path's icon
-				iconPath = [[self contextURLString] stringByAppendingString:iconPath];
-				XDrvDebug(@"Fetching icon: %@", iconPath);
-				[[XService sharedXService].remoteService downloadFileAtAbsolutePath:iconPath ifModifiedSinceCachedDate:nil withDelegate:self];
-				[_iconToPathMap setObject:[defaultPath objectForKey:@"path"] forKey:[iconPath lastPathComponent]];
-				_activeFetchCount++;
-			}
-		}];
+		if ([defaultPathDetails objectForKey:@"icon"])
+		{
+			[self downloadIconWithName:[defaultPathDetails objectForKey:@"icon"] forDefaultPath:[defaultPathDetails objectForKey:@"path"]];
+		}
+		if ([defaultPathDetails objectForKey:@"icon@2x"])
+		{
+			[self downloadIconWithName:[defaultPathDetails objectForKey:@"icon@2x"]];
+		}
 	}
 }
 
-- (void)didFinishActiveFetch
+- (void)downloadIconWithName:(NSString *)name forDefaultPath:(NSString *)path
 {
-	_activeFetchCount--;
-	if (!_activeFetchCount)
+	NSString *localPath = [self downloadIconWithName:name];
+	
+	// Set the icon path on the default path object
+	XDefaultPath *defaultPath = [self defaultPathWithPath:path];
+	defaultPath.icon = localPath;
+}
+
+- (NSString *)downloadIconWithName:(NSString *)name
+{
+	NSString *remotePath = [_setupController.server.context stringByAppendingString:name];
+	NSString *localPath = [[[[XService sharedXService] documentsPath] stringByAppendingString:@"-meta/icons"] 
+						   stringByAppendingPathComponent:name];
+	
+	XServiceRemote *remoteService = [[XServiceRemote alloc] initWithServer:_setupController.server];
+	[_iconDownloads addObject:remoteService];
+	
+	_fetchCount++;
+	[remoteService downloadFileAtPath:remotePath ifModifiedSinceCachedDate:nil 
+					  withUpdateBlock:^(float percentDownloaded) {} 
+					  completionBlock:^(id result) {
+						  NSString *tmpFilePath = (NSString *)result;
+						  XDrvDebug(@"Icon finished downloading; tmp path: %@", tmpFilePath);
+						  
+						  // Move file to permanent home
+						  [[XService sharedXService] moveFileAtPath:tmpFilePath toPath:localPath];
+						  
+						  [self iconDownloadFinished];
+					  }];
+	
+	return localPath;
+}
+
+- (void)iconDownloadFinished
+{
+	_fetchCount--;
+	if (!_fetchCount)
 	{
-		// All done getting default paths; notify delegate
+		XDrvDebug(@"Last icon download finished");
 		[_setupController defaultPathsFinished];
+		_iconDownloads = nil;
+		return;
 	}
-	else
-	{
-		XDrvLog(@"%i active fetches remaining", _activeFetchCount);
-	}
-}
-
-- (void)receiveDefaultPathIcon:(NSString *)tmpFilePath
-{
-	// Move file to permanent home
-	NSString *fileName = [tmpFilePath lastPathComponent];
-	NSString *newFilePath = [[[[XService sharedXService] documentsPath] stringByAppendingString:@"-meta/icons"] 
-							 stringByAppendingPathComponent:fileName];
-	[[XService sharedXService] moveFileAtPath:tmpFilePath toPath:newFilePath];
-	
-	// Set icon path
-	NSString *path = [_iconToPathMap objectForKey:fileName];
-	if (path)
-	{
-		XDefaultPath *defaultPath = [self defaultPathWithPath:path];
-		XDrvDebug(@"Attaching icon %@ to default path %@", newFilePath, defaultPath.path);
-		defaultPath.icon = newFilePath;
-	}
-
-	// This fetch is finished
-	[self didFinishActiveFetch];
+	XDrvDebug(@"Waiting for %i more icon downloads to finish", _fetchCount);
 }
 
 
@@ -234,59 +219,6 @@
 		}
 	}
 	return defaultPath;
-}
-
-- (NSString *)contextURLString
-{
-	return [NSString stringWithFormat:@"%@://%@:%i%@",
-			_server.protocol,
-			_server.hostname,
-			[_server.port intValue],
-			_server.context];
-}
-
-
-
-#pragma mark - XServiceRemoteDelegate
-
-- (void)connectionFinishedWithResult:(NSObject *)result
-{
-	if (!_server)
-	{
-		// A connection failed and we're in a reset state; do nothing
-		return;
-	}
-	
-	
-	if (_activeFetchCount == 0 && [result isKindOfClass:[NSArray class]])
-	{
-		// List of default paths
-		[self receiveDefaultPathsList:(NSArray *)result];
-	}
-	else if ([result isKindOfClass:[NSString class]])
-	{
-		// Handle icon file
-		[self receiveDefaultPathIcon:(NSString *)result];
-	}
-	else
-	{
-		// No idea what this is
-		XDrvLog(@"Unrecognized result: %@", result);
-	}
-}
-
-- (void)connectionFailedWithError:(NSError *)error
-{
-	XDrvLog(@"Connection failed: %@", error);
-	
-	// Update view
-	[_setupController defaultPathsFailedWithError:error];
-	
-	// Reset
-	_defaultPathsList = nil;
-	_activeFetchCount = 0;
-	_setupController = nil;
-	_server = nil;
 }
 
 

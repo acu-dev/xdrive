@@ -7,16 +7,23 @@
 //
 
 #import "XServer.h"
-@protocol XServiceRemoteDelegate;
 
-
+typedef void (^XServiceCompletionBlock)(id result);
+typedef void (^XServiceFailedBlock)(NSError *error);
+typedef void (^XServiceUpdateBlock)(float percentDownloaded);
+typedef NSURLCredential * (^XServiceAuthenticationChallengeBlock)(NSURLAuthenticationChallenge *challenge);
 
 @interface XServiceRemote : NSObject
 
 /**
- Special delegate to handle authentication challenges instead of the connection's delegate
+ A block to be executed when connections fail.
  */
-@property (nonatomic, weak) id<XServiceRemoteDelegate> authDelegate;
+@property (nonatomic, copy) XServiceFailedBlock failureBlock;
+
+/**
+ A block to evaluate and respond to authentication challenges.
+ */
+@property (nonatomic, copy) XServiceAuthenticationChallengeBlock authenticationChallengeBlock;
 
 ///---------------------
 /// @name Initialization
@@ -29,65 +36,23 @@
  */
 - (id)initWithServer:(XServer *)server;
 
-///---------------
-/// @name Fetching
-///---------------
+///----------------------------
+/// @name Getting Entry Details
+///----------------------------
 
-- (void)fetchEntryDetailsAtPath:(NSString *)path withCompletionBlock:(void (^)(NSError *))completionBlock;
+- (void)fetchDefaultPathsWithCompletionBlock:(XServiceCompletionBlock)completionBlock;
+- (void)fetchEntryDetailsAtPath:(NSString *)path withCompletionBlock:(XServiceCompletionBlock)completionBlock;
 
+///------------------------
+/// @name Downloading Files
+///------------------------
 
-
-
-
-///------------------------------------
-/// @name Old code that uses CGNetUtils
-///------------------------------------
-
-
-- (void)fetchJSONAtURL:(NSString *)url withTarget:(id)target action:(SEL)action;
-- (void)fetchJSONAtURL:(NSString *)url withDelegate:(id<XServiceRemoteDelegate>)delegate;
-	// Creates the connection and saves the target/action in the requests dictionary
-	// to be used when the connection returns.
-
-- (void)fetchInfoAtHost:(NSString *)host withDelegate:(id<XServiceRemoteDelegate>)delegate;
-	// Gets the server info (version, service paths, etc)
-
-- (void)fetchDefaultPathsForServer:(XServer *)server withDelegate:(id<XServiceRemoteDelegate>)delegate;
-	// Gets the server's configured default paths.
-
-- (void)fetchDirectoryContentsAtPath:(NSString *)path withDelegate:(id<XServiceRemoteDelegate>)delegate;
-	// Gets the directory contents for a path
-
-
-- (void)fetchDirectoryContentsAtPath:(NSString *)path withTarget:(id)target action:(SEL)action;
-
-- (void)downloadFileAtPath:(NSString *)path withDelegate:(id<XServiceRemoteDelegate>)delegate;
-- (void)downloadFileAtPath:(NSString *)path ifModifiedSinceCachedDate:(NSDate *)cachedDate withDelegate:(id<XServiceRemoteDelegate>)delegate;
-- (void)downloadFileAtAbsolutePath:(NSString *)path ifModifiedSinceCachedDate:(NSDate *)cachedDate withDelegate:(id<XServiceRemoteDelegate>)delegate;
-	// Downloads a file at given url path and notifies delegate on events
-
+- (void)downloadFileAtPath:(NSString *)path ifModifiedSinceCachedDate:(NSDate *)cachedDate
+		   withUpdateBlock:(XServiceUpdateBlock)updateBlock
+		   completionBlock:(XServiceCompletionBlock)completionBlock;
 
 @end
 
 
 
-@protocol XServiceRemoteDelegate <NSObject>
 
-- (void)connectionFinishedWithResult:(NSObject *)result;
-    // Result of the remote connection
-
-@optional
-
-- (void)connectionFailedWithError:(NSError *)error;
-    // Handle connection failure
-
-- (void)fileTransferProgressUpdate:(float)percent;
-    // Get updates on the file being transferred
-
-- (NSURLCredential *)credentialForAuthenticationChallenge;
-	// Provides a credential to use when the connection sends an authentication challenge
-
-/* deprecated */
-- (void)connectionDownloadPercentUpdate:(float)percent;
-
-@end

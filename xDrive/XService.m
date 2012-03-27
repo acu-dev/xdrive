@@ -18,13 +18,16 @@
 
 
 @interface XService()
+@property (nonatomic, strong) NSMutableDictionary *_directoryUpdates;
 @property (nonatomic, strong) NSOperationQueue *_operationQueue;
+
 @end
 
 
 @implementation XService
 
 // Private
+@synthesize _directoryUpdates;
 @synthesize _operationQueue;
 
 // Public
@@ -57,6 +60,7 @@
 		// Init local and remote services
 		_localService = [[XServiceLocal alloc] init];
 		_remoteService = [[XServiceRemote alloc] initWithServer:_localService.server];
+		_directoryUpdates = [[NSMutableDictionary alloc] init];
 		_operationQueue = [[NSOperationQueue alloc] init];
     }
     return self;
@@ -88,9 +92,62 @@
 
 #pragma mark - Directory Updates
 
-- (void)updateDirectoryAtPath:(NSString *)path forContentsViewController:(DirectoryContentsViewController *)viewController
+- (void)updateEntryAtPath:(NSString *)path forContentsViewController:(DirectoryContentsViewController *)viewController
 {
+	NSMutableDictionary *directoryUpdate = nil;
+	if ([_directoryUpdates objectForKey:path])
+	{
+		// Add view controller to existing update for specified directory
+		directoryUpdate = [_directoryUpdates objectForKey:path];
+		[[directoryUpdate objectForKey:@"viewControllers"] addObject:viewController];
+		return;
+	}
+	directoryUpdate = [[NSMutableDictionary alloc] init];
 	
+	// View controller
+	NSMutableArray *viewControllers = [[NSMutableArray alloc] initWithObjects:viewController, nil];
+	[directoryUpdate setObject:viewControllers forKey:@"viewControllers"];
+	
+	// Remote service
+	XServiceRemote *remoteService = [[XServiceRemote alloc] initWithServer:[_localService server]];
+	remoteService.failureBlock = ^(NSError *error){
+		[self updateEntryFailedWithError:error];
+	};
+	[directoryUpdate setObject:remoteService forKey:@"remoteService"];
+	
+	// Start fetch
+	[remoteService fetchEntryDetailsAtPath:path withCompletionBlock:^(id result) {
+		[self receivedEntryDetails:(NSDictionary *)result];
+	}];
+	
+	// Store update
+	[_directoryUpdates setObject:directoryUpdate forKey:path];
+}
+
+- (void)receivedEntryDetails:(NSDictionary *)details
+{
+	NSString *path = [details objectForKey:@"path"];
+	XDrvDebug(@"Received entry details for path %@", path);
+	NSMutableDictionary *directoryUpdate = [_directoryUpdates objectForKey:path];
+	
+	// Remove remote service
+	[directoryUpdate removeObjectForKey:@"remoteService"];
+	
+	// Update operation
+	UpdateDirectoryOperation *operation = [[UpdateDirectoryOperation alloc] initWithDetails:details forDirectoryPath:path];
+	[_operationQueue addOperation:operation];
+}
+
+- (void)operationDidFinishUpdatingDirectoryAtPath:(NSString *)path
+{
+	XDrvDebug(@"Operation finished udpating directory details at path %@", path);
+	// notify view controllers
+}
+
+- (void)updateEntryFailedWithError:(NSError *)error
+{
+	XDrvLog(@"Error: Update entry failed: %@", error);
+	// notify view controllers
 }
 
 
@@ -230,7 +287,7 @@
 - (void)downloadFile:(XFile *)file withDelegate:(id<XServiceRemoteDelegate>)delegate;
 {
 	//[self.remoteService downloadFileAtPath:file.path ifModifiedSinceCachedDate:file.lastUpdated withDelegate:delegate];
-	[self.remoteService downloadFileAtPath:file.path withDelegate:delegate];
+	//[self.remoteService downloadFileAtPath:file.path withDelegate:delegate];
 }
 
 - (void)moveFileAtPath:(NSString *)oldFilePath toPath:(NSString *)newFilePath

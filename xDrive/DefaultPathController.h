@@ -19,22 +19,21 @@
 /**
  Designated initializer.
  
+ @param remoteService The remote service object configured with the server to fetch from.
  @param setupController The setup controller to receive notifications.
  */
-- (id)initWithSetupController:(SetupController *)setupController;
+- (id)initWithController:(SetupController *)setupController;
 
 ///-----------------------------------------
 /// @name Getting the Server's Default Paths
 ///-----------------------------------------
 
 /**
- Gets a list of default paths that have been configured on the specified server and creates local `XDefaultPath` and `XDirectory` objects for them.
+ Gets a list of default paths that have been configured on the server and creates local `XDefaultPath` and `XDirectory` objects for them.
  
  @discussion This acts as an authentication validation because the default paths service is protected. If everything is setup successfully `defaultPathsValidated` will be called on the `SetupController`. 
- 
- @param server The XServer object to fetch default paths from.
  */
-- (void)fetchDefaultPathsForServer:(XServer *)server;
+- (void)fetchDefaultPaths;
 
 ///-------------------------------------
 /// @name Initializing the Default Paths

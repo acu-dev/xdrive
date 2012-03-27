@@ -11,7 +11,6 @@
 #import "XDriveConfig.h"
 #import "OpenFileViewController.h"
 #import "UIStoryboard+Xdrive.h"
-#import "DirectoryContentsController.h"
 
 static NSTimeInterval SecondsBetweenContentUpdates = 300;
 
@@ -19,16 +18,7 @@ static NSTimeInterval SecondsBetweenContentUpdates = 300;
 
 @interface DirectoryContentsViewController ()
 
-/**
- Results controller for the contents of the current directory.
- */
 @property (nonatomic, strong) NSFetchedResultsController *_fetchedResultsController;
-
-/**
- Controller to handle updating the directory contents.
- */
-@property (nonatomic, strong) DirectoryContentsController *_contentsController;
-
 @property (nonatomic, assign) BOOL _isFirstUpdate;
 
 - (void)configureCell:(UITableViewCell *)cell atIndexPath:(NSIndexPath *)indexPath;
@@ -46,7 +36,6 @@ static NSTimeInterval SecondsBetweenContentUpdates = 300;
 
 // Private
 @synthesize _fetchedResultsController;
-@synthesize _contentsController;
 @synthesize _isFirstUpdate;
 
 // Public
@@ -77,13 +66,11 @@ static NSTimeInterval SecondsBetweenContentUpdates = 300;
 	XDrvDebug(@"Setting directory to: %@", dir);
 	contentStatus = DirectoryContentNotChecked;
 	
-	_contentsController = [[DirectoryContentsController alloc] initWithDirectory:directory forViewController:self];
-	
 	if (!directory.contentsLastUpdated)
 	{
 		XDrvDebug(@"%@ :: Directory is new; doing first update", directory.path);
 		_isFirstUpdate = YES;
-		[_contentsController updateDirectoryContents];
+		[[XService sharedXService] updateEntryAtPath:directory.path forContentsViewController:self];
 	}
 	else
 	{
@@ -117,6 +104,8 @@ static NSTimeInterval SecondsBetweenContentUpdates = 300;
 - (void)viewWillAppear:(BOOL)animated
 {
 	[super viewWillAppear:animated];
+	
+	XDrvDebug(@"%@ :: View will appear", directory.path);
 	
 	if (_isFirstUpdate)
 	{

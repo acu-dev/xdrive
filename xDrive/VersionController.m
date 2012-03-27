@@ -35,7 +35,7 @@ static NSString *downloadURL = @"http://xdrive.acu.edu";
 {
 	if (![[XDriveConfig appVersion] hasSuffix:@"-SNAPSHOT"])
 	{
-		[[XService sharedXService].remoteService fetchJSONAtURL:latestVersionURL withDelegate:self];
+		//[[XService sharedXService].remoteService fetchJSONAtURL:latestVersionURL withDelegate:self];
 	}
 }
 

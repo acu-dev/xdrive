@@ -7,6 +7,7 @@
 //
 
 #import <Foundation/Foundation.h>
+#import "XServer.h"
 
 
 typedef enum {
@@ -18,17 +19,40 @@ typedef enum {
 
 @interface SetupController : NSObject
 
-@property (nonatomic, strong) NSString *validateUser, *validatePass;
-	// User/pass to use when authenticating to server
+/**
+ Login view controller.
+ */
+@property (nonatomic, strong, readonly) UIViewController *viewController;
 
+/**
+ Username and password to use for authenticating with xservice.
+ */
+@property (nonatomic, strong, readonly) NSString *validateUser, *validatePass;
+
+/**
+ Server object to validate and store if successful.
+ */
+@property (nonatomic, strong, readonly) XServer *server;
+
+/**
+ Status of the reset process.
+ */
 @property (nonatomic, assign, readonly) BOOL isResetting;
-	// Status of the reset process
 
-- (UIViewController *)viewController;
-	// Initializes the setup view controller for displaying on initial app launch
-
+/**
+ Starts validating the user/pass/host provided.
+ 
+ @param username The username to use for authentication.
+ @param password The password to use for authentication.
+ @param host The host to validate and if successful, setup.
+ */
 - (void)setupWithUsername:(NSString *)username password:(NSString *)password forHost:(NSString *)host;
-	// Starts validating the user/pass/host provided
+
+
+
+
+
+
 
 - (void)defaultPathsStatusUpdate:(NSString *)status;
 	// Status update of the default path setup

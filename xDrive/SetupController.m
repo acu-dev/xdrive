@@ -16,24 +16,18 @@
 #import "DTAsyncFileDeleter.h"
 
 
+static NSString * const kXServiceDefaultProtocol = @"https";
+static NSUInteger const kXServiceDefaultPort = 443;
+static NSString * const kXServiceDefaultContext = @"/xservice";
+static NSUInteger const kXServiceDefaultCachePolicy = NSURLRequestReloadIgnoringLocalCacheData;
+static NSUInteger const kXServiceDefaultTimoutInterval = 15;
 
-typedef enum _SetupStep {
-	ValidateServer,
-	FetchingDefaultPaths
-} SetupStep;
 
+@interface SetupController()
 
-
-@interface SetupController() <XServiceRemoteDelegate>
-
-@property (nonatomic, strong) SetupViewController *viewController;
-	// View controller to provide user/host/pass
-
-@property (nonatomic, strong) XServer *server;
-
-@property (nonatomic, assign) SetupStep setupStep;
-
-@property (nonatomic, strong) DefaultPathController *defaultPathController;
+@property (nonatomic, strong) SetupViewController *_viewController;
+@property (nonatomic, strong) XServiceRemote *_remoteService;
+@property (nonatomic, strong) DefaultPathController *_defaultPathController;
 
 - (void)receiveServerInfoResult:(NSObject *)result;
 - (BOOL)isServerVersionCompatible:(NSString *)version;
@@ -47,36 +41,39 @@ typedef enum _SetupStep {
 @implementation SetupController
 
 // Public
-@synthesize validateUser, validatePass;
+@synthesize viewController;
+@synthesize validateUser = _validateUser;
+@synthesize validatePass = _validatePass;
+@synthesize server = _server;
 @synthesize isResetting = _isResetting;
 
 // Private
-@synthesize viewController;
-@synthesize server;
-@synthesize setupStep;
-@synthesize defaultPathController;
-
+@synthesize _viewController;
+@synthesize _remoteService;
+@synthesize _defaultPathController;
 
 
 - (void)dealloc
 {
-	self.validateUser = nil;
-	self.validatePass = nil;
-	self.defaultPathController = nil;
-	self.server = nil;
-	self.viewController = nil;
+	_validateUser = nil;
+	_validatePass = nil;
+	_server = nil;
+	self._viewController = nil;
+	self._defaultPathController = nil;
 }
 
 
 
+#pragma mark - Accessors
+
 - (UIViewController *)viewController
 {
-	if (!viewController)
+	if (!_viewController)
 	{
-		viewController = [[UIStoryboard mainStoryboard] instantiateViewControllerWithIdentifier:@"SetupView"];
-		viewController.setupController = self;
+		_viewController = [[UIStoryboard mainStoryboard] instantiateViewControllerWithIdentifier:@"SetupView"];
+		_viewController.setupController = self;
 	}
-	return viewController;
+	return _viewController;
 }
 
 
@@ -86,22 +83,48 @@ typedef enum _SetupStep {
 - (void)setupWithUsername:(NSString *)username password:(NSString *)password forHost:(NSString *)host
 {	
 	// Save user/pass for validation on next step
-	validateUser = username;
-	validatePass = password;
+	_validateUser = username;
+	_validatePass = password;
 	
-	// Get server info
-	setupStep = ValidateServer;
-	[[XService sharedXService].remoteService fetchInfoAtHost:host withDelegate:self];
+	// Build URL from defaults
+	NSURL *url = [NSURL URLWithString:[NSString stringWithFormat:@"%@://%@:%i%@", kXServiceDefaultProtocol, host, kXServiceDefaultPort, kXServiceDefaultContext]];
+	XDrvDebug(@"Fetching server info from URL: %@", [url absoluteString]);
+	
+	// Create request
+	NSURLRequest *request = [NSURLRequest requestWithURL:url cachePolicy:kXServiceDefaultCachePolicy timeoutInterval:kXServiceDefaultTimoutInterval];
+	
+	// Send request
+	[NSURLConnection sendAsynchronousRequest:request queue:[NSOperationQueue mainQueue] completionHandler:^(NSURLResponse *response, NSData *data, NSError *error) {
+		if (error)
+		{
+			[_viewController setupFailedWithError:error];
+		}
+		else
+		{
+			NSError *jsonError = nil;
+			id result = [NSJSONSerialization JSONObjectWithData:data options:NSJSONReadingAllowFragments error:&jsonError];
+			if (jsonError || ![result isKindOfClass:[NSDictionary class]])
+			{
+				[_viewController setupFailedWithError:jsonError];
+			}
+			else
+			{
+				[self receiveServerInfoResult:result];
+			}
+		}
+	}];
 }
 
-- (void)receiveServerInfoResult:(NSObject *)result
+- (void)receiveServerInfoResult:(NSDictionary *)result
 {	
-	NSDictionary *xserviceInfo = [(NSDictionary *)result objectForKey:@"xservice"];
+	XDrvDebug(@"Received server info");
+	NSDictionary *xserviceInfo = [result objectForKey:@"xservice"];
 	
 	// Evaluate version info
 	if (![self isServerVersionCompatible:[xserviceInfo objectForKey:@"version"]])
 	{
 		// Version incompatible
+		XDrvLog(@"Server version is incompatible");
 		NSString *title = NSLocalizedStringFromTable(@"Unsupported server version",
 													 @"XService",
 													 @"Title for error given when a server responds with an unsupported version.");
@@ -111,24 +134,20 @@ typedef enum _SetupStep {
 		NSDictionary *errorInfo = [NSDictionary dictionaryWithObjectsAndKeys:title, NSLocalizedFailureReasonErrorKey, desc, NSLocalizedDescriptionKey, nil];
 		NSError *error = [NSError errorWithDomain:@"XService" code:ServerIsIncompatible userInfo:errorInfo];
 
-		[viewController setupFailedWithError:error];
+		[_viewController setupFailedWithError:error];
 		return;
 	}
-
+		
 	// Create server object
-	server = [[XService sharedXService].localService createServerWithProtocol:[xserviceInfo objectForKey:@"protocol"]
-																		 port:[xserviceInfo objectForKey:@"port"]
-																	 hostname:[xserviceInfo objectForKey:@"host"]
-																	  context:[xserviceInfo objectForKey:@"context"]
-																  servicePath:[xserviceInfo objectForKey:@"serviceBase"]];
-	
-	// Become auth challenge handler
-	[XService sharedXService].remoteService.authDelegate = self;
+	_server = [[XService sharedXService].localService createServerWithProtocol:[xserviceInfo objectForKey:@"protocol"]
+																		  port:[xserviceInfo objectForKey:@"port"]
+																 	  hostname:[xserviceInfo objectForKey:@"host"]
+																	   context:[xserviceInfo objectForKey:@"context"]
+																   servicePath:[xserviceInfo objectForKey:@"serviceBase"]];
 	
 	// Fetch default paths
-	setupStep = FetchingDefaultPaths;
-	defaultPathController = [[DefaultPathController alloc] initWithSetupController:self];
-	[defaultPathController fetchDefaultPathsForServer:server];
+	_defaultPathController = [[DefaultPathController alloc] initWithController:self];
+	[_defaultPathController fetchDefaultPaths];
 }
 
 - (BOOL)isServerVersionCompatible:(NSString *)version
@@ -140,16 +159,16 @@ typedef enum _SetupStep {
 - (void)saveCredentials
 {
 	// Create protection space for the new server
-	NSURLProtectionSpace *protectionSpace = [[NSURLProtectionSpace alloc] initWithHost:server.hostname
-																				  port:[server.port integerValue]
-																			  protocol:server.protocol
-																				 realm:server.hostname
+	NSURLProtectionSpace *protectionSpace = [[NSURLProtectionSpace alloc] initWithHost:_server.hostname
+																				  port:[_server.port integerValue]
+																			  protocol:_server.protocol
+																				 realm:_server.hostname
 																  authenticationMethod:@"NSURLAuthenticationMethodDefault"];
 	// Make a credential with permanent persistence
-	NSURLCredential *credential = [NSURLCredential credentialWithUser:validateUser password:validatePass persistence:NSURLCredentialPersistencePermanent];
+	NSURLCredential *credential = [NSURLCredential credentialWithUser:_validateUser password:_validatePass persistence:NSURLCredentialPersistencePermanent];
 	
 	// Save credential to the protection space
-	XDrvDebug(@"Saving credentials for user: %@", validateUser);
+	XDrvDebug(@"Saving credentials for user: %@", _validateUser);
 	[[NSURLCredentialStorage sharedCredentialStorage] setDefaultCredential:credential forProtectionSpace:protectionSpace];
 }
 
@@ -159,12 +178,12 @@ typedef enum _SetupStep {
 
 - (void)defaultPathsStatusUpdate:(NSString *)status
 {
-	[viewController setupStatusUpdate:status];
+	[_viewController setupStatusUpdate:status];
 }
 
 - (void)defaultPathsFailedWithError:(NSError *)error
 {
-	[viewController setupFailedWithError:error];
+	[_viewController setupFailedWithError:error];
 }
 
 - (void)defaultPathsValidated
@@ -175,7 +194,7 @@ typedef enum _SetupStep {
 		if (error)
 		{
 			XDrvLog(@"Error: unable to save context after adding new server - %@", error);
-			[viewController setupFailedWithError:error];
+			[_viewController setupFailedWithError:error];
 		}
 		else
 		{
@@ -183,13 +202,13 @@ typedef enum _SetupStep {
 			XDrvDebug(@"Successfully saved server and default paths");
 			
 			// Update remote service
-			[XService sharedXService].remoteService.activeServer = server;
+			//[XService sharedXService].remoteService.activeServer = server;
 			
 			// Save the credentials permanently now that they have been validated
 			[self saveCredentials];
 			
 			// Pre-populate default path directory contents
-			[defaultPathController initializeDefaultPaths];
+			[_defaultPathController initializeDefaultPaths];
 		}
 	}];
 }
@@ -206,7 +225,7 @@ typedef enum _SetupStep {
 			
 		// All done
 		XDrvDebug(@"Setup Finished");
-		[viewController setupFinished];
+		[_viewController setupFinished];
 	}];
 }
 
@@ -220,13 +239,7 @@ typedef enum _SetupStep {
 
 - (void)connectionFailedWithError:(NSError *)error
 {
-	[viewController setupFailedWithError:error];
-}
-
-- (NSURLCredential *)credentialForAuthenticationChallenge
-{
-	XDrvDebug(@"Providing temp credential until it is validated");
-	return [NSURLCredential credentialWithUser:validateUser password:validatePass persistence:NSURLCredentialPersistenceNone];
+	[_viewController setupFailedWithError:error];
 }
 
 

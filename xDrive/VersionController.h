@@ -9,7 +9,7 @@
 #import <Foundation/Foundation.h>
 #import "XService.h"
 
-@interface VersionController : NSObject <XServiceRemoteDelegate>
+@interface VersionController : NSObject //<XServiceRemoteDelegate>
 
 - (void)checkVersion;
 	// Starts a fetch to get the latest version

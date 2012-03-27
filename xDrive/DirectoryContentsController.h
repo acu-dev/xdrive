@@ -10,7 +10,7 @@
 #import "XService.h"
 #import "DirectoryContentsViewController.h"
 
-@interface DirectoryContentsController : NSObject <XServiceRemoteDelegate>
+@interface DirectoryContentsController : NSObject //<XServiceRemoteDelegate>
 
 - (id)initWithDirectory:(XDirectory *)directory forViewController:(DirectoryContentsViewController *)viewController;
 
