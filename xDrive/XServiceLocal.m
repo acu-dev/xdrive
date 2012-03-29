@@ -233,10 +233,6 @@ static NSString *ModelFileName = @"xDrive";
 	{
 		XDrvLog(@"Error: Found multiple %@ objects with the path %@; This should not happen!", type, path);
 	}
-	else
-	{
-		XDrvDebug(@"Found entry at %@", path);
-	}
 	return [fetchedObjects objectAtIndex:0];
 }
 
