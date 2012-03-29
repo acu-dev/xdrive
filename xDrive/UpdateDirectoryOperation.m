@@ -118,18 +118,19 @@
 	
 	// Save changes
 	[localService saveWithCompletionBlock:^(NSError *error) {
+		NSString *path = directory.path;
 		if (error)
 		{
-			XDrvLog(@"%@ :: Error: Problem saving local context: %@", directory.path, error);
+			XDrvLog(@"%@ :: Error: Problem saving local context: %@", path, error);
 			dispatch_async(dispatch_get_main_queue(), ^{
-				[[XService sharedXService] updateDirectoryAtPath:directory.path failedWithError:error];
+				[[XService sharedXService] updateDirectoryAtPath:path failedWithError:error];
 			});
 		}
 		else
 		{
-			XDrvDebug(@"%@ :: Saved local context", directory.path);
+			XDrvDebug(@"%@ :: Saved local context", path);
 			dispatch_async(dispatch_get_main_queue(), ^{
-				[[XService sharedXService] operationDidFinishUpdatingDirectoryAtPath:directory.path];
+				[[XService sharedXService] operationDidFinishUpdatingDirectoryAtPath:path];
 			});
 		}
 	}];
