@@ -21,6 +21,7 @@ static NSTimeInterval SecondsBetweenContentUpdates = 3600;
 
 @property (nonatomic, strong) NSFetchedResultsController *_fetchedResultsController;
 @property (nonatomic, assign) BOOL _performingFirstUpdate, _shouldHideSearch;
+@property (nonatomic, strong) UILabel *_folderEmptyLabel;
 
 - (void)configureCell:(UITableViewCell *)cell forEntry:(XEntry *)entry;
 
@@ -33,14 +34,16 @@ static NSTimeInterval SecondsBetweenContentUpdates = 3600;
 // Private
 @synthesize _fetchedResultsController;
 @synthesize _performingFirstUpdate, _shouldHideSearch;
+@synthesize _folderEmptyLabel;
 
 // Public
 @synthesize directoryViewController;
 @synthesize directory;
 
+@synthesize headerView;
 @synthesize activityIndicator;
 @synthesize arrowImageView;
-@synthesize actionLabel, lastUpdatedLabel;
+@synthesize actionLabel, lastUpdatedLabel, folderEmptyLabel;
 
 @synthesize contentStatus = _contentStatus;
 
@@ -94,6 +97,17 @@ static NSTimeInterval SecondsBetweenContentUpdates = 3600;
 	CGRect frame = self.view.frame;
 	frame.origin.y = 0;
 	self.view.frame = frame;
+	
+	if (![directory.contents count])
+	{
+		// Display empty folder label
+		_folderEmptyLabel = folderEmptyLabel;
+		frame = _folderEmptyLabel.frame;
+		frame.origin.y = 175;
+		_folderEmptyLabel.frame = frame;
+		_folderEmptyLabel.hidden = NO;
+		[self.view addSubview:_folderEmptyLabel];
+	}
 }
 
 - (void)viewDidUnload
@@ -170,7 +184,15 @@ static NSTimeInterval SecondsBetweenContentUpdates = 3600;
 			[self.tableView reloadData];
 			_performingFirstUpdate = NO;
 			
-			XDrvDebug(@"%@ :: Contents now loaded. Hide activity animation here .....................", directory.path);
+			// Show contents
+			[directoryViewController showDirectoryContentsAnimated:YES];
+		}
+		
+		if ([directory.contents count] && _folderEmptyLabel)
+		{
+			// Remove folder empty label
+			[_folderEmptyLabel removeFromSuperview];
+			_folderEmptyLabel = nil;
 		}
 	}
 	else if (status == DirectoryContentUpdateFailed)

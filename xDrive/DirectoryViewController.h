@@ -15,6 +15,7 @@
 @property (nonatomic, strong) XDirectory *directory;
 @property (nonatomic, strong) IBOutlet UIView *initialUpdateView;
 
+- (void)showDirectoryContentsAnimated:(BOOL)animated;
 - (void)navigateToDirectory:(XDirectory *)directory;
 - (void)navigateToFile:(XFile *)file;
 

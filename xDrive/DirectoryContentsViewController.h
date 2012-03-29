@@ -20,10 +20,10 @@ typedef enum {
 
 @interface DirectoryContentsViewController : UITableViewController <NSFetchedResultsControllerDelegate>
 
-
+@property (nonatomic, strong) IBOutlet UIView *headerView;
 @property (strong, nonatomic) IBOutlet UIActivityIndicatorView *activityIndicator;
 @property (strong, nonatomic) IBOutlet UIImageView *arrowImageView;
-@property (strong, nonatomic) IBOutlet UILabel *actionLabel, *lastUpdatedLabel;
+@property (strong, nonatomic) IBOutlet UILabel *actionLabel, *lastUpdatedLabel, *folderEmptyLabel;
 
 @property (nonatomic, weak) DirectoryViewController *directoryViewController;
 

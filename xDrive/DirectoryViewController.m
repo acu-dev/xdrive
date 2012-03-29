@@ -16,7 +16,6 @@
 @property (nonatomic, strong) DirectoryContentsViewController *_contentsViewController;
 @property (nonatomic, assign) BOOL _contentsViewIsLoaded;
 - (void)showInitialUpdateView;
-- (void)showDirectoryContentsAnimated:(BOOL)animated;
 @end
 
 @implementation DirectoryViewController
@@ -104,13 +103,43 @@
 	if (!animated)
 	{
 		[self.view addSubview:_contentsViewController.view];
+		[_contentsViewController viewDidAppear:animated];
+		_contentsViewIsLoaded = YES;
 	}
 	else
 	{
+		float heightOfStatusBarAndTitleBar = 64;
+		XDrvLog(@"self view height: %f", self.view.frame.size.height);
 		
+		CGRect endFrameForInitialUpdateView = initialUpdateView.frame;
+		endFrameForInitialUpdateView.origin.y -= endFrameForInitialUpdateView.size.height;
+		endFrameForInitialUpdateView.origin.y -= heightOfStatusBarAndTitleBar;
+		
+		CGRect endFrameForContentsView = _contentsViewController.view.frame;
+		endFrameForContentsView.size.height = self.view.frame.size.height;
+		CGRect startFrameForContentsView = endFrameForContentsView;
+		startFrameForContentsView.origin.y -= startFrameForContentsView.size.height;
+		startFrameForContentsView.origin.y -= heightOfStatusBarAndTitleBar;
+
+		_contentsViewController.view.frame = startFrameForContentsView;
+		[self.view addSubview:_contentsViewController.view];
+		
+		[UIView animateWithDuration:0.3
+						 animations:^{
+							 initialUpdateView.frame = endFrameForInitialUpdateView;
+						 }
+						 completion:^(BOOL finished) {
+							 [initialUpdateView removeFromSuperview];
+							 [UIView animateWithDuration:0.3
+											  animations:^{
+												  _contentsViewController.view.frame = endFrameForContentsView;
+											  }
+											  completion:^(BOOL finished) {
+												  [_contentsViewController viewDidAppear:animated];
+												  _contentsViewIsLoaded = YES;
+											  }];
+						 }];
 	}
-	[_contentsViewController viewDidAppear:animated];
-	_contentsViewIsLoaded = YES;
 }
 
 

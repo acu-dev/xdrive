@@ -31,9 +31,34 @@
                     <view key="view" contentMode="scaleToFill" id="wmL-tP-eyX">
                         <rect key="frame" x="0.0" y="64" width="320" height="416"/>
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                        <subviews>
+                            <view contentMode="scaleToFill" id="As9-db-wHM">
+                                <rect key="frame" x="0.0" y="0.0" width="320" height="108"/>
+                                <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMaxY="YES"/>
+                                <subviews>
+                                    <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" text="Fetching folder contents..." textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" minimumFontSize="10" id="Fkl-BO-HzW">
+                                        <rect key="frame" x="20" y="43" width="280" height="21"/>
+                                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                                        <fontDescription key="fontDescription" type="boldSystem" pointSize="16"/>
+                                        <color key="textColor" red="0.33725491166114807" green="0.42745101451873779" blue="0.63137257099151611" alpha="1" colorSpace="deviceRGB"/>
+                                        <nil key="highlightedColor"/>
+                                        <color key="shadowColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                        <size key="shadowOffset" width="0.0" height="1"/>
+                                    </label>
+                                    <activityIndicatorView opaque="NO" contentMode="scaleToFill" hidesWhenStopped="YES" animating="YES" style="gray" id="U7C-Mh-QMs">
+                                        <rect key="frame" x="25" y="44" width="20" height="20"/>
+                                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                    </activityIndicatorView>
+                                </subviews>
+                                <color key="backgroundColor" red="0.96862751245498657" green="0.96862751245498657" blue="0.96862751245498657" alpha="1" colorSpace="deviceRGB"/>
+                            </view>
+                        </subviews>
                         <color key="backgroundColor" cocoaTouchSystemColor="scrollViewTexturedBackgroundColor"/>
                     </view>
                     <simulatedNavigationBarMetrics key="simulatedTopBarMetrics" prompted="NO"/>
+                    <connections>
+                        <outlet property="initialUpdateView" destination="As9-db-wHM" id="ZQP-aW-m4r"/>
+                    </connections>
                 </viewController>
             </objects>
             <point key="canvasLocation" x="-9" y="-297"/>
@@ -477,7 +502,7 @@
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <color key="backgroundColor" red="0.96862751245498657" green="0.96862751245498657" blue="0.96862751245498657" alpha="1" colorSpace="deviceRGB"/>
                         <inset key="contentInset" minX="0.0" minY="-66" maxX="0.0" maxY="0.0"/>
-                        <view key="tableHeaderView" contentMode="scaleToFill" id="Bwx-pD-efW">
+                        <view key="tableHeaderView" clipsSubviews="YES" contentMode="scaleToFill" id="Bwx-pD-efW">
                             <rect key="frame" x="0.0" y="0.0" width="320" height="110"/>
                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                             <subviews>
@@ -510,6 +535,13 @@
                                     <rect key="frame" x="29" y="17" width="29" height="38"/>
                                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 </imageView>
+                                <label hidden="YES" opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" text="Folder is Empty" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" minimumFontSize="10" id="MH4-PD-pww">
+                                    <rect key="frame" x="20" y="0.0" width="280" height="21"/>
+                                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                    <fontDescription key="fontDescription" type="boldSystem" pointSize="17"/>
+                                    <color key="textColor" white="0.33333333333333331" alpha="1" colorSpace="calibratedWhite"/>
+                                    <nil key="highlightedColor"/>
+                                </label>
                             </subviews>
                             <color key="backgroundColor" red="0.96717900815217395" green="0.96717900815217395" blue="0.96717900815217395" alpha="1" colorSpace="calibratedRGB"/>
                         </view>
@@ -607,6 +639,8 @@
                         <outlet property="actionLabel" destination="x5i-VZ-1ad" id="ebl-MZ-4Bs"/>
                         <outlet property="activityIndicator" destination="Tct-rV-YDl" id="7vl-h3-AeH"/>
                         <outlet property="arrowImageView" destination="ciI-fD-X7t" id="5ZK-oX-BJy"/>
+                        <outlet property="folderEmptyLabel" destination="MH4-PD-pww" id="Xsk-XN-OfI"/>
+                        <outlet property="headerView" destination="Bwx-pD-efW" id="bHe-dL-eRy"/>
                         <outlet property="lastUpdatedLabel" destination="kol-gM-S9B" id="wQY-Ey-yUB"/>
                     </connections>
                 </tableViewController>
@@ -906,6 +940,8 @@
                 <relationship kind="outlet" name="actionLabel" candidateClass="UILabel"/>
                 <relationship kind="outlet" name="activityIndicator" candidateClass="UIActivityIndicatorView"/>
                 <relationship kind="outlet" name="arrowImageView" candidateClass="UIImageView"/>
+                <relationship kind="outlet" name="folderEmptyLabel" candidateClass="UILabel"/>
+                <relationship kind="outlet" name="headerView" candidateClass="UIView"/>
                 <relationship kind="outlet" name="lastUpdatedLabel" candidateClass="UILabel"/>
             </relationships>
         </class>
