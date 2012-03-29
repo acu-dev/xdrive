@@ -27,6 +27,20 @@
 @synthesize _contentsViewIsLoaded;
 
 
+#pragma mark - Directory
+
+- (void)setDirectory:(XDirectory *)dir
+{
+	directory = dir;
+	_contentsViewController = [[UIStoryboard mainStoryboard] instantiateViewControllerWithIdentifier:@"directoryContentsView"];
+	_contentsViewController.directoryViewController = self;
+	_contentsViewController.directory = directory;
+}
+
+
+
+#pragma mark - View lifecycle
+
 - (void)viewDidLoad
 {
     [super viewDidLoad];
@@ -69,18 +83,6 @@
 - (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation
 {
     return YES;
-}
-
-
-
-#pragma mark - Directory
-
-- (void)setDirectory:(XDirectory *)dir
-{
-	directory = dir;
-	_contentsViewController = [[UIStoryboard mainStoryboard] instantiateViewControllerWithIdentifier:@"directoryContentsView"];
-	_contentsViewController.directoryViewController = self;
-	_contentsViewController.directory = directory;
 }
 
 
