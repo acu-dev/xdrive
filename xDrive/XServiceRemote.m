@@ -52,6 +52,7 @@
 	self = [super init];
     if (!self) return nil;
 	_server = server;
+	[CGNet utils].challengeResponseDelegate = self;
 	return self;
 }
 
