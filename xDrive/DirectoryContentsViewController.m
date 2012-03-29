@@ -19,14 +19,13 @@ static NSTimeInterval SecondsBetweenContentUpdates = 300;
 @interface DirectoryContentsViewController ()
 
 @property (nonatomic, strong) NSFetchedResultsController *_fetchedResultsController;
-@property (nonatomic, assign) BOOL _isFirstUpdate;
+@property (nonatomic, assign) BOOL _performingFirstUpdate;
+@property (nonatomic, assign) DirectoryContentStatus _contentStatus;
 
 - (void)configureCell:(UITableViewCell *)cell atIndexPath:(NSIndexPath *)indexPath;
 - (void)configureCell:(UITableViewCell *)cell forEntry:(XEntry *)entry;
-	// Sylizes and fills in data for a specific cell
 
 - (UIImage *)iconForEntryType:(NSString *)entryType;
-	// Creates an icon image appropriate for the entry type
 
 @end
 
@@ -36,12 +35,13 @@ static NSTimeInterval SecondsBetweenContentUpdates = 300;
 
 // Private
 @synthesize _fetchedResultsController;
-@synthesize _isFirstUpdate;
+@synthesize _performingFirstUpdate;
+@synthesize _contentStatus;
 
 // Public
 @synthesize directory;
 @synthesize iconTypes;
-@synthesize contentStatus;
+
 
 
 
@@ -63,14 +63,13 @@ static NSTimeInterval SecondsBetweenContentUpdates = 300;
 - (void)setDirectory:(XDirectory *)dir
 {
 	directory = dir;
-	XDrvDebug(@"Setting directory to: %@", dir);
-	contentStatus = DirectoryContentNotChecked;
 	
 	if (!directory.contentsLastUpdated)
 	{
 		XDrvDebug(@"%@ :: Directory is new; doing first update", directory.path);
-		_isFirstUpdate = YES;
-		[[XService sharedXService] updateEntryAtPath:directory.path forContentsViewController:self];
+		_performingFirstUpdate = YES;
+		_contentStatus = DirectoryContentUpdating;
+		[[XService sharedXService] updateDirectory:directory forContentsViewController:self];
 	}
 	else
 	{
@@ -99,6 +98,11 @@ static NSTimeInterval SecondsBetweenContentUpdates = 300;
 	if (!self.title) self.title = directory.name;
 	
 	XDrvLog(@"%@ :: View did load", directory.path);
+	
+	if (_performingFirstUpdate)
+	{
+		XDrvLog(@"%@ :: Contents not yet loaded. Show activity animation here .....................", directory.path);
+	}
 }
 
 - (void)viewWillAppear:(BOOL)animated
@@ -107,15 +111,17 @@ static NSTimeInterval SecondsBetweenContentUpdates = 300;
 	
 	XDrvDebug(@"%@ :: View will appear", directory.path);
 	
-	if (_isFirstUpdate)
+	if ([self shouldUpdateContentAutomatically])
 	{
-		XDrvLog(@"%@ :: Contents not yet loaded. Show activity animation here .....................", directory.path);
+		XDrvDebug(@"%@ :: Directory is stale; initiating update", directory.path);
+		_contentStatus = DirectoryContentUpdating;
+		[[XService sharedXService] updateDirectory:directory forContentsViewController:self];
 	}
-	
-	/*if ([self shouldUpdateContentAutomatically])
+	else if (!_performingFirstUpdate)
 	{
-		[_contentsController updateDirectoryContents];
-	}*/
+		XDrvDebug(@"%@ :: Directory is fresh", directory.path);
+		_contentStatus = DirectoryContentCached;
+	}
 }
 
 - (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender
@@ -136,27 +142,18 @@ static NSTimeInterval SecondsBetweenContentUpdates = 300;
 
 #pragma mark - Content Status
 
-- (BOOL)isUpdateInProgress
-{
-	return (contentStatus == DirectoryContentFetching || contentStatus == DirectoryContentUpdating);
-}
-
 - (BOOL)shouldUpdateContentAutomatically
 {
-	if ([self isUpdateInProgress])
+	if (_contentStatus == DirectoryContentUpdating)
 	{
+		// Update in progress
 		return NO;
 	}
-	
-	if (!directory.contentsLastUpdated)
-	{
-		// Directory contents have never been fetched
-		return YES;
-	}
 
+	XDrvDebug(@"%@ :: Contents last updated %@", directory.path, directory.contentsLastUpdated);
 	if ([directory.contentsLastUpdated timeIntervalSinceNow] < (SecondsBetweenContentUpdates * -1))
 	{
-		// Last content update was longer ago than time specified between updates
+		// Time passed is greater than specified time interval between content updates
 		return YES;
 	}
 
@@ -165,7 +162,7 @@ static NSTimeInterval SecondsBetweenContentUpdates = 300;
 
 - (void)updateDirectoryStatus:(DirectoryContentStatus)status
 {
-	contentStatus = status;
+	_contentStatus = status;
 	
 	switch (status)
 	{
@@ -173,14 +170,13 @@ static NSTimeInterval SecondsBetweenContentUpdates = 300;
 			XDrvDebug(@"%@ :: Status is cached", directory.path);
 			break;
 			
-		case DirectoryContentFetching:
 		case DirectoryContentUpdating:
 			XDrvDebug(@"%@ :: Status is updating", directory.path);
 			break;
 			
 		case DirectoryContentUpdateFinished:
 			XDrvDebug(@"%@ :: Status is update finished", directory.path);
-			if (_isFirstUpdate)
+			if (_performingFirstUpdate)
 			{
 				XDrvDebug(@"%@ :: Update was first update; setting up fetched results controller and displaying contents", directory.path);
 				_fetchedResultsController = [[XService sharedXService].localService contentsControllerForDirectory:directory];
@@ -196,7 +192,7 @@ static NSTimeInterval SecondsBetweenContentUpdates = 300;
 				
 				// Reload table
 				[self.tableView reloadData];
-				_isFirstUpdate = NO;
+				_performingFirstUpdate = NO;
 			}
 			break;
 			
@@ -234,12 +230,6 @@ static NSTimeInterval SecondsBetweenContentUpdates = 300;
 
 
 #pragma mark - Cell customization
-
-- (void)configureCell:(UITableViewCell *)cell atIndexPath:(NSIndexPath *)indexPath
-{
-    XEntry *entry = [_fetchedResultsController objectAtIndexPath:indexPath];
-    [self configureCell:cell forEntry:entry];
-}
 
 - (void)configureCell:(UITableViewCell *)cell forEntry:(XEntry *)entry
 {
@@ -393,24 +383,29 @@ static NSTimeInterval SecondsBetweenContentUpdates = 300;
       newIndexPath:(NSIndexPath *)newIndexPath
 {
     UITableView *tableView = self.tableView;
+	XDrvDebug(@"%@ :: Changed object %@ at row %i, new row %i", directory.path, anObject, indexPath.row, newIndexPath.row);
     
     switch(type)
     {
             
         case NSFetchedResultsChangeInsert:
+			XDrvDebug(@"- Change type INSERT");
             [tableView insertRowsAtIndexPaths:[NSArray arrayWithObject:newIndexPath] withRowAnimation:UITableViewRowAnimationFade];
             break;
             
         case NSFetchedResultsChangeDelete:
+			XDrvDebug(@"- Change type DELETE");
             [tableView deleteRowsAtIndexPaths:[NSArray arrayWithObject:indexPath] withRowAnimation:UITableViewRowAnimationFade];
             break;
             
         case NSFetchedResultsChangeUpdate:
+			XDrvDebug(@"- Change type UPDATE");
             //[self configureCell:[tableView cellForRowAtIndexPath:indexPath] atIndexPath:indexPath];
 			[tableView cellForRowAtIndexPath:indexPath];
             break;
             
         case NSFetchedResultsChangeMove:
+			XDrvDebug(@"- Change type MOVE");
             [tableView deleteRowsAtIndexPaths:[NSArray arrayWithObject:indexPath] withRowAnimation:UITableViewRowAnimationFade];
             [tableView insertRowsAtIndexPaths:[NSArray arrayWithObject:newIndexPath]withRowAnimation:UITableViewRowAnimationFade];
             break;

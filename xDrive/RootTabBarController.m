@@ -83,7 +83,7 @@
 
 		[viewControllers addObject:navController];
 	}
-	
+	/*
 	// Recent
 	UINavigationController *recentNavController = [[UIStoryboard mainStoryboard] instantiateViewControllerWithIdentifier:@"recentNav"];
 	recentNavController.tabBarItem.image = [UIImage imageNamed:@"clock.png"];
@@ -93,7 +93,7 @@
 	UINavigationController *settingsNavController = [[UIStoryboard mainStoryboard] instantiateViewControllerWithIdentifier:@"settingsNav"];
 	settingsNavController.tabBarItem.image = [UIImage imageNamed:@"gear.png"];
 	[viewControllers addObject:settingsNavController];
-	
+	*/
 	// Init tab items
 	self.viewControllers = [self orderedViewControllers:viewControllers];
 }

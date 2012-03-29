@@ -28,13 +28,13 @@
 
 #pragma mark - Initiailization
 
-- (id)initWithDetails:(NSDictionary *)details forDirectoryPath:(NSString *)directoryPath
+- (id)initWithDetails:(NSDictionary *)details forDirectoryAtPath:(NSString *)path
 {
     self = [super init];
     if (!self) return nil;
 
-	XDrvDebug(@"%@ :: Creating update operation", directoryPath);
-	_directoryPath = directoryPath;
+	XDrvDebug(@"%@ :: Creating update operation", path);
+	_directoryPath = path;
 	_directoryDetails = details;
 	
     return self;
@@ -51,14 +51,14 @@
 	XServiceLocal *localService = [[XService sharedXService].localService newServiceForOperation];
 	
 	// Get directory
-	XDrvDebug(@"%@ :: Fetching directory object from local service", _directoryPath);
-	XDirectory *directory = [localService directoryWithPath:[_directoryDetails objectForKey:@"path"]];
+	XDrvDebug(@"%@ :: Fetching directory object from ID at path", _directoryPath);
+	XDirectory *directory = [localService directoryWithPath:_directoryPath];
 	
 	// Update last updated time (times come from details in milliseconds since epoch)
 	NSTimeInterval lastUpdatedSeconds = [[_directoryDetails objectForKey:@"lastUpdated"] doubleValue] / 1000;
 	NSDate *lastUpdated = [NSDate dateWithTimeIntervalSince1970:lastUpdatedSeconds];
 	directory.lastUpdated = lastUpdated;
-	directory.contentsLastUpdated = lastUpdated;
+	directory.contentsLastUpdated = [NSDate date];
 	
 	// Go through contents and create a set of remote entries (entries that don't exist are created on the fly)
 	NSMutableSet *remoteEntries = [[NSMutableSet alloc] init];
@@ -122,7 +122,7 @@
 		{
 			XDrvLog(@"%@ :: Error: Problem saving local context: %@", directory.path, error);
 			dispatch_async(dispatch_get_main_queue(), ^{
-				[[XService sharedXService] updateEntryFailedWithError:error];
+				[[XService sharedXService] updateDirectoryAtPath:directory.path failedWithError:error];
 			});
 		}
 		else

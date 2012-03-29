@@ -15,6 +15,7 @@
 #import "NSString+DTPaths.h"
 #import "NSString+DTFormatNumbers.h"
 #import "UpdateDirectoryOperation.h"
+#import "DirectoryContentsViewController.h"
 
 
 @interface XService()
@@ -92,13 +93,13 @@
 
 #pragma mark - Directory Updates
 
-- (void)updateEntryAtPath:(NSString *)path forContentsViewController:(DirectoryContentsViewController *)viewController
+- (void)updateDirectory:(XDirectory *)directory forContentsViewController:(DirectoryContentsViewController *)viewController
 {
 	NSMutableDictionary *directoryUpdate = nil;
-	if ([_directoryUpdates objectForKey:path])
+	if ([_directoryUpdates objectForKey:directory.path])
 	{
 		// Add view controller to existing update for specified directory
-		directoryUpdate = [_directoryUpdates objectForKey:path];
+		directoryUpdate = [_directoryUpdates objectForKey:directory.path];
 		[[directoryUpdate objectForKey:@"viewControllers"] addObject:viewController];
 		return;
 	}
@@ -111,20 +112,20 @@
 	// Remote service
 	XServiceRemote *remoteService = [[XServiceRemote alloc] initWithServer:[_localService server]];
 	remoteService.failureBlock = ^(NSError *error){
-		[self updateEntryFailedWithError:error];
+		[self updateDirectoryAtPath:directory.path failedWithError:error];
 	};
 	[directoryUpdate setObject:remoteService forKey:@"remoteService"];
 	
 	// Start fetch
-	[remoteService fetchEntryDetailsAtPath:path withCompletionBlock:^(id result) {
-		[self receivedEntryDetails:(NSDictionary *)result];
+	[remoteService fetchEntryDetailsAtPath:directory.path withCompletionBlock:^(id result) {
+		[self receivedDirectoryDetails:(NSDictionary *)result];
 	}];
 	
 	// Store update
-	[_directoryUpdates setObject:directoryUpdate forKey:path];
+	[_directoryUpdates setObject:directoryUpdate forKey:directory.path];
 }
 
-- (void)receivedEntryDetails:(NSDictionary *)details
+- (void)receivedDirectoryDetails:(NSDictionary *)details
 {
 	NSString *path = [details objectForKey:@"path"];
 	XDrvDebug(@"Received entry details for path %@", path);
@@ -134,20 +135,30 @@
 	[directoryUpdate removeObjectForKey:@"remoteService"];
 	
 	// Update operation
-	UpdateDirectoryOperation *operation = [[UpdateDirectoryOperation alloc] initWithDetails:details forDirectoryPath:path];
+	UpdateDirectoryOperation *operation = [[UpdateDirectoryOperation alloc] initWithDetails:details forDirectoryAtPath:path];
 	[_operationQueue addOperation:operation];
 }
 
 - (void)operationDidFinishUpdatingDirectoryAtPath:(NSString *)path
 {
 	XDrvDebug(@"Operation finished udpating directory details at path %@", path);
-	// notify view controllers
+	NSMutableDictionary *directoryUpdate = [_directoryUpdates objectForKey:path];
+	for (DirectoryContentsViewController *viewController in [directoryUpdate objectForKey:@"viewControllers"])
+	{
+		[viewController updateDirectoryStatus:DirectoryContentUpdateFinished];
+	}
+	[_directoryUpdates removeObjectForKey:path];
 }
 
-- (void)updateEntryFailedWithError:(NSError *)error
+- (void)updateDirectoryAtPath:(NSString *)path failedWithError:(NSError *)error
 {
 	XDrvLog(@"Error: Update entry failed: %@", error);
-	// notify view controllers
+	NSMutableDictionary *directoryUpdate = [_directoryUpdates objectForKey:path];
+	for (DirectoryContentsViewController *viewController in [directoryUpdate objectForKey:@"viewControllers"])
+	{
+		[viewController updateDirectoryStatus:DirectoryContentUpdateFailed];
+	}
+	[_directoryUpdates removeObjectForKey:path];
 }
 
 

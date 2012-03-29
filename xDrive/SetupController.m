@@ -220,12 +220,20 @@ static NSUInteger const kXServiceDefaultTimoutInterval = 15;
 	// Save the context now that the default paths have been initialized
 	[[XService sharedXService].localService saveWithCompletionBlock:^(NSError *error) {
 		
-		// Set default local storage
-		[XDriveConfig setLocalStorageOption:[XDriveConfig defaultLocalStorageOption]];
-			
-		// All done
-		XDrvDebug(@"Setup Finished");
-		[_viewController setupFinished];
+		if (error)
+		{
+			XDrvLog(@"Error: unable to save context after initializing default paths - %@", error);
+			[_viewController setupFailedWithError:error];
+		}
+		else
+		{
+			// Set default local storage
+			[XDriveConfig setLocalStorageOption:[XDriveConfig defaultLocalStorageOption]];
+				
+			// All done
+			XDrvDebug(@"Setup Finished");
+			[_viewController setupFinished];
+		}
 	}];
 }
 

@@ -11,8 +11,6 @@
 
 typedef enum {
 	DirectoryContentNotChecked,
-	DirectoryContentFetching,
-	DirectoryContentFetchFailed,
 	DirectoryContentCached,
 	DirectoryContentUpdating,
 	DirectoryContentUpdateFinished,
@@ -30,11 +28,6 @@ typedef enum {
  Mapping of file mime-types to icon file names.
  */
 @property (nonatomic, strong) NSDictionary *iconTypes;
-
-/**
- Current status of the directory contents.
- */
-@property (nonatomic, assign) DirectoryContentStatus contentStatus;
 
 /**
  Updates the view to reflect the current status of the directory content.

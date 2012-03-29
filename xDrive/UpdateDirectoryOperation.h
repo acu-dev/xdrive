@@ -21,7 +21,7 @@
  @param details The directory detials fetched from the server.
  @param directoryPath The directory path to update.
  */
-- (id)initWithDetails:(NSDictionary *)details forDirectoryPath:(NSString *)directoryPath;
+- (id)initWithDetails:(NSDictionary *)details forDirectoryAtPath:(NSString *)path;
 
 @end
 

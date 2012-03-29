@@ -96,7 +96,7 @@ static NSString *ModelFileName = @"xDrive";
 	NSManagedObjectContext *privateManagedObjectContext = [[NSManagedObjectContext alloc] initWithConcurrencyType:NSPrivateQueueConcurrencyType];
 	[privateManagedObjectContext setParentContext:_managedObjectContext];
 	
-	return [self initForOperationWithManagedObjectContext:privateManagedObjectContext];
+	return [[XServiceLocal alloc] initForOperationWithManagedObjectContext:privateManagedObjectContext];
 }
 
 
@@ -195,8 +195,6 @@ static NSString *ModelFileName = @"xDrive";
 															  inManagedObjectContext:_managedObjectContext];
 	defaultPath.path = path;
 	defaultPath.name = name;
-	//defaultPath.server = [self server];
-	//[[self server] addDefaultPathsObject:defaultPath];
 	
 	return defaultPath;
 }
@@ -231,11 +229,15 @@ static NSString *ModelFileName = @"xDrive";
 		// No entries found, create one
 		return [self createEntryOfType:type withPath:path];
 	}
+	else if ([fetchedObjects count] > 1)
+	{
+		XDrvLog(@"Error: Found multiple %@ objects with the path %@; This should not happen!", type, path);
+	}
 	else
 	{
 		XDrvDebug(@"Found entry at %@", path);
-		return [fetchedObjects lastObject];
 	}
+	return [fetchedObjects objectAtIndex:0];
 }
 
 - (XEntry *)createEntryOfType:(NSString *)type withPath:(NSString *)path
@@ -248,6 +250,19 @@ static NSString *ModelFileName = @"xDrive";
 	newEntry.server = [self server];
 	
 	return newEntry;
+}
+
+- (XDirectory *)directoryWithObjectID:(NSManagedObjectID *)objectID
+{
+	XDrvDebug(@"Looking up directory by object ID");
+	NSError *error = nil;
+	XDirectory *directory = (XDirectory *)[_managedObjectContext existingObjectWithID:objectID error:&error];
+	if (error)
+	{
+		XDrvLog(@"Error getting directory by object ID - %@", error);
+		return nil;
+	}
+	return directory;
 }
 
 

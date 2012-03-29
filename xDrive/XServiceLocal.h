@@ -109,6 +109,15 @@
  */
 - (XDirectory *)directoryWithPath:(NSString *)path;
 
+/**
+ Gets a directory object with the specified ID.
+ 
+ @param objectID The directory object's ID.
+ 
+ @return The directory object with the specified ID. If the object does not exist nil is returned.
+ */
+- (XDirectory *)directoryWithObjectID:(NSManagedObjectID *)objectID;
+
 ///-----------------------
 /// @name Removing Entries
 ///-----------------------

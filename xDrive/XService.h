@@ -54,10 +54,10 @@
 /// @name Directory Updates
 ///------------------------
 
-- (void)updateEntryAtPath:(NSString *)path forContentsViewController:(DirectoryContentsViewController *)viewController;
-- (void)receivedEntryDetails:(NSDictionary *)details;
+- (void)updateDirectory:(XDirectory *)directory forContentsViewController:(DirectoryContentsViewController *)viewController;
+- (void)receivedDirectoryDetails:(NSDictionary *)details;
 - (void)operationDidFinishUpdatingDirectoryAtPath:(NSString *)path;
-- (void)updateEntryFailedWithError:(NSError *)error;
+- (void)updateDirectoryAtPath:(NSString *)path failedWithError:(NSError *)error;
 
 
 
