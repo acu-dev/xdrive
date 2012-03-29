@@ -6,6 +6,7 @@
 //  Copyright 2011 Abilene Christian University. All rights reserved.
 //
 
+#import "DirectoryViewController.h"
 #import "XService.h"
 @class XDirectory;
 
@@ -19,15 +20,19 @@ typedef enum {
 
 @interface DirectoryContentsViewController : UITableViewController <NSFetchedResultsControllerDelegate>
 
+
+@property (strong, nonatomic) IBOutlet UIActivityIndicatorView *activityIndicator;
+@property (strong, nonatomic) IBOutlet UIImageView *arrowImageView;
+@property (strong, nonatomic) IBOutlet UILabel *actionLabel, *lastUpdatedLabel;
+
+@property (nonatomic, weak) DirectoryViewController *directoryViewController;
+
 /**
  Directory object to display the contents of.
  */
 @property (nonatomic, strong) XDirectory *directory;
 
-/**
- Mapping of file mime-types to icon file names.
- */
-@property (nonatomic, strong) NSDictionary *iconTypes;
+@property (nonatomic, assign, readonly) DirectoryContentStatus contentStatus;
 
 /**
  Updates the view to reflect the current status of the directory content.

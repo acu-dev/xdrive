@@ -12,18 +12,17 @@
 #import "OpenFileViewController.h"
 #import "UIStoryboard+Xdrive.h"
 
-static NSTimeInterval SecondsBetweenContentUpdates = 300;
 
+// Content refresh time: 1 hour
+static NSTimeInterval SecondsBetweenContentUpdates = 3600;
 
 
 @interface DirectoryContentsViewController ()
 
 @property (nonatomic, strong) NSFetchedResultsController *_fetchedResultsController;
-@property (nonatomic, assign) BOOL _performingFirstUpdate;
-@property (nonatomic, assign) DirectoryContentStatus _contentStatus;
+@property (nonatomic, assign) BOOL _performingFirstUpdate, _shouldHideSearch;
 
 - (void)configureCell:(UITableViewCell *)cell forEntry:(XEntry *)entry;
-- (UIImage *)iconForEntryType:(NSString *)entryType;
 
 @end
 
@@ -33,13 +32,17 @@ static NSTimeInterval SecondsBetweenContentUpdates = 300;
 
 // Private
 @synthesize _fetchedResultsController;
-@synthesize _performingFirstUpdate;
-@synthesize _contentStatus;
+@synthesize _performingFirstUpdate, _shouldHideSearch;
 
 // Public
+@synthesize directoryViewController;
 @synthesize directory;
-@synthesize iconTypes;
 
+@synthesize activityIndicator;
+@synthesize arrowImageView;
+@synthesize actionLabel, lastUpdatedLabel;
+
+@synthesize contentStatus = _contentStatus;
 
 
 
@@ -49,14 +52,8 @@ static NSTimeInterval SecondsBetweenContentUpdates = 300;
 {
     // Releases the view if it doesn't have a superview.
     [super didReceiveMemoryWarning];
-    
-    // Release any cached data, images, etc that aren't in use.
-	self.iconTypes = nil;
+
 }
-
-
-
-#pragma mark - Accessors
 
 - (void)setDirectory:(XDirectory *)dir
 {
@@ -72,13 +69,13 @@ static NSTimeInterval SecondsBetweenContentUpdates = 300;
 	else
 	{
 		XDrvDebug(@"%@ :: Displaying directory contents", directory.path);
+		_contentStatus = DirectoryContentNotChecked;
 		_fetchedResultsController = [[XService sharedXService].localService contentsControllerForDirectory:directory];
 		_fetchedResultsController.delegate = self;
-	
 		NSError *error = nil;
 		if (![_fetchedResultsController performFetch:&error])
 		{
-			XDrvLog(@"Error performing directory contents fetch: %@", error);
+			XDrvLog(@"%@ :: Error getting contents: %@", directory.path, error);
 		}
 	}
 	
@@ -93,10 +90,19 @@ static NSTimeInterval SecondsBetweenContentUpdates = 300;
     [super viewDidLoad];
 	if (!self.title) self.title = directory.name;
 	
-	if (_performingFirstUpdate)
-	{
-		XDrvLog(@"%@ :: Contents not yet loaded. Show activity animation here .....................", directory.path);
-	}
+	// Reset frame origin
+	CGRect frame = self.view.frame;
+	frame.origin.y = 0;
+	self.view.frame = frame;
+}
+
+- (void)viewDidUnload
+{
+	[self setActivityIndicator:nil];
+	[self setArrowImageView:nil];
+	[self setActionLabel:nil];
+	[self setLastUpdatedLabel:nil];
+	[super viewDidUnload];
 }
 
 - (void)viewWillAppear:(BOOL)animated
@@ -112,15 +118,6 @@ static NSTimeInterval SecondsBetweenContentUpdates = 300;
 	else if (!_performingFirstUpdate)
 	{
 		_contentStatus = DirectoryContentCached;
-	}
-}
-
-- (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender
-{
-	if ([segue.identifier isEqualToString:@"ViewFile"])
-	{
-		XFile *file = [_fetchedResultsController objectAtIndexPath:[self.tableView indexPathForSelectedRow]];
-		[(id)segue.destinationViewController setXFile:file];
 	}
 }
 
@@ -201,34 +198,7 @@ static NSTimeInterval SecondsBetweenContentUpdates = 300;
 		type = @"folder";
 	}
 	
-	cell.imageView.image = [self iconForEntryType:type];
-}
-
-- (UIImage *)iconForEntryType:(NSString *)entryType
-{
-	if (!iconTypes)
-	{
-		// Load icon mappings from plist
-		iconTypes = [[NSDictionary dictionaryWithContentsOfFile:[[NSBundle mainBundle] pathForResource:@"File-Types" ofType:@"plist"]] objectForKey:@"Icons"];
-	}
-	
-	// First check for exact match
-	NSString *iconName = [iconTypes objectForKey:entryType];
-	if (iconName)
-	{
-		return [UIImage imageNamed:iconName];
-	}
-
-	// Match type category
-	NSString *category = [[entryType componentsSeparatedByString:@"/"] objectAtIndex:0];
-	iconName = [iconTypes objectForKey:category];
-	if (iconName)
-	{
-		return [UIImage imageNamed:iconName];
-	}
-	
-	// Use default
-	return [UIImage imageNamed:[iconTypes objectForKey:@"default"]];
+	cell.imageView.image = [UIImage imageNamed:[[XService sharedXService] iconNameForEntryType:type]];
 }
 
 
@@ -296,16 +266,11 @@ static NSTimeInterval SecondsBetweenContentUpdates = 300;
 	
 	if ([entry isKindOfClass:[XDirectory class]])
 	{
-		XDirectory *updatedDir = [[XService sharedXService].localService directoryWithPath:entry.path];
-		DirectoryContentsViewController *viewController = [[UIStoryboard mainStoryboard] instantiateViewControllerWithIdentifier:@"directoryContents"];
-		[viewController setDirectory:updatedDir];
-		[self.navigationController pushViewController:viewController animated:YES];
+		[directoryViewController navigateToDirectory:(XDirectory *)entry];
 	}
 	else if ([OpenFileViewController isFileViewable:(XFile *)entry])
 	{
-		// Load file in viewer
-		XDrvDebug(@"Opening file entry: %@", entry.path);
-		[self performSegueWithIdentifier:@"ViewFile" sender:self];
+		[directoryViewController navigateToFile:(XFile *)entry];
 	}
 }
 
@@ -366,9 +331,6 @@ static NSTimeInterval SecondsBetweenContentUpdates = 300;
 {
     [self.tableView endUpdates];
 }
-
-
-
 
 @end
 

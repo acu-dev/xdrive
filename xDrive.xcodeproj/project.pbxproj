@@ -20,6 +20,7 @@
 		A96CBBD014C9EE2C0069A641 /* SetupController.m in Sources */ = {isa = PBXBuildFile; fileRef = A96CBBCF14C9EE2C0069A641 /* SetupController.m */; };
 		A97AC30B1524D6B4007F361A /* arrow-down.png in Resources */ = {isa = PBXBuildFile; fileRef = A97AC3091524D6B4007F361A /* arrow-down.png */; };
 		A97AC30C1524D6B4007F361A /* arrow-down@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = A97AC30A1524D6B4007F361A /* arrow-down@2x.png */; };
+		A97AC30F1524F303007F361A /* DirectoryViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = A97AC30E1524F303007F361A /* DirectoryViewController.m */; };
 		A997F47914EC20820069D3F2 /* AccountViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = A997F47814EC20820069D3F2 /* AccountViewController.m */; };
 		A997F47C14EC3ADE0069D3F2 /* XFile.m in Sources */ = {isa = PBXBuildFile; fileRef = A997F47B14EC3ADE0069D3F2 /* XFile.m */; };
 		A9ACC70F1501719500EB69DE /* Icon.png in Resources */ = {isa = PBXBuildFile; fileRef = A9ACC70C1501719500EB69DE /* Icon.png */; };
@@ -163,6 +164,8 @@
 		A96CBBCF14C9EE2C0069A641 /* SetupController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SetupController.m; sourceTree = "<group>"; };
 		A97AC3091524D6B4007F361A /* arrow-down.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "arrow-down.png"; sourceTree = "<group>"; };
 		A97AC30A1524D6B4007F361A /* arrow-down@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "arrow-down@2x.png"; sourceTree = "<group>"; };
+		A97AC30D1524F303007F361A /* DirectoryViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DirectoryViewController.h; sourceTree = "<group>"; };
+		A97AC30E1524F303007F361A /* DirectoryViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DirectoryViewController.m; sourceTree = "<group>"; };
 		A997F47714EC20820069D3F2 /* AccountViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AccountViewController.h; sourceTree = "<group>"; };
 		A997F47814EC20820069D3F2 /* AccountViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AccountViewController.m; sourceTree = "<group>"; };
 		A997F47A14EC3ADE0069D3F2 /* XFile.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = XFile.h; sourceTree = "<group>"; };
@@ -310,13 +313,15 @@
 			name = Products;
 			sourceTree = "<group>";
 		};
-		A978436813C6847300120A94 /* Directory Contents */ = {
+		A978436813C6847300120A94 /* Directory */ = {
 			isa = PBXGroup;
 			children = (
+				A97AC30D1524F303007F361A /* DirectoryViewController.h */,
+				A97AC30E1524F303007F361A /* DirectoryViewController.m */,
 				A93E36A813C5630600DE693D /* DirectoryContentsViewController.h */,
 				A93E36A913C5630600DE693D /* DirectoryContentsViewController.m */,
 			);
-			name = "Directory Contents";
+			name = Directory;
 			sourceTree = "<group>";
 		};
 		A9C34FC9142665CA00E3BC3C /* File Info */ = {
@@ -536,7 +541,7 @@
 				C3877018143F98EB00E3CE8E /* Setup */,
 				C3AAF63E142CF948002BC5C8 /* Settings */,
 				C3AAF63F142CFC88002BC5C8 /* Recent */,
-				A978436813C6847300120A94 /* Directory Contents */,
+				A978436813C6847300120A94 /* Directory */,
 				A9C34FC9142665CA00E3BC3C /* File Info */,
 				C378433A13BE475200F1793A /* Model */,
 				C328C428141A89C900D578ED /* images */,
@@ -741,6 +746,7 @@
 				A937884814F577E6007F2A1A /* WebViewController.m in Sources */,
 				A95F180714F846BB00EEA0A2 /* VersionController.m in Sources */,
 				A9F626AF1506BEF200B2568E /* UpdateDirectoryOperation.m in Sources */,
+				A97AC30F1524F303007F361A /* DirectoryViewController.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

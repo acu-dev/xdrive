@@ -8,7 +8,7 @@
 
 #import "RootTabBarController.h"
 #import "UIStoryboard+Xdrive.h"
-#import "DirectoryContentsViewController.h"
+#import "DirectoryViewController.h"
 #import "XService.h"
 #import "XDefaultPath.h"
 #import "XDriveConfig.h"
@@ -71,7 +71,7 @@
 	// Create nav controller for each default path
 	for (XDefaultPath *defaultPath in [[XService sharedXService].localService server].defaultPaths)
 	{
-		DirectoryContentsViewController *viewController = [[UIStoryboard mainStoryboard] instantiateViewControllerWithIdentifier:@"directoryContents"];
+		DirectoryViewController *viewController = [[UIStoryboard mainStoryboard] instantiateViewControllerWithIdentifier:@"directoryView"];
 		viewController.directory = defaultPath.directory;
 		viewController.title = defaultPath.name;
 		
