@@ -126,15 +126,18 @@
 
 
 
+///------------
+/// @name Utils
+///------------
 
-
-
-//- (XDirectory *)directoryWithPath:(NSString *)path;
-// Gets a directory object at given path. Fires off remote fetch in background
-// and if necessary, directory contents are updated.
-
-//- (XDirectory *)updateDirectoryDetails:(NSDictionary *)details;
-// Updates directory contents with the passed details (Usually from the server).
+/**
+ Gets the appropriate icon name for the specified entry's mime-type.
+ 
+ @param entryType The entry object's mime-type.
+ 
+ @return The image name to use for an icon.
+ */
+- (NSString *)iconNameForEntryType:(NSString *)entryType;
 
 
 @end

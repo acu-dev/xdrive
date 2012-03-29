@@ -21,6 +21,7 @@
 @interface XService()
 @property (nonatomic, strong) NSMutableDictionary *_directoryUpdates;
 @property (nonatomic, strong) NSOperationQueue *_operationQueue;
+@property (nonatomic, strong) NSDictionary *_iconTypes;
 
 @end
 
@@ -30,6 +31,7 @@
 // Private
 @synthesize _directoryUpdates;
 @synthesize _operationQueue;
+@synthesize _iconTypes;
 
 // Public
 @synthesize localService = _localService;
@@ -328,7 +330,34 @@
 
 
 
+#pragma mark - Utils
 
+- (NSString *)iconNameForEntryType:(NSString *)entryType
+{
+	if (!_iconTypes)
+	{
+		// Load icon mappings from plist
+		_iconTypes = [[NSDictionary dictionaryWithContentsOfFile:[[NSBundle mainBundle] pathForResource:@"File-Types" ofType:@"plist"]] objectForKey:@"Icons"];
+	}
+	
+	// First check for exact match
+	NSString *iconName = [_iconTypes objectForKey:entryType];
+	if (iconName)
+	{
+		return iconName;
+	}
+	
+	// Match type category
+	NSString *category = [[entryType componentsSeparatedByString:@"/"] objectAtIndex:0];
+	iconName = [_iconTypes objectForKey:category];
+	if (iconName)
+	{
+		return iconName;
+	}
+	
+	// Use default
+	return [_iconTypes objectForKey:@"default"];
+}
 
 
 @end
