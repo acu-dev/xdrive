@@ -51,7 +51,6 @@
 	XServiceLocal *localService = [[XService sharedXService].localService newServiceForOperation];
 	
 	// Get directory
-	XDrvDebug(@"%@ :: Fetching directory object from ID at path", _directoryPath);
 	XDirectory *directory = [localService directoryWithPath:_directoryPath];
 	
 	// Update last updated time (times come from details in milliseconds since epoch)
