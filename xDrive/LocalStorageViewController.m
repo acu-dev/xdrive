@@ -138,7 +138,7 @@
 		long long bytesCached = [XDriveConfig totalCachedBytes];
 		float percentUsed = (float)bytesCached / (float)maxBytesAvailable;
 		[usageProgressView setProgress:percentUsed animated:animated];
-		usageLabel.text = [NSString stringWithFormat:@"Used %1.2f%% of %@", percentUsed * 100, [[XDriveConfig localStorageOption] objectForKey:@"description"]];
+		usageLabel.text = [NSString stringWithFormat:@"Used %1.0f%% of %@", percentUsed * 100, [[XDriveConfig localStorageOption] objectForKey:@"description"]];
 	}
 	else
 	{
