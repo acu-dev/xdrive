@@ -516,7 +516,7 @@
                                         <string>Title</string>
                                     </scopeButtonTitles>
                                 </searchBar>
-                                <activityIndicatorView opaque="NO" contentMode="scaleToFill" hidesWhenStopped="YES" style="gray" id="Tct-rV-YDl">
+                                <activityIndicatorView opaque="NO" contentMode="scaleToFill" style="gray" id="Tct-rV-YDl">
                                     <rect key="frame" x="34" y="26" width="20" height="20"/>
                                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 </activityIndicatorView>
