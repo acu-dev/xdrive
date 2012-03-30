@@ -118,7 +118,7 @@
 /// @name Files
 ///------------
 
-- (void)downloadFile:(XFile *)file withDelegate:(id<XServiceRemoteDelegate>)delegate;
+//- (void)downloadFile:(XFile *)file withDelegate:(id<XServiceRemoteDelegate>)delegate;
 // Downloads a file to a temp location and notifies the delegate.
 
 - (void)moveFileAtPath:(NSString *)oldFilePath toPath:(NSString *)newFilePath;

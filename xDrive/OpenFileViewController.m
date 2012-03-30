@@ -13,19 +13,18 @@
 
 
 
-@interface OpenFileViewController() //<XServiceRemoteDelegate>
-
+@interface OpenFileViewController()
+@property XServiceRemote *_remoteService;
 - (void)downloadFile;
 - (void)loadFile;
-
 @end
 
 
 
 @implementation OpenFileViewController
 
-
-@synthesize xFile;
+@synthesize _remoteService;
+@synthesize file;
 @synthesize webView;
 @synthesize downloadView;
 @synthesize downloadFileNameLabel;
@@ -64,17 +63,16 @@
 - (void)viewDidLoad
 {
     [super viewDidLoad];
+	self.title = [file.name stringByDeletingPathExtension];
 	
-	self.title = [xFile.name stringByDeletingPathExtension];
-	
-	if ([[NSFileManager defaultManager] fileExistsAtPath:[xFile cachePath]])
+	if ([[NSFileManager defaultManager] fileExistsAtPath:[file cachePath]])
 	{
 		// File has been cached locally
 		
-		if ([xFile.lastAccessed compare:xFile.lastUpdated] == NSOrderedDescending)
+		if ([file.lastAccessed compare:file.lastUpdated] == NSOrderedDescending)
 		{
 			// Last access is later in time than last updated (cached file is still fresh)
-			XDrvDebug(@"Cached file is fresh, loading it");
+			XDrvDebug(@"%@ :: Loading cached file", file.path);
 			
 			// Display file
 			downloadView.hidden = YES;
@@ -97,7 +95,7 @@
 	
 	// Hide webview and show download indicator
 	[webView setAlpha:0];
-	downloadFileNameLabel.text = xFile.name;
+	downloadFileNameLabel.text = file.name;
 	
 	// Download file
 	[self downloadFile];
@@ -106,8 +104,10 @@
 - (void)viewDidUnload
 {
     [super viewDidUnload];
-    // Release any retained subviews of the main view.
-    // e.g. self.myOutlet = nil;
+	self.webView = nil;
+	self.downloadProgressView = nil;
+	self.downloadFileNameLabel = nil;
+	self.downloadView = nil;
 }
 
 - (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation
@@ -120,70 +120,68 @@
 # pragma mark - Download File
 
 - (void)downloadFile
-{
-	// Kick off download
-	[[XService sharedXService] downloadFile:xFile withDelegate:self];
+{	
+	// Setup service
+	_remoteService = [[XServiceRemote alloc] initWithServer:[[XService sharedXService].localService server]];
+	[_remoteService setFailureBlock:^(NSError *error) {
+		XDrvLog(@"%@ :: Download failed: %@", file.path, error);
+		NSString *title = NSLocalizedStringFromTable(@"Unable to download file", 
+													 @"XDrive", 
+													 @"Title of alert displayed when a file download fails.");
+		UIAlertView *alert = [[UIAlertView alloc] initWithTitle:title message:[error localizedDescription] delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil];
+		[alert show];
+	}];
+	
+	// Download file
+	[_remoteService downloadFileAtPath:file.path ifModifiedSinceCachedDate:nil
+					   withUpdateBlock:^(float percentDownloaded) {
+						   [downloadProgressView setProgress:percentDownloaded animated:YES];
+					   } 
+					   completionBlock:^(id result) {
+						   [self downloadFinishedAtTemporaryPath:(NSString *)result];
+					   }];
 }
 
-- (void)loadFile
+- (void)downloadFinishedAtTemporaryPath:(NSString *)tmpPath
 {
-	XDrvDebug(@"Loading %@ content at %@ into web view", xFile.type, xFile.path);
-	/*[webView loadData:[NSData dataWithContentsOfFile:[xFile localPath]]
-			 MIMEType:xFile.type
-	 textEncodingName:@"utf-8" 
-			  baseURL:[NSURL URLWithString:[xFile localPath]]];*/
-	
-    NSURLRequest *request = [NSURLRequest requestWithURL:[NSURL fileURLWithPath:[xFile cachePath]]];
-    [webView loadRequest:request];
-	
-	// Update file's last access time
-	xFile.lastAccessed = [NSDate date];
-	[[XService sharedXService].localService saveWithCompletionBlock:^(NSError *error) {}];
-}
-
-
-
-#pragma mark - XServiceRemoteDelegate
-
-- (void)connectionFinishedWithResult:(NSObject *)result
-{
-	XDrvDebug(@"Download finished with result: %@", result);
-	//return;
-	
-	
-	[[XService sharedXService] cacheFile:xFile fromTmpPath:(NSString *)result];
+	[[XService sharedXService] cacheFile:file fromTmpPath:tmpPath];
 	
 	// Load file
 	[self loadFile];
 	
 	// Reveal webview
-	[UIView animateWithDuration:1.0 
+	[UIView animateWithDuration:0.3
 					 animations:^(void){
 						 [webView setAlpha:1.0];
 					 }
 					 completion:^(BOOL finished){
 						 downloadView.hidden = YES;
 					 }];
-	
 }
 
-- (void)connectionFailedWithError:(NSError *)error
-{
-	XDrvLog(@"Download failed: %@", [error description]);
-	
-	NSString *title = NSLocalizedStringFromTable(@"Unable to download file", 
-												 @"XDrive", 
-												 @"Title of alert displayed when server returned an error while trying to download file.");
-	UIAlertView *alert = [[UIAlertView alloc] initWithTitle:title message:[error localizedDescription] delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil];
-	[alert show];
-}
 
-- (void)connectionDownloadPercentUpdate:(float)percent
+
+- (void)loadFile
 {
-	[downloadProgressView setProgress:percent animated:YES];
+    NSURLRequest *request = [NSURLRequest requestWithURL:[NSURL fileURLWithPath:[file cachePath]]];
+    [webView loadRequest:request];
+	
+	// Update file's last access time
+	file.lastAccessed = [NSDate date];
+	[[XService sharedXService].localService saveWithCompletionBlock:^(NSError *error) {}];
 }
 
 @end
+
+
+
+
+
+
+
+
+
+
 
 
 

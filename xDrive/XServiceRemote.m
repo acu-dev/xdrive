@@ -192,7 +192,7 @@
   totalReceivedBytes:(long long)totalReceivedBytes expectedTotalBytes:(long long)expectedTotalBytes
 {
 	float percent = (float)totalReceivedBytes / (float)expectedTotalBytes;
-	XDrvDebug(@"Download file percent done: %f", percent);
+	//XDrvDebug(@"Download file percent done: %f", percent);
 	_updateBlock(percent);
 }
 

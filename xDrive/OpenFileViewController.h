@@ -11,7 +11,7 @@
 
 @interface OpenFileViewController : UIViewController
 
-@property (nonatomic, strong) XFile *xFile;
+@property (nonatomic, strong) XFile *file;
 	// File object to display if needed and download
 
 @property (nonatomic, strong) IBOutlet UIWebView *webView;

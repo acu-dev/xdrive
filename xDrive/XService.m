@@ -16,10 +16,11 @@
 #import "NSString+DTFormatNumbers.h"
 #import "UpdateDirectoryOperation.h"
 #import "DirectoryContentsViewController.h"
+#import "OpenFileViewController.h"
 
 
 @interface XService()
-@property (nonatomic, strong) NSMutableDictionary *_directoryUpdates;
+@property (nonatomic, strong) NSMutableDictionary *_directoryUpdates, *_fileDownloads;
 @property (nonatomic, strong) NSOperationQueue *_operationQueue;
 @property (nonatomic, strong) NSDictionary *_iconTypes;
 
@@ -29,7 +30,7 @@
 @implementation XService
 
 // Private
-@synthesize _directoryUpdates;
+@synthesize _directoryUpdates, _fileDownloads;
 @synthesize _operationQueue;
 @synthesize _iconTypes;
 
@@ -64,6 +65,7 @@
 		_localService = [[XServiceLocal alloc] init];
 		_remoteService = [[XServiceRemote alloc] initWithServer:_localService.server];
 		_directoryUpdates = [[NSMutableDictionary alloc] init];
+		_fileDownloads = [[NSMutableDictionary alloc] init];
 		_operationQueue = [[NSOperationQueue alloc] init];
     }
     return self;
@@ -296,12 +298,6 @@
 
 
 #pragma mark - File
-
-- (void)downloadFile:(XFile *)file withDelegate:(id<XServiceRemoteDelegate>)delegate;
-{
-	//[self.remoteService downloadFileAtPath:file.path ifModifiedSinceCachedDate:file.lastUpdated withDelegate:delegate];
-	//[self.remoteService downloadFileAtPath:file.path withDelegate:delegate];
-}
 
 - (void)moveFileAtPath:(NSString *)oldFilePath toPath:(NSString *)newFilePath
 {

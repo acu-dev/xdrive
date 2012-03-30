@@ -12,8 +12,6 @@
 #import "UIStoryboard+Xdrive.h"
 #import "XDriveConfig.h"
 
-//static float MessageViewYPos = 100;
-
 @interface DirectoryViewController ()
 @property (nonatomic, strong) DirectoryContentsViewController *_contentsViewController;
 @end
@@ -108,7 +106,7 @@
 - (void)navigateToFile:(XFile *)file
 {
 	OpenFileViewController *viewController = [[UIStoryboard mainStoryboard] instantiateViewControllerWithIdentifier:@"fileView"];
-	viewController.xFile = file;
+	viewController.file = file;
 	[self.navigationController pushViewController:viewController animated:YES];
 }
 
