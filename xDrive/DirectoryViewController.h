@@ -13,9 +13,13 @@
 @interface DirectoryViewController : UIViewController
 
 @property (nonatomic, strong) XDirectory *directory;
-@property (nonatomic, strong) IBOutlet UIView *initialUpdateView;
+@property (nonatomic, strong) IBOutlet UIView *messageView;
+@property (nonatomic, strong) IBOutlet UILabel *messageLabel;
+@property (nonatomic, strong) IBOutlet UIActivityIndicatorView *activityIndicator;
 
-- (void)showDirectoryContentsAnimated:(BOOL)animated;
+- (UIView *)initialUpdateMessageView;
+- (UIView *)noContentsMessageView;
+
 - (void)navigateToDirectory:(XDirectory *)directory;
 - (void)navigateToFile:(XFile *)file;
 

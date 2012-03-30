@@ -54,22 +54,23 @@
 	
 	// Get directory
 	XDirectory *directory = [_localService directoryWithPath:_directoryPath];
-	directory.contentsLastUpdated = [NSDate date];
 	
 	// Remote directory's last updated time (times come from details in milliseconds since epoch)
 	NSTimeInterval lastUpdatedSeconds = [[_directoryDetails objectForKey:@"lastUpdated"] doubleValue] / 1000;
 	NSDate *lastUpdated = [NSDate dateWithTimeIntervalSince1970:lastUpdatedSeconds];
 	
-	if ([directory.lastUpdated compare:lastUpdated] == NSOrderedSame)
+	if ([directory.contentsLastUpdated compare:lastUpdated] == NSOrderedDescending)
 	{
 		// Remote directory has no changes
 		XDrvDebug(@"%@ :: Remote directory has not changed", directory.path);
+		directory.contentsLastUpdated = [NSDate date];
 		[self finished];
 		return;
 	}
 	
-	// New last updated time
+	// Update dates
 	directory.lastUpdated = lastUpdated;
+	directory.contentsLastUpdated = [NSDate date];
 	
 	// Go through contents and create a set of remote entries (entries that don't exist are created on the fly)
 	NSMutableSet *remoteEntries = [[NSMutableSet alloc] init];

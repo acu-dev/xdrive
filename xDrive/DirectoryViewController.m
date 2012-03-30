@@ -12,18 +12,20 @@
 #import "UIStoryboard+Xdrive.h"
 #import "XDriveConfig.h"
 
+//static float MessageViewYPos = 100;
+
 @interface DirectoryViewController ()
 @property (nonatomic, strong) DirectoryContentsViewController *_contentsViewController;
-@property (nonatomic, assign) BOOL _contentsViewIsLoaded;
-- (void)showInitialUpdateView;
 @end
 
 @implementation DirectoryViewController
 
 @synthesize directory;
-@synthesize initialUpdateView;
+@synthesize messageView;
+@synthesize messageLabel;
+@synthesize activityIndicator;
+
 @synthesize _contentsViewController;
-@synthesize _contentsViewIsLoaded;
 
 
 #pragma mark - Directory
@@ -45,38 +47,19 @@
     [super viewDidLoad];
 	if (!self.title) self.title = directory.name;
 	
-	if (_contentsViewController.contentStatus == DirectoryContentUpdating)
-	{
-		[self showInitialUpdateView];
-	}
-	else
-	{
-		[self showDirectoryContentsAnimated:NO];
-	}
-}
-
-- (void)viewDidUnload
-{
-    [super viewDidUnload];
-	self._contentsViewController = nil;
+	[self.view addSubview:_contentsViewController.view];
 }
 
 - (void)viewWillAppear:(BOOL)animated
 {
 	[super viewWillAppear:animated];
-	if (_contentsViewIsLoaded)
-	{
-		[_contentsViewController viewWillAppear:animated];
-	}
+	[_contentsViewController viewWillAppear:animated];
 }
 
 - (void)viewDidAppear:(BOOL)animated
 {
 	[super viewDidAppear:animated];
-	if (_contentsViewIsLoaded)
-	{
-		[_contentsViewController viewDidAppear:animated];
-	}
+	[_contentsViewController viewDidAppear:animated];
 }
 
 - (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation
@@ -86,62 +69,31 @@
 
 
 
-#pragma mark - Initial Update
+#pragma mark - Messages
 
-- (void)showInitialUpdateView
+- (UIView *)initialUpdateMessageView
 {
+	messageView.hidden = NO;
+	messageLabel.text = NSLocalizedStringFromTable(@"Fetching directory contents...",
+												   @"XDrive",
+												   @"Message displayed when the directory contents are being fetched for the first time.");
+	activityIndicator.hidden = NO;
+	[activityIndicator startAnimating];
 	
+	return messageView;
 }
 
-
-
-#pragma mark - Directory Contents
-
-- (void)showDirectoryContentsAnimated:(BOOL)animated
+- (UIView *)noContentsMessageView
 {
-	[_contentsViewController viewWillAppear:animated];
-	if (!animated)
-	{
-		[self.view addSubview:_contentsViewController.view];
-		[_contentsViewController viewDidAppear:animated];
-		_contentsViewIsLoaded = YES;
-	}
-	else
-	{
-		float heightOfStatusBarAndTitleBar = 64;
-		XDrvLog(@"self view height: %f", self.view.frame.size.height);
-		
-		CGRect endFrameForInitialUpdateView = initialUpdateView.frame;
-		endFrameForInitialUpdateView.origin.y -= endFrameForInitialUpdateView.size.height;
-		endFrameForInitialUpdateView.origin.y -= heightOfStatusBarAndTitleBar;
-		
-		CGRect endFrameForContentsView = _contentsViewController.view.frame;
-		endFrameForContentsView.size.height = self.view.frame.size.height;
-		CGRect startFrameForContentsView = endFrameForContentsView;
-		startFrameForContentsView.origin.y -= startFrameForContentsView.size.height;
-		startFrameForContentsView.origin.y -= heightOfStatusBarAndTitleBar;
-
-		_contentsViewController.view.frame = startFrameForContentsView;
-		[self.view addSubview:_contentsViewController.view];
-		
-		[UIView animateWithDuration:0.3
-						 animations:^{
-							 initialUpdateView.frame = endFrameForInitialUpdateView;
-						 }
-						 completion:^(BOOL finished) {
-							 [initialUpdateView removeFromSuperview];
-							 [UIView animateWithDuration:0.3
-											  animations:^{
-												  _contentsViewController.view.frame = endFrameForContentsView;
-											  }
-											  completion:^(BOOL finished) {
-												  [_contentsViewController viewDidAppear:animated];
-												  _contentsViewIsLoaded = YES;
-											  }];
-						 }];
-	}
+	messageView.hidden = NO;
+	messageLabel.text = NSLocalizedStringFromTable(@"Folder is Empty",
+												   @"XDrive",
+												   @"Message displayed when folder has no contents.");
+	[activityIndicator stopAnimating];
+	activityIndicator.hidden = YES;
+	
+	return messageView;
 }
-
 
 
 #pragma mark - Navigation

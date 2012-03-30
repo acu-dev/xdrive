@@ -24,7 +24,7 @@ static float ReleaseToRefreshThreshold = -66;
 
 @property (nonatomic, strong) NSFetchedResultsController *_fetchedResultsController;
 @property (nonatomic, assign) BOOL _performingFirstUpdate, _isUserDragging, _isPullToUpdateIndicatorOrientedUp;
-@property (nonatomic, strong) UILabel *_folderEmptyLabel;
+@property (nonatomic, strong) UIView *_messageView;
 
 - (void)configureCell:(UITableViewCell *)cell forEntry:(XEntry *)entry;
 
@@ -37,7 +37,7 @@ static float ReleaseToRefreshThreshold = -66;
 // Private
 @synthesize _fetchedResultsController;
 @synthesize _performingFirstUpdate, _isUserDragging, _isPullToUpdateIndicatorOrientedUp;
-@synthesize _folderEmptyLabel;
+@synthesize _messageView;
 
 // Public
 @synthesize directoryViewController;
@@ -93,17 +93,27 @@ static float ReleaseToRefreshThreshold = -66;
 	frame.origin.y = 0;
 	self.view.frame = frame;
 	
-	if (![directory.contents count])
+	// Display status message
+	if (_performingFirstUpdate)
 	{
-		// Display empty folder label
-		_folderEmptyLabel = folderEmptyLabel;
-		frame = _folderEmptyLabel.frame;
-		frame.origin.y = 175;
-		_folderEmptyLabel.frame = frame;
-		_folderEmptyLabel.hidden = NO;
-		[self.view addSubview:_folderEmptyLabel];
+		_messageView = [directoryViewController initialUpdateMessageView];
+		[self.view addSubview:_messageView];
+	}
+	else if (![directory.contents count])
+	{
+		_messageView = [directoryViewController noContentsMessageView];
+		[self.view addSubview:_messageView];
+	}
+	else
+	{
+		if (_messageView)
+		{
+			[_messageView removeFromSuperview];
+		}
+		_messageView = nil;
 	}
 	
+	// Set last updated
 	[self updatePullToUpdateLastUpdatedLabel];
 }
 
@@ -201,23 +211,25 @@ static float ReleaseToRefreshThreshold = -66;
 			// Hide pull to update view
 			[self hidePullToUpdateView];
 			
+			if (![directory.contents count])
+			{
+				_messageView = [directoryViewController noContentsMessageView];
+				[self.view addSubview:_messageView];
+			}
+			else
+			{
+				if (_messageView)
+				{
+					[_messageView removeFromSuperview];
+					_messageView = nil;
+				}
+			}
+			
 			if (_performingFirstUpdate)
 			{
 				_performingFirstUpdate = NO;
-				
-				// Load contents
 				[self setupDirectoryContentController];
 				[self.tableView reloadData];
-				
-				// Show contents
-				[directoryViewController showDirectoryContentsAnimated:YES];
-			}
-			
-			if ([directory.contents count] && _folderEmptyLabel)
-			{
-				// Remove folder empty label
-				[_folderEmptyLabel removeFromSuperview];
-				_folderEmptyLabel = nil;
 			}
 			
 			[activityIndicator stopAnimating];
@@ -258,15 +270,24 @@ static float ReleaseToRefreshThreshold = -66;
 
 - (void)updatePullToUpdateLastUpdatedLabel
 {
-	NSDateFormatter *formatter = [[NSDateFormatter alloc] init];
-	[formatter setDateStyle:NSDateFormatterShortStyle];
-	[formatter setTimeStyle:NSDateFormatterShortStyle];
+	NSString *formattedDate = nil;
+	
+	if (directory.contentsLastUpdated)
+	{
+		NSDateFormatter *formatter = [[NSDateFormatter alloc] init];
+		[formatter setDateStyle:NSDateFormatterShortStyle];
+		[formatter setTimeStyle:NSDateFormatterShortStyle];
+		formattedDate = [formatter stringFromDate:directory.contentsLastUpdated];
+	}
+	else
+	{
+		formattedDate = @"Never";
+	}
 	
 	NSString *lastUpdated = NSLocalizedStringFromTable(@"Last Updated: ", 
 													   @"XDrive", 
 													   @"Label for the directory's last updated date/time");
-	
-	lastUpdatedLabel.text = [lastUpdated stringByAppendingString:[formatter stringFromDate:directory.contentsLastUpdated]];
+	lastUpdatedLabel.text = [lastUpdated stringByAppendingString:formattedDate];
 }
 
 - (void)flipPullToUpdateIndicator

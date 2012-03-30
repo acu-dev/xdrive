@@ -41,4 +41,6 @@ typedef enum {
  */
 - (void)updateDirectoryStatus:(DirectoryContentStatus)status;
 
+- (void)setupDirectoryContentController;
+
 @end
