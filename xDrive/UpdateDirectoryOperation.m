@@ -15,6 +15,7 @@
 
 @property (nonatomic, strong) NSDictionary *_directoryDetails;
 @property (nonatomic, strong) NSString *_directoryPath;
+@property (nonatomic, strong) XServiceLocal *_localService;
 
 @end
 
@@ -24,6 +25,7 @@
 // Private
 @synthesize _directoryDetails;
 @synthesize _directoryPath;
+@synthesize _localService;
 
 
 #pragma mark - Initiailization
@@ -48,16 +50,26 @@
 {
 	// Create new service with it's own context for background operation
 	XDrvDebug(@"%@ :: Creating new service for background operation", _directoryPath);
-	XServiceLocal *localService = [[XService sharedXService].localService newServiceForOperation];
+	_localService = [[XService sharedXService].localService newServiceForOperation];
 	
 	// Get directory
-	XDirectory *directory = [localService directoryWithPath:_directoryPath];
+	XDirectory *directory = [_localService directoryWithPath:_directoryPath];
+	directory.contentsLastUpdated = [NSDate date];
 	
-	// Update last updated time (times come from details in milliseconds since epoch)
+	// Remote directory's last updated time (times come from details in milliseconds since epoch)
 	NSTimeInterval lastUpdatedSeconds = [[_directoryDetails objectForKey:@"lastUpdated"] doubleValue] / 1000;
 	NSDate *lastUpdated = [NSDate dateWithTimeIntervalSince1970:lastUpdatedSeconds];
+	
+	if ([directory.lastUpdated compare:lastUpdated] == NSOrderedSame)
+	{
+		// Remote directory has no changes
+		XDrvDebug(@"%@ :: Remote directory has not changed", directory.path);
+		[self finished];
+		return;
+	}
+	
+	// New last updated time
 	directory.lastUpdated = lastUpdated;
-	directory.contentsLastUpdated = [NSDate date];
 	
 	// Go through contents and create a set of remote entries (entries that don't exist are created on the fly)
 	NSMutableSet *remoteEntries = [[NSMutableSet alloc] init];
@@ -69,12 +81,12 @@
 		if ([[entryFromJson objectForKey:@"type"] isEqualToString:@"folder"])
 		{
 			// Folder
-			entry = [localService directoryWithPath:[entryFromJson objectForKey:@"path"]];
+			entry = [_localService directoryWithPath:[entryFromJson objectForKey:@"path"]];
 		}
 		else
 		{
 			// File
-			XFile *file = [localService fileWithPath:[entryFromJson objectForKey:@"path"]];
+			XFile *file = [_localService fileWithPath:[entryFromJson objectForKey:@"path"]];
 			file.type = [entryFromJson objectForKey:@"type"];
 			file.size = [entryFromJson objectForKey:@"size"];
 			file.sizeDescription = [NSString stringByFormattingBytes:[file.size integerValue]];
@@ -108,16 +120,22 @@
 			{
 				[[XService sharedXService] removeCacheForFile:(XFile *)entry];
 			}
-			[localService removeEntry:entry];
+			[_localService removeEntry:entry];
 		}
 	}
 	
 	// Update directory's contents with set of entries from server
 	[directory setContents:remoteEntries];
 	
+	// All done
+	[self finished];
+}
+
+- (void)finished
+{
 	// Save changes
-	[localService saveWithCompletionBlock:^(NSError *error) {
-		NSString *path = directory.path;
+	[_localService saveWithCompletionBlock:^(NSError *error) {
+		NSString *path = _directoryPath;
 		if (error)
 		{
 			XDrvLog(@"%@ :: Error: Problem saving local context: %@", path, error);
