@@ -141,7 +141,7 @@
 	[_operationQueue addOperation:operation];
 }
 
-- (void)operationDidFinishUpdatingDirectoryAtPath:(NSString *)path
+- (void)didFinishUpdatingDirectoryAtPath:(NSString *)path
 {
 	XDrvDebug(@"Operation finished udpating directory details at path %@", path);
 	NSMutableDictionary *directoryUpdate = [_directoryUpdates objectForKey:path];

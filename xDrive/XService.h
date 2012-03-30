@@ -56,7 +56,7 @@
 
 - (void)updateDirectory:(XDirectory *)directory forContentsViewController:(DirectoryContentsViewController *)viewController;
 - (void)receivedDirectoryDetails:(NSDictionary *)details;
-- (void)operationDidFinishUpdatingDirectoryAtPath:(NSString *)path;
+- (void)didFinishUpdatingDirectoryAtPath:(NSString *)path;
 - (void)updateDirectoryAtPath:(NSString *)path failedWithError:(NSError *)error;
 
 
