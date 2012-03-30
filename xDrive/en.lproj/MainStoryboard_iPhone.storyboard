@@ -520,7 +520,7 @@
                                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 </activityIndicatorView>
                                 <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" text="Pull down to update..." textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" minimumFontSize="10" id="x5i-VZ-1ad">
-                                    <rect key="frame" x="20" y="17" width="280" height="21"/>
+                                    <rect key="frame" x="20" y="20" width="280" height="21"/>
                                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                     <fontDescription key="fontDescription" type="boldSystem" pointSize="14"/>
                                     <color key="textColor" red="0.33828158508074041" green="0.42709469780503745" blue="0.63043478260869568" alpha="1" colorSpace="calibratedRGB"/>
@@ -529,7 +529,7 @@
                                     <size key="shadowOffset" width="0.0" height="1"/>
                                 </label>
                                 <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" text="Last updated: 1/11/11 1:11 AM" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" minimumFontSize="10" id="kol-gM-S9B">
-                                    <rect key="frame" x="20" y="33" width="280" height="21"/>
+                                    <rect key="frame" x="20" y="36" width="280" height="21"/>
                                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                     <fontDescription key="fontDescription" type="system" pointSize="13"/>
                                     <color key="textColor" red="0.57647061347961426" green="0.61568629741668701" blue="0.70196080207824707" alpha="1" colorSpace="deviceRGB"/>

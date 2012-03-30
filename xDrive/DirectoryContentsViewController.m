@@ -13,14 +13,17 @@
 #import "UIStoryboard+Xdrive.h"
 
 
-// Content refresh time: 1 hour
-static NSTimeInterval SecondsBetweenContentUpdates = 3600;
+static NSTimeInterval SecondsBetweenContentUpdates = 3600; // 1 hour
+
+static float PullToRefreshOffset = -66;
+static float PullToRefreshThreshold = 0;
+static float ReleaseToRefreshThreshold = -66;
 
 
 @interface DirectoryContentsViewController ()
 
 @property (nonatomic, strong) NSFetchedResultsController *_fetchedResultsController;
-@property (nonatomic, assign) BOOL _performingFirstUpdate, _shouldHideSearch;
+@property (nonatomic, assign) BOOL _performingFirstUpdate, _isUserDragging;
 @property (nonatomic, strong) UILabel *_folderEmptyLabel;
 
 - (void)configureCell:(UITableViewCell *)cell forEntry:(XEntry *)entry;
@@ -33,7 +36,7 @@ static NSTimeInterval SecondsBetweenContentUpdates = 3600;
 
 // Private
 @synthesize _fetchedResultsController;
-@synthesize _performingFirstUpdate, _shouldHideSearch;
+@synthesize _performingFirstUpdate, _isUserDragging;
 @synthesize _folderEmptyLabel;
 
 // Public
@@ -352,6 +355,57 @@ static NSTimeInterval SecondsBetweenContentUpdates = 3600;
 - (void)controllerDidChangeContent:(NSFetchedResultsController *)controller
 {
     [self.tableView endUpdates];
+}
+
+
+
+#pragma mark - UIScrollViewDelegate
+
+- (void)scrollViewWillBeginDragging:(UIScrollView *)scrollView
+{
+	_isUserDragging = YES;
+}
+
+- (void)scrollViewDidScroll:(UIScrollView *)scrollView
+{
+	if (_contentStatus == DirectoryContentUpdating || !_isUserDragging)
+	{
+		return;
+	}
+	
+	float relativeYPos = scrollView.contentOffset.y + PullToRefreshOffset;
+	if (relativeYPos > ReleaseToRefreshThreshold && relativeYPos < PullToRefreshThreshold)
+	{
+		actionLabel.text = NSLocalizedStringFromTable(@"Pull down to update...",
+													  @"XDrive",
+													  @"Action label for updating the table view contents");
+	}
+	else if (relativeYPos < ReleaseToRefreshThreshold)
+	{
+		actionLabel.text = NSLocalizedStringFromTable(@"Release to update...",
+													  @"XDrive",
+													  @"Action label for updating the table view contents");
+	}
+}
+
+- (void)scrollViewDidEndDragging:(UIScrollView *)scrollView willDecelerate:(BOOL)decelerate
+{
+	_isUserDragging = NO;
+		
+	float relativeYPos = scrollView.contentOffset.y + PullToRefreshOffset;
+	if (relativeYPos <= ReleaseToRefreshThreshold)
+	{
+		// Make updating view stick
+		self.tableView.contentInset = UIEdgeInsetsMake(0, 0, 0, 0);
+		
+		
+		if (_contentStatus != DirectoryContentUpdating)
+		{
+			actionLabel.text = NSLocalizedStringFromTable(@"Updating...",
+														  @"XDrive",
+														  @"Action label for updating the table view contents");
+		}
+	}
 }
 
 @end
