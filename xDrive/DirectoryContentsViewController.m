@@ -13,8 +13,7 @@
 #import "UIStoryboard+Xdrive.h"
 
 
-static NSTimeInterval SecondsBetweenContentUpdates = 3600; // 1 hour
-
+static NSTimeInterval SecondsBetweenContentUpdates = 3600;
 static float PullToRefreshOffset = -66;
 static float PullToRefreshThreshold = 0;
 static float ReleaseToRefreshThreshold = -66;
@@ -40,15 +39,14 @@ static float ReleaseToRefreshThreshold = -66;
 @synthesize _messageView;
 
 // Public
-@synthesize directoryViewController;
 @synthesize directory;
-
+@synthesize directoryViewController;
+@synthesize contentStatus = _contentStatus;
 @synthesize headerView;
 @synthesize activityIndicator;
 @synthesize arrowImageView;
 @synthesize actionLabel, lastUpdatedLabel, folderEmptyLabel;
-
-@synthesize contentStatus = _contentStatus;
+@synthesize searchBar;
 
 
 
@@ -520,6 +518,12 @@ static float ReleaseToRefreshThreshold = -66;
 		[self showPullToUpdateView];
 	}
 }
+
+
+
+#pragma mark - UISearchBarDelegate
+
+
 
 @end
 

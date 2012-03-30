@@ -20,27 +20,16 @@ typedef enum {
 
 @interface DirectoryContentsViewController : UITableViewController <NSFetchedResultsControllerDelegate>
 
-@property (nonatomic, strong) IBOutlet UIView *headerView;
-@property (strong, nonatomic) IBOutlet UIActivityIndicatorView *activityIndicator;
-@property (strong, nonatomic) IBOutlet UIImageView *arrowImageView;
-@property (strong, nonatomic) IBOutlet UILabel *actionLabel, *lastUpdatedLabel, *folderEmptyLabel;
-
-@property (nonatomic, weak) DirectoryViewController *directoryViewController;
-
-/**
- Directory object to display the contents of.
- */
 @property (nonatomic, strong) XDirectory *directory;
-
+@property (nonatomic, weak) DirectoryViewController *directoryViewController;
 @property (nonatomic, assign, readonly) DirectoryContentStatus contentStatus;
+@property (nonatomic, strong) IBOutlet UIView *headerView;
+@property (nonatomic, strong) IBOutlet UIActivityIndicatorView *activityIndicator;
+@property (nonatomic, strong) IBOutlet UIImageView *arrowImageView;
+@property (nonatomic, strong) IBOutlet UILabel *actionLabel, *lastUpdatedLabel, *folderEmptyLabel;
+@property (nonatomic, strong) IBOutlet UISearchBar *searchBar;
 
-/**
- Updates the view to reflect the current status of the directory content.
- 
- @param status The status of the directory content.
- */
 - (void)updateDirectoryStatus:(DirectoryContentStatus)status;
-
 - (void)setupDirectoryContentController;
 
 @end

@@ -507,16 +507,7 @@
                             <rect key="frame" x="0.0" y="0.0" width="320" height="110"/>
                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                             <subviews>
-                                <searchBar contentMode="redraw" placeholder="Search this Folder" id="vFn-s2-fJd">
-                                    <rect key="frame" x="0.0" y="66" width="320" height="44"/>
-                                    <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMaxY="YES"/>
-                                    <textInputTraits key="textInputTraits"/>
-                                    <scopeButtonTitles>
-                                        <string>Title</string>
-                                        <string>Title</string>
-                                    </scopeButtonTitles>
-                                </searchBar>
-                                <activityIndicatorView opaque="NO" contentMode="scaleToFill" style="gray" id="Tct-rV-YDl">
+                                <activityIndicatorView hidden="YES" opaque="NO" contentMode="scaleToFill" hidesWhenStopped="YES" style="gray" id="Tct-rV-YDl">
                                     <rect key="frame" x="34" y="26" width="20" height="20"/>
                                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 </activityIndicatorView>
@@ -547,6 +538,14 @@
                                     <color key="textColor" white="0.33333333333333331" alpha="1" colorSpace="calibratedWhite"/>
                                     <nil key="highlightedColor"/>
                                 </label>
+                                <searchBar contentMode="redraw" id="rfY-c8-YrH">
+                                    <rect key="frame" x="0.0" y="66" width="320" height="44"/>
+                                    <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMaxY="YES"/>
+                                    <textInputTraits key="textInputTraits"/>
+                                    <connections>
+                                        <outlet property="delegate" destination="h0F-Ep-3VL" id="Gxv-lD-wb7"/>
+                                    </connections>
+                                </searchBar>
                             </subviews>
                             <color key="backgroundColor" red="0.96717900815217395" green="0.96717900815217395" blue="0.96717900815217395" alpha="1" colorSpace="calibratedRGB"/>
                         </view>
@@ -647,8 +646,18 @@
                         <outlet property="folderEmptyLabel" destination="MH4-PD-pww" id="Xsk-XN-OfI"/>
                         <outlet property="headerView" destination="Bwx-pD-efW" id="bHe-dL-eRy"/>
                         <outlet property="lastUpdatedLabel" destination="kol-gM-S9B" id="wQY-Ey-yUB"/>
+                        <outlet property="searchDisplayController" destination="3Wk-2l-oli" id="TOA-O5-y6Y"/>
                     </connections>
                 </tableViewController>
+                <searchDisplayController id="3Wk-2l-oli">
+                    <connections>
+                        <outlet property="delegate" destination="h0F-Ep-3VL" id="Sbh-1D-b2l"/>
+                        <outlet property="searchBar" destination="rfY-c8-YrH" id="Gl3-KI-dj6"/>
+                        <outlet property="searchContentsController" destination="h0F-Ep-3VL" id="mRA-Bd-mIk"/>
+                        <outlet property="searchResultsDataSource" destination="h0F-Ep-3VL" id="lxX-ax-asr"/>
+                        <outlet property="searchResultsDelegate" destination="h0F-Ep-3VL" id="Qud-b4-DT7"/>
+                    </connections>
+                </searchDisplayController>
             </objects>
             <point key="canvasLocation" x="458" y="-297"/>
         </scene>
@@ -948,6 +957,7 @@
                 <relationship kind="outlet" name="folderEmptyLabel" candidateClass="UILabel"/>
                 <relationship kind="outlet" name="headerView" candidateClass="UIView"/>
                 <relationship kind="outlet" name="lastUpdatedLabel" candidateClass="UILabel"/>
+                <relationship kind="outlet" name="searchBar" candidateClass="UISearchBar"/>
             </relationships>
         </class>
         <class className="DirectoryViewController" superclassName="UIViewController">
