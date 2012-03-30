@@ -67,22 +67,14 @@ static float ReleaseToRefreshThreshold = -66;
 	
 	if (!directory.contentsLastUpdated)
 	{
-		XDrvDebug(@"%@ :: Updating directory contents for the first time", directory.path);
+		XDrvDebug(@"%@ :: Performing first update", directory.path);
 		_performingFirstUpdate = YES;
-		_contentStatus = DirectoryContentUpdating;
-		[[XService sharedXService] updateDirectory:directory forContentsViewController:self];
+		[self updateDirectoryContent];
 	}
 	else
 	{
-		XDrvDebug(@"%@ :: Displaying directory contents", directory.path);
-		_contentStatus = DirectoryContentNotChecked;
-		_fetchedResultsController = [[XService sharedXService].localService contentsControllerForDirectory:directory];
-		_fetchedResultsController.delegate = self;
-		NSError *error = nil;
-		if (![_fetchedResultsController performFetch:&error])
-		{
-			XDrvLog(@"%@ :: Error getting contents: %@", directory.path, error);
-		}
+		[self updateDirectoryStatus:DirectoryContentNotChecked];
+		[self setupDirectoryContentController];
 	}
 	
 }
@@ -111,6 +103,8 @@ static float ReleaseToRefreshThreshold = -66;
 		_folderEmptyLabel.hidden = NO;
 		[self.view addSubview:_folderEmptyLabel];
 	}
+	
+	[self updatePullToUpdateLastUpdatedLabel];
 }
 
 - (void)viewDidUnload
@@ -128,13 +122,12 @@ static float ReleaseToRefreshThreshold = -66;
 	
 	if ([self shouldUpdateContentAutomatically])
 	{
-		XDrvDebug(@"%@ :: Directory is stale; Updating directory contents", directory.path);
-		_contentStatus = DirectoryContentUpdating;
-		[[XService sharedXService] updateDirectory:directory forContentsViewController:self];
+		XDrvDebug(@"%@ :: Directory is stale", directory.path);
+		[self updateDirectoryContent];
 	}
 	else if (!_performingFirstUpdate)
 	{
-		_contentStatus = DirectoryContentCached;
+		[self updateDirectoryStatus:DirectoryContentCached];
 	}
 }
 
@@ -145,7 +138,26 @@ static float ReleaseToRefreshThreshold = -66;
 
 
 
-#pragma mark - Content Status
+#pragma mark - Directory Content
+
+- (void)setupDirectoryContentController
+{
+	XDrvDebug(@"%@ :: Loading directory contents", directory.path);
+	_fetchedResultsController = [[XService sharedXService].localService contentsControllerForDirectory:directory];
+	_fetchedResultsController.delegate = self;
+	NSError *error = nil;
+	if (![_fetchedResultsController performFetch:&error])
+	{
+		XDrvLog(@"%@ :: Error getting contents: %@", directory.path, error);
+	}
+}
+
+- (void)updateDirectoryContent
+{
+	XDrvDebug(@"%@ :: Updating directory contents", directory.path);
+	[self updateDirectoryStatus:DirectoryContentUpdating];
+	[[XService sharedXService] updateDirectory:directory forContentsViewController:self];
+}
 
 - (BOOL)shouldUpdateContentAutomatically
 {
@@ -168,40 +180,74 @@ static float ReleaseToRefreshThreshold = -66;
 {
 	_contentStatus = status;
 	
-	if (status == DirectoryContentUpdateFinished)
-	{
-		XDrvDebug(@"%@ :: Directory contents have been updated", directory.path);
-		if (_performingFirstUpdate)
+	switch (status) {
+		case DirectoryContentUpdating:
 		{
-			XDrvDebug(@"%@ :: Displaying directory contents", directory.path);
-			_fetchedResultsController = [[XService sharedXService].localService contentsControllerForDirectory:directory];
-			_fetchedResultsController.delegate = self;
+			actionLabel.text = NSLocalizedStringFromTable(@"Updating...",
+														  @"XDrive",
+														  @"Action label for updating the table view contents");
+		}
+		break;
 			
-			NSError *error = nil;
-			if (![_fetchedResultsController performFetch:&error])
+		case DirectoryContentUpdateFinished:
+		{
+			XDrvDebug(@"%@ :: Directory contents have been updated", directory.path);
+			[self updatePullToUpdateLastUpdatedLabel];
+			
+			// Hide pull to update view
+			[self hidePullToUpdateView];
+			
+			if (_performingFirstUpdate)
 			{
-				XDrvLog(@"Error performing directory contents fetch: %@", error);
+				_performingFirstUpdate = NO;
+				
+				// Load contents
+				[self setupDirectoryContentController];
+				[self.tableView reloadData];
+				
+				// Show contents
+				[directoryViewController showDirectoryContentsAnimated:YES];
 			}
 			
-			// Reload table
-			[self.tableView reloadData];
-			_performingFirstUpdate = NO;
+			if ([directory.contents count] && _folderEmptyLabel)
+			{
+				// Remove folder empty label
+				[_folderEmptyLabel removeFromSuperview];
+				_folderEmptyLabel = nil;
+			}
+		}
+		break;
 			
-			// Show contents
-			[directoryViewController showDirectoryContentsAnimated:YES];
-		}
-		
-		if ([directory.contents count] && _folderEmptyLabel)
-		{
-			// Remove folder empty label
-			[_folderEmptyLabel removeFromSuperview];
-			_folderEmptyLabel = nil;
-		}
+		case DirectoryContentUpdateFailed:
+			XDrvLog(@"%@ :: Directory update failed", directory.path);
+			break;
+
+		default:
+			break;
 	}
-	else if (status == DirectoryContentUpdateFailed)
-	{
-		XDrvLog(@"%@ :: Directory update failed", directory.path);
-	}
+}
+
+
+
+#pragma mark - Pull to update
+
+- (void)showPullToUpdateView
+{
+	[UIView animateWithDuration:0.2 animations:^{
+		self.tableView.contentInset = UIEdgeInsetsMake(0, 0, 0, 0);
+	}];
+}
+
+- (void)hidePullToUpdateView
+{
+	[UIView animateWithDuration:0.2 animations:^{
+		self.tableView.contentInset = UIEdgeInsetsMake(PullToRefreshOffset, 0, 0, 0);
+	}];
+}
+
+- (void)updatePullToUpdateLastUpdatedLabel
+{
+	lastUpdatedLabel.text = [directory.contentsLastUpdated description];
 }
 
 
@@ -395,16 +441,13 @@ static float ReleaseToRefreshThreshold = -66;
 	float relativeYPos = scrollView.contentOffset.y + PullToRefreshOffset;
 	if (relativeYPos <= ReleaseToRefreshThreshold)
 	{
-		// Make updating view stick
-		self.tableView.contentInset = UIEdgeInsetsMake(0, 0, 0, 0);
-		
-		
 		if (_contentStatus != DirectoryContentUpdating)
 		{
-			actionLabel.text = NSLocalizedStringFromTable(@"Updating...",
-														  @"XDrive",
-														  @"Action label for updating the table view contents");
+			[self updateDirectoryContent];
 		}
+		
+		// Make updating view stick
+		[self showPullToUpdateView];
 	}
 }
 
