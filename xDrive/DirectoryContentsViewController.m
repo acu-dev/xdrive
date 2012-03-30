@@ -23,7 +23,7 @@ static float ReleaseToRefreshThreshold = -66;
 @interface DirectoryContentsViewController ()
 
 @property (nonatomic, strong) NSFetchedResultsController *_fetchedResultsController;
-@property (nonatomic, assign) BOOL _performingFirstUpdate, _isUserDragging;
+@property (nonatomic, assign) BOOL _performingFirstUpdate, _isUserDragging, _isPullToUpdateIndicatorOrientedUp;
 @property (nonatomic, strong) UILabel *_folderEmptyLabel;
 
 - (void)configureCell:(UITableViewCell *)cell forEntry:(XEntry *)entry;
@@ -36,7 +36,7 @@ static float ReleaseToRefreshThreshold = -66;
 
 // Private
 @synthesize _fetchedResultsController;
-@synthesize _performingFirstUpdate, _isUserDragging;
+@synthesize _performingFirstUpdate, _isUserDragging, _isPullToUpdateIndicatorOrientedUp;
 @synthesize _folderEmptyLabel;
 
 // Public
@@ -186,6 +186,10 @@ static float ReleaseToRefreshThreshold = -66;
 			actionLabel.text = NSLocalizedStringFromTable(@"Updating...",
 														  @"XDrive",
 														  @"Action label for updating the table view contents");
+			arrowImageView.hidden = YES;
+			[self flipPullToUpdateIndicator];
+			activityIndicator.hidden = NO;
+			[activityIndicator startAnimating];
 		}
 		break;
 			
@@ -215,11 +219,18 @@ static float ReleaseToRefreshThreshold = -66;
 				[_folderEmptyLabel removeFromSuperview];
 				_folderEmptyLabel = nil;
 			}
+			
+			[activityIndicator stopAnimating];
+			activityIndicator.hidden = YES;
+			arrowImageView.hidden = NO;
 		}
 		break;
 			
 		case DirectoryContentUpdateFailed:
 			XDrvLog(@"%@ :: Directory update failed", directory.path);
+			[activityIndicator stopAnimating];
+			activityIndicator.hidden = YES;
+			arrowImageView.hidden = NO;
 			break;
 
 		default:
@@ -247,7 +258,37 @@ static float ReleaseToRefreshThreshold = -66;
 
 - (void)updatePullToUpdateLastUpdatedLabel
 {
-	lastUpdatedLabel.text = [directory.contentsLastUpdated description];
+	NSDateFormatter *formatter = [[NSDateFormatter alloc] init];
+	[formatter setDateStyle:NSDateFormatterShortStyle];
+	[formatter setTimeStyle:NSDateFormatterShortStyle];
+	
+	NSString *lastUpdated = NSLocalizedStringFromTable(@"Last Updated: ", 
+													   @"XDrive", 
+													   @"Label for the directory's last updated date/time");
+	
+	lastUpdatedLabel.text = [lastUpdated stringByAppendingString:[formatter stringFromDate:directory.contentsLastUpdated]];
+}
+
+- (void)flipPullToUpdateIndicator
+{
+	float angleDegrees;
+	if (_isPullToUpdateIndicatorOrientedUp)
+	{
+		angleDegrees = 0;
+		_isPullToUpdateIndicatorOrientedUp = NO;
+	}
+	else
+	{
+		angleDegrees = 180;
+		_isPullToUpdateIndicatorOrientedUp = YES;
+	}
+	
+	float angleRadians = angleDegrees * ((float)M_PI / 180.0f);
+	CGAffineTransform transform = CGAffineTransformMakeRotation(angleRadians);
+	
+	[UIView animateWithDuration:0.2 animations:^{
+		arrowImageView.transform = transform;
+	}];
 }
 
 
@@ -425,12 +466,20 @@ static float ReleaseToRefreshThreshold = -66;
 		actionLabel.text = NSLocalizedStringFromTable(@"Pull down to update...",
 													  @"XDrive",
 													  @"Action label for updating the table view contents");
+		if (_isPullToUpdateIndicatorOrientedUp)
+		{
+			[self flipPullToUpdateIndicator];
+		}
 	}
 	else if (relativeYPos < ReleaseToRefreshThreshold)
 	{
 		actionLabel.text = NSLocalizedStringFromTable(@"Release to update...",
 													  @"XDrive",
 													  @"Action label for updating the table view contents");
+		if (!_isPullToUpdateIndicatorOrientedUp)
+		{
+			[self flipPullToUpdateIndicator];
+		}
 	}
 }
 
