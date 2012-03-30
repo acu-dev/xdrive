@@ -107,10 +107,9 @@
 
 - (void)navigateToFile:(XFile *)file
 {
-	XDrvLog(@"Navigating to file is not implemented yet");
-	/*OpenFileViewController *viewController = [[UIStoryboard mainStoryboard] instantiateViewControllerWithIdentifier:@"fileView"];
-	viewController.file = file;
-	[self.navigationController pushViewController:viewController animated:YES];*/
+	OpenFileViewController *viewController = [[UIStoryboard mainStoryboard] instantiateViewControllerWithIdentifier:@"fileView"];
+	viewController.xFile = file;
+	[self.navigationController pushViewController:viewController animated:YES];
 }
 
 @end
