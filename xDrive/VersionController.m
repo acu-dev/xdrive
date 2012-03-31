@@ -35,12 +35,17 @@ static NSString *downloadURL = @"http://xdrive.acu.edu/app.plist";
 	[NSURLConnection sendAsynchronousRequest:request queue:[NSOperationQueue mainQueue]
 						   completionHandler:^(NSURLResponse *response, NSData *data, NSError *error) {
 
-							   if (error) return;
+							   if (error)
+							   {
+								   XDrvDebug(@"Error fetching version information: %@", error);
+								   return;
+							   }
 
 							   NSError *jsonError = nil;
 							   id result = [NSJSONSerialization JSONObjectWithData:data options:NSJSONReadingAllowFragments error:&jsonError];
 							   if (jsonError || ![result isKindOfClass:[NSDictionary class]])
 							   {
+								   XDrvDebug(@"Error converting JSON data into object: %@", jsonError);
 								   return;
 							   }
 							   else
