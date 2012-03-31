@@ -334,15 +334,6 @@ static float ReleaseToRefreshThreshold = -66;
 
 
 
-#pragma mark - Searching
-
-- (NSPredicate *)predicateForSearchString
-{
-	
-}
-
-
-
 #pragma mark - UITableViewDataSource
 
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView
@@ -529,7 +520,7 @@ static float ReleaseToRefreshThreshold = -66;
 }
 
 
-
+/*
 #pragma mark - UISearchBarDelegate
 
 - (void)searchBarTextDidBeginEditing:(UISearchBar *)searchBar
@@ -556,7 +547,7 @@ static float ReleaseToRefreshThreshold = -66;
 {
 	XDrvDebug(@"do search");
 }
-
+*/
 @end
 
 
