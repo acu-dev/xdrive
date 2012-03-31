@@ -11,7 +11,7 @@
 #import "DTVersion.h"
 
 static NSString *latestVersionURL = @"http://xdrive.acu.edu/version";
-static NSString *downloadURL = @"http://xdrive.acu.edu";
+static NSString *downloadURL = @"http://xdrive.acu.edu/app.plist";
 
 
 @interface VersionController ()
@@ -19,24 +19,46 @@ static NSString *downloadURL = @"http://xdrive.acu.edu";
 @property (nonatomic, strong) UIAlertView *alert;
 
 - (void)alertUserToNewAppVersion;
-	// Creates an alert that allows user to download new version
 
 @end
-
 
 
 @implementation VersionController
 
 @synthesize alert;
 
-
-
 - (void)checkVersion
 {
-	if (![[XDriveConfig appVersion] hasSuffix:@"-SNAPSHOT"])
-	{
-		//[[XService sharedXService].remoteService fetchJSONAtURL:latestVersionURL withDelegate:self];
-	}
+	if ([[XDriveConfig appVersion] hasSuffix:@"-SNAPSHOT"]) return;
+	
+	NSURLRequest *request = [NSURLRequest requestWithURL:[NSURL URLWithString:latestVersionURL]];
+	[NSURLConnection sendAsynchronousRequest:request queue:[NSOperationQueue mainQueue]
+						   completionHandler:^(NSURLResponse *response, NSData *data, NSError *error) {
+
+							   if (error) return;
+
+							   NSError *jsonError = nil;
+							   id result = [NSJSONSerialization JSONObjectWithData:data options:NSJSONReadingAllowFragments error:&jsonError];
+							   if (jsonError || ![result isKindOfClass:[NSDictionary class]])
+							   {
+								   return;
+							   }
+							   else
+							   {
+								   DTVersion *latestVersion = [DTVersion versionWithString:[(NSDictionary *)result objectForKey:@"latest"]];
+								   DTVersion *currentVersion = [DTVersion versionWithString:[XDriveConfig appVersion]];
+								   
+								   if ([latestVersion compare:currentVersion] == NSOrderedDescending)
+								   {
+									   [self alertUserToNewAppVersion];
+								   }
+								   else
+								   {
+									   XDrvDebug(@"Current version is newer than remote version");
+								   }
+							   }
+						   }];
+
 }
 
 - (void)alertUserToNewAppVersion
@@ -55,29 +77,6 @@ static NSString *downloadURL = @"http://xdrive.acu.edu";
 
 
 
-#pragma mark - XServiceRemoteDelegate
-
-- (void)connectionFinishedWithResult:(NSObject *)result
-{
-	if (![result isKindOfClass:[NSDictionary class]])
-		return;
-	
-	DTVersion *latestVersion = [DTVersion versionWithString:[(NSDictionary *)result objectForKey:@"latest"]];
-	DTVersion *currentVersion = [DTVersion versionWithString:[XDriveConfig appVersion]];
-	
-	if ([latestVersion compare:currentVersion] == NSOrderedDescending)
-	{
-		[self alertUserToNewAppVersion];
-	}
-}
-
-- (void)connectionFailedWithError:(NSError *)error
-{
-	XDrvLog(@"Version check failed: %@", error);
-}
-
-
-
 #pragma mark - UIAlertViewDelegate
 
 - (void)alertView:(UIAlertView *)alertView didDismissWithButtonIndex:(NSInteger)buttonIndex
@@ -85,11 +84,7 @@ static NSString *downloadURL = @"http://xdrive.acu.edu";
 	if (buttonIndex)
 	{
 		// URL for app plist if it is protected with basic auth
-		//NSURL *appURL = [NSURL URLWithString:[NSString stringWithFormat:@"itms-services://?action=download-manifest&url=%@", downloadURL]];
-		
-		// URL to open app download page in safari
-		NSURL *appURL = [NSURL URLWithString:downloadURL];
-		
+		NSURL *appURL = [NSURL URLWithString:[NSString stringWithFormat:@"itms-services://?action=download-manifest&url=%@", downloadURL]];
 		[[UIApplication sharedApplication] openURL:appURL];
 	}
 	self.alert = nil;
