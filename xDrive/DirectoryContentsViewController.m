@@ -86,11 +86,6 @@ static float ReleaseToRefreshThreshold = -66;
     [super viewDidLoad];
 	if (!self.title) self.title = directory.name;
 	
-	// Reset frame origin
-	CGRect frame = self.view.frame;
-	frame.origin.y = 0;
-	self.view.frame = frame;
-	
 	// Display status message
 	if (_performingFirstUpdate)
 	{
