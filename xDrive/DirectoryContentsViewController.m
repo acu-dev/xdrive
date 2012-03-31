@@ -45,8 +45,8 @@ static float ReleaseToRefreshThreshold = -66;
 @synthesize headerView;
 @synthesize activityIndicator;
 @synthesize arrowImageView;
-@synthesize actionLabel, lastUpdatedLabel, folderEmptyLabel;
-@synthesize searchBar;
+@synthesize actionLabel, lastUpdatedLabel;
+//@synthesize searchBar;
 
 
 
@@ -334,6 +334,15 @@ static float ReleaseToRefreshThreshold = -66;
 
 
 
+#pragma mark - Searching
+
+- (NSPredicate *)predicateForSearchString
+{
+	
+}
+
+
+
 #pragma mark - UITableViewDataSource
 
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView
@@ -523,7 +532,30 @@ static float ReleaseToRefreshThreshold = -66;
 
 #pragma mark - UISearchBarDelegate
 
+- (void)searchBarTextDidBeginEditing:(UISearchBar *)searchBar
+{
+	[searchBar setShowsCancelButton:YES animated:YES];
+}
 
+- (void)searchBarTextDidEndEditing:(UISearchBar *)searchBar
+{
+	[searchBar setShowsCancelButton:NO animated:YES];
+}
+
+- (void)searchBar:(UISearchBar *)searchBar textDidChange:(NSString *)searchText
+{
+	XDrvDebug(@"text changed");
+}
+
+- (void)searchBarCancelButtonClicked:(UISearchBar *)searchBar
+{
+	[searchBar resignFirstResponder];
+}
+
+- (void)searchBarSearchButtonClicked:(UISearchBar *)searchBar
+{
+	XDrvDebug(@"do search");
+}
 
 @end
 

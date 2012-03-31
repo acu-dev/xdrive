@@ -18,7 +18,7 @@ typedef enum {
 	DirectoryContentUpdateFailed
 } DirectoryContentStatus;
 
-@interface DirectoryContentsViewController : UITableViewController <NSFetchedResultsControllerDelegate>
+@interface DirectoryContentsViewController : UITableViewController <NSFetchedResultsControllerDelegate, UISearchBarDelegate>
 
 @property (nonatomic, strong) XDirectory *directory;
 @property (nonatomic, weak) DirectoryViewController *directoryViewController;
@@ -26,8 +26,8 @@ typedef enum {
 @property (nonatomic, strong) IBOutlet UIView *headerView;
 @property (nonatomic, strong) IBOutlet UIActivityIndicatorView *activityIndicator;
 @property (nonatomic, strong) IBOutlet UIImageView *arrowImageView;
-@property (nonatomic, strong) IBOutlet UILabel *actionLabel, *lastUpdatedLabel, *folderEmptyLabel;
-@property (nonatomic, strong) IBOutlet UISearchBar *searchBar;
+@property (nonatomic, strong) IBOutlet UILabel *actionLabel, *lastUpdatedLabel;
+//@property (nonatomic, strong) IBOutlet UISearchBar *searchBar;
 
 - (void)updateDirectoryStatus:(DirectoryContentStatus)status;
 - (void)setupDirectoryContentController;
