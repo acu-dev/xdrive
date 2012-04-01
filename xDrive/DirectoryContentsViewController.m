@@ -106,8 +106,9 @@ static float ReleaseToRefreshThreshold = -66;
 		_messageView = nil;
 	}
 	
-	// Set last updated
+	// Update pull-to-update view
 	[self updatePullToUpdateLastUpdatedLabel];
+	if (_performingFirstUpdate) [self updateDirectoryStatus:DirectoryContentUpdating];
 }
 
 - (void)viewDidUnload
@@ -500,6 +501,8 @@ static float ReleaseToRefreshThreshold = -66;
 - (void)scrollViewDidEndDragging:(UIScrollView *)scrollView willDecelerate:(BOOL)decelerate
 {
 	_isUserDragging = NO;
+	
+	if (_performingFirstUpdate) return;
 		
 	float relativeYPos = scrollView.contentOffset.y + PullToRefreshOffset;
 	if (relativeYPos <= ReleaseToRefreshThreshold)
