@@ -45,7 +45,7 @@
                                         <size key="shadowOffset" width="0.0" height="0.0"/>
                                     </label>
                                     <activityIndicatorView opaque="NO" contentMode="scaleToFill" style="gray" id="U7C-Mh-QMs">
-                                        <rect key="frame" x="28" y="10" width="20" height="20"/>
+                                        <rect key="frame" x="18" y="10" width="20" height="20"/>
                                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                     </activityIndicatorView>
                                 </subviews>
