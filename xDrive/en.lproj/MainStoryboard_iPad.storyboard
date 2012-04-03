@@ -292,39 +292,15 @@
             </objects>
             <point key="canvasLocation" x="1346" y="913"/>
         </scene>
-        <!--View Controller-->
-        <scene sceneID="gqR-ZU-J5e">
-            <objects>
-                <placeholder placeholderIdentifier="IBFirstResponder" id="5pu-5h-xa7" userLabel="First Responder" sceneMemberID="firstResponder"/>
-                <viewController id="yQS-dW-faT" sceneMemberID="viewController">
-                    <view key="view" contentMode="scaleToFill" id="a3R-hB-uKw">
-                        <rect key="frame" x="0.0" y="20" width="768" height="1004"/>
-                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                        <subviews>
-                            <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" text="file viewer goes here" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" minimumFontSize="10" id="j0v-rF-jhD">
-                                <rect key="frame" x="309" y="405" width="169" height="21"/>
-                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
-                                <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
-                                <nil key="highlightedColor"/>
-                            </label>
-                        </subviews>
-                        <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
-                    </view>
-                    <toolbarItems/>
-                </viewController>
-            </objects>
-            <point key="canvasLocation" x="2791" y="205"/>
-        </scene>
         <!--Split View Controller-->
         <scene sceneID="JGq-HO-s2n">
             <objects>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="oQt-tW-mUs" userLabel="First Responder" sceneMemberID="firstResponder"/>
-                <splitViewController id="Lm4-vx-ZMx" sceneMemberID="viewController">
+                <splitViewController id="Lm4-vx-ZMx" customClass="SplitViewController" sceneMemberID="viewController">
                     <toolbarItems/>
                     <connections>
-                        <segue destination="yQS-dW-faT" kind="relationship" relationship="detailViewController" id="Nlw-K8-5PN"/>
                         <segue destination="DRr-dn-2pP" kind="relationship" relationship="masterViewController" id="duJ-5X-0b7"/>
+                        <segue destination="fp6-sh-1dq" kind="relationship" relationship="detailViewController" id="sQF-60-WHx"/>
                     </connections>
                 </splitViewController>
             </objects>
@@ -335,7 +311,8 @@
             <objects>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="Lnu-Hk-wKp" userLabel="First Responder" sceneMemberID="firstResponder"/>
                 <tabBarController definesPresentationContext="YES" id="DRr-dn-2pP" customClass="RootTabBarController" sceneMemberID="viewController">
-                    <simulatedTabBarMetrics key="simulatedBottomBarMetrics"/>
+                    <simulatedNavigationBarMetrics key="simulatedTopBarMetrics" prompted="NO"/>
+                    <nil key="simulatedBottomBarMetrics"/>
                     <tabBar key="tabBar" contentMode="scaleToFill" id="Bgd-vU-jvp">
                         <rect key="frame" x="129" y="330" width="163" height="49"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMinY="YES"/>
@@ -344,6 +321,53 @@
                 </tabBarController>
             </objects>
             <point key="canvasLocation" x="2791" y="-764"/>
+        </scene>
+        <!--Open File View Controller-->
+        <scene sceneID="SzL-p9-emj">
+            <objects>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="CW3-9I-6zn" userLabel="First Responder" sceneMemberID="firstResponder"/>
+                <viewController id="fp6-sh-1dq" customClass="OpenFileViewController" sceneMemberID="viewController">
+                    <view key="view" contentMode="scaleToFill" id="xUd-WG-mtz">
+                        <rect key="frame" x="0.0" y="64" width="768" height="960"/>
+                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                        <subviews>
+                            <view contentMode="scaleToFill" id="G59-gx-KeF">
+                                <rect key="frame" x="0.0" y="0.0" width="768" height="960"/>
+                                <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                                <subviews>
+                                    <progressView opaque="NO" contentMode="scaleToFill" id="YVm-Tm-79k">
+                                        <rect key="frame" x="60" y="555" width="648" height="9"/>
+                                        <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMinY="YES" flexibleMaxY="YES"/>
+                                    </progressView>
+                                    <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" text="File Name" textAlignment="center" lineBreakMode="middleTruncation" numberOfLines="2" minimumFontSize="10" id="oho-PH-zAY">
+                                        <rect key="frame" x="20" y="362" width="728" height="55"/>
+                                        <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMinY="YES" flexibleMaxY="YES"/>
+                                        <fontDescription key="fontDescription" type="boldSystem" pointSize="20"/>
+                                        <color key="textColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="calibratedRGB"/>
+                                        <nil key="highlightedColor"/>
+                                        <color key="shadowColor" white="0.66666666666666663" alpha="1" colorSpace="calibratedWhite"/>
+                                    </label>
+                                </subviews>
+                                <color key="backgroundColor" cocoaTouchSystemColor="viewFlipsideBackgroundColor"/>
+                            </view>
+                            <webView contentMode="center" scalesPageToFit="YES" id="Lo4-r4-5jo">
+                                <rect key="frame" x="0.0" y="0.0" width="768" height="960"/>
+                                <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                                <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
+                            </webView>
+                        </subviews>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
+                    </view>
+                    <simulatedNavigationBarMetrics key="simulatedTopBarMetrics" prompted="NO"/>
+                    <connections>
+                        <outlet property="downloadFileNameLabel" destination="oho-PH-zAY" id="aWc-JJ-aUc"/>
+                        <outlet property="downloadProgressView" destination="YVm-Tm-79k" id="Xns-cn-kos"/>
+                        <outlet property="downloadView" destination="G59-gx-KeF" id="NAo-NP-sPd"/>
+                        <outlet property="webView" destination="Lo4-r4-5jo" id="guu-3T-FMy"/>
+                    </connections>
+                </viewController>
+            </objects>
+            <point key="canvasLocation" x="2791" y="259"/>
         </scene>
     </scenes>
     <resources>
@@ -372,6 +396,15 @@
                 <relationship kind="outlet" name="messageView" candidateClass="UIView"/>
             </relationships>
         </class>
+        <class className="OpenFileViewController" superclassName="UIViewController">
+            <source key="sourceIdentifier" type="project" relativePath="./Classes/OpenFileViewController.h"/>
+            <relationships>
+                <relationship kind="outlet" name="downloadFileNameLabel" candidateClass="UILabel"/>
+                <relationship kind="outlet" name="downloadProgressView" candidateClass="UIProgressView"/>
+                <relationship kind="outlet" name="downloadView" candidateClass="UIView"/>
+                <relationship kind="outlet" name="webView" candidateClass="UIWebView"/>
+            </relationships>
+        </class>
         <class className="RootTabBarController" superclassName="UITabBarController">
             <source key="sourceIdentifier" type="project" relativePath="./Classes/RootTabBarController.h"/>
         </class>
@@ -388,6 +421,9 @@
                 <relationship kind="outlet" name="serverField" candidateClass="UITextField"/>
                 <relationship kind="outlet" name="usernameField" candidateClass="UITextField"/>
             </relationships>
+        </class>
+        <class className="SplitViewController" superclassName="UISplitViewController">
+            <source key="sourceIdentifier" type="project" relativePath="./Classes/SplitViewController.h"/>
         </class>
     </classes>
     <simulatedMetricsContainer key="defaultSimulatedMetrics">

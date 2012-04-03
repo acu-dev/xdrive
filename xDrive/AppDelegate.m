@@ -48,7 +48,7 @@
 	 splitViewController.delegate = (id)navigationController.topViewController;
 	 }*/
 	
-	[application setStatusBarStyle:UIStatusBarStyleBlackTranslucent animated:NO];
+	//[application setStatusBarStyle:UIStatusBarStyleBlackTranslucent animated:NO];
 	
 	
 	// Get root view controller

@@ -9,6 +9,7 @@
 /* Begin PBXBuildFile section */
 		A917271114F227D900A4FBA0 /* libz.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = A917271014F227D900A4FBA0 /* libz.dylib */; };
 		A917271314F227E500A4FBA0 /* libxml2.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = A917271214F227E500A4FBA0 /* libxml2.dylib */; };
+		A91BFA2D152A2CD8008CCEC2 /* SplitViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = A91BFA2C152A2CD8008CCEC2 /* SplitViewController.m */; };
 		A937884514F55977007F2A1A /* about.html in Resources */ = {isa = PBXBuildFile; fileRef = A937884414F55977007F2A1A /* about.html */; };
 		A937884814F577E6007F2A1A /* WebViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = A937884714F577E5007F2A1A /* WebViewController.m */; };
 		A937884C14F58839007F2A1A /* legal.html in Resources */ = {isa = PBXBuildFile; fileRef = A937884B14F58839007F2A1A /* legal.html */; };
@@ -26,6 +27,7 @@
 		A9ACC70F1501719500EB69DE /* Icon.png in Resources */ = {isa = PBXBuildFile; fileRef = A9ACC70C1501719500EB69DE /* Icon.png */; };
 		A9ACC7101501719500EB69DE /* Icon@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = A9ACC70D1501719500EB69DE /* Icon@2x.png */; };
 		A9ACC7111501719500EB69DE /* iTunesArtwork.png in Resources */ = {isa = PBXBuildFile; fileRef = A9ACC70E1501719500EB69DE /* iTunesArtwork.png */; };
+		A9BA215B152B4C80000C9682 /* FileViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = A9BA215A152B4C80000C9682 /* FileViewController.m */; };
 		A9C34FCC1426668400E3BC3C /* OpenFileViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = A9C34FCB1426668400E3BC3C /* OpenFileViewController.m */; };
 		A9DCAD8914ED6BE70014C8A8 /* LocalStorageViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = A9DCAD8814ED6BE70014C8A8 /* LocalStorageViewController.m */; };
 		A9DCAD8B14ED74C90014C8A8 /* LocalStorageOptions.plist in Resources */ = {isa = PBXBuildFile; fileRef = A9DCAD8A14ED74C90014C8A8 /* LocalStorageOptions.plist */; };
@@ -149,6 +151,8 @@
 		A917270014F2278C00A4FBA0 /* DTFoundation.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = DTFoundation.xcodeproj; path = DTFoundation/DTFoundation.xcodeproj; sourceTree = "<group>"; };
 		A917271014F227D900A4FBA0 /* libz.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libz.dylib; path = usr/lib/libz.dylib; sourceTree = SDKROOT; };
 		A917271214F227E500A4FBA0 /* libxml2.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libxml2.dylib; path = usr/lib/libxml2.dylib; sourceTree = SDKROOT; };
+		A91BFA2B152A2CD8008CCEC2 /* SplitViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SplitViewController.h; sourceTree = "<group>"; };
+		A91BFA2C152A2CD8008CCEC2 /* SplitViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SplitViewController.m; sourceTree = "<group>"; };
 		A937884414F55977007F2A1A /* about.html */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.html; path = about.html; sourceTree = "<group>"; };
 		A937884614F577E5007F2A1A /* WebViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WebViewController.h; sourceTree = "<group>"; };
 		A937884714F577E5007F2A1A /* WebViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WebViewController.m; sourceTree = "<group>"; };
@@ -173,6 +177,8 @@
 		A9ACC70C1501719500EB69DE /* Icon.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = Icon.png; sourceTree = "<group>"; };
 		A9ACC70D1501719500EB69DE /* Icon@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Icon@2x.png"; sourceTree = "<group>"; };
 		A9ACC70E1501719500EB69DE /* iTunesArtwork.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = iTunesArtwork.png; sourceTree = "<group>"; };
+		A9BA2159152B4C80000C9682 /* FileViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FileViewController.h; sourceTree = "<group>"; };
+		A9BA215A152B4C80000C9682 /* FileViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FileViewController.m; sourceTree = "<group>"; };
 		A9C34FCA1426668400E3BC3C /* OpenFileViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OpenFileViewController.h; sourceTree = "<group>"; };
 		A9C34FCB1426668400E3BC3C /* OpenFileViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OpenFileViewController.m; sourceTree = "<group>"; };
 		A9DCAD8714ED6BE70014C8A8 /* LocalStorageViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LocalStorageViewController.h; sourceTree = "<group>"; };
@@ -329,6 +335,8 @@
 			children = (
 				A9C34FCA1426668400E3BC3C /* OpenFileViewController.h */,
 				A9C34FCB1426668400E3BC3C /* OpenFileViewController.m */,
+				A9BA2159152B4C80000C9682 /* FileViewController.h */,
+				A9BA215A152B4C80000C9682 /* FileViewController.m */,
 			);
 			name = "File Info";
 			sourceTree = "<group>";
@@ -534,6 +542,8 @@
 				C3FC6C6713BCB90B009FBAA3 /* AppDelegate.m */,
 				C3FC6C6913BCB90B009FBAA3 /* MainStoryboard_iPhone.storyboard */,
 				C3FC6C6C13BCB90B009FBAA3 /* MainStoryboard_iPad.storyboard */,
+				A91BFA2B152A2CD8008CCEC2 /* SplitViewController.h */,
+				A91BFA2C152A2CD8008CCEC2 /* SplitViewController.m */,
 				C3ECE29713C3BF2D004FF63F /* RootTabBarController.h */,
 				C3ECE29813C3BF2D004FF63F /* RootTabBarController.m */,
 				A95F180514F846BB00EEA0A2 /* VersionController.h */,
@@ -747,6 +757,8 @@
 				A95F180714F846BB00EEA0A2 /* VersionController.m in Sources */,
 				A9F626AF1506BEF200B2568E /* UpdateDirectoryOperation.m in Sources */,
 				A97AC30F1524F303007F361A /* DirectoryViewController.m in Sources */,
+				A91BFA2D152A2CD8008CCEC2 /* SplitViewController.m in Sources */,
+				A9BA215B152B4C80000C9682 /* FileViewController.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
