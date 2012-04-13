@@ -37,36 +37,24 @@
 #pragma mark - Application
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
-{
-    // Override point for customization after application launch.
-	self.window = [[UIWindow alloc] initWithFrame:[[UIScreen mainScreen] bounds]];
-	
-	// Implement iPad specific stuff
-	/*if ([[UIDevice currentDevice] userInterfaceIdiom] == UIUserInterfaceIdiomPad) {
-	 UISplitViewController *splitViewController = (UISplitViewController *)self.window.rootViewController;
-	 UINavigationController *navigationController = [splitViewController.viewControllers lastObject];
-	 splitViewController.delegate = (id)navigationController.topViewController;
-	 }*/
-	
-	//[application setStatusBarStyle:UIStatusBarStyleBlackTranslucent animated:NO];
-	
-	
-	// Get root view controller
-	if (![[XService sharedXService].localService server])
+{	
+	if ([[XService sharedXService].localService server])
 	{
-		// No server configured so make setup the root view controller
-		XDrvDebug(@"Loading initial setup");
-		setupController = [[SetupController alloc] init];
-		window.rootViewController = [setupController viewController];
+		if ([[UIDevice currentDevice] userInterfaceIdiom] == UIUserInterfaceIdiomPad)
+		{
+			// Make file view controller the split view controller's delegate
+			UISplitViewController *splitViewController = (UISplitViewController *)self.window.rootViewController;
+			UIViewController *detailViewController = [splitViewController.viewControllers lastObject];
+			splitViewController.delegate = (id)detailViewController;
+		}
 	}
 	else
 	{
-		// Load storyboard's initial view controller
-		window.rootViewController = [[UIStoryboard mainStoryboard] instantiateInitialViewController];
+		// Load setup
+		XDrvDebug(@"Loading setup controller");
+		setupController = [[SetupController alloc] init];
+		window.rootViewController = [setupController viewController];
 	}
-
-	// Display
-	[window makeKeyAndVisible];
 	
 	// Create version controller
 	versionController = [[VersionController alloc] init];
@@ -120,19 +108,19 @@
 
 #pragma mark - Setup cleanup
 
-- (void)tabBarControllerDidAppear:(UITabBarController *)tabBarController
+- (void)rootViewControllerDidAppear:(UIViewController *)viewController
 {
-	self.window.rootViewController = tabBarController;
-	[self performSelector:@selector(cleanupSetup) withObject:nil afterDelay:1.0];
+	if (setupController)
+	{
+		self.window.rootViewController = viewController;
+		[self performSelector:@selector(cleanupSetup) withObject:nil afterDelay:1.0];
+	}
 }
 
 - (void)cleanupSetup
 {
-	if (setupController)
-	{
-		XDrvDebug(@"Removing setup controller");
-		self.setupController = nil;
-	}
+	XDrvDebug(@"Removing setup controller");
+	self.setupController = nil;
 }
 
 

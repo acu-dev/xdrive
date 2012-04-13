@@ -8,12 +8,20 @@
 
 #import "SplitViewController.h"
 #import "XDriveConfig.h"
+#import "AppDelegate.h"
 
 @interface SplitViewController ()
 
 @end
 
 @implementation SplitViewController
+
+- (void)viewDidAppear:(BOOL)animated
+{
+	[super viewDidAppear:animated];
+	
+	[(AppDelegate *)[[UIApplication sharedApplication] delegate] rootViewControllerDidAppear:self];
+}
 
 - (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation
 {

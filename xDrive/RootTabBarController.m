@@ -30,6 +30,9 @@
 - (void)awakeFromNib
 {
 	self.delegate = self;
+	
+	CGRect frame = self.view.frame;
+	XDrvLog(@"Root Tabs Frame :: Origin (%1.0f, %1.0f) - Size (%1.0f, %1.0f)", frame.origin.x, frame.origin.y, frame.size.width, frame.size.height);
 }
 
 
@@ -39,6 +42,7 @@
 - (void)viewDidLoad
 {
     [super viewDidLoad];
+	
 	
 	[self initTabItems];
 }
@@ -55,12 +59,20 @@
     return YES;
 }
 
+- (void)viewWillAppear:(BOOL)animated
+{
+	[super viewWillAppear:animated];
+}
+
 - (void)viewDidAppear:(BOOL)animated
 {
 	[super viewDidAppear:animated];
 	
-	// Tell app delegate we've appeared so we can become root view controller and setup controllers can be cleaned up
-	[(AppDelegate *)[[UIApplication sharedApplication] delegate] tabBarControllerDidAppear:self];
+	if ([[UIDevice currentDevice] userInterfaceIdiom] == UIUserInterfaceIdiomPhone)
+	{
+		// Tell app delegate we've appeared so we can become root view controller and setup controllers can be cleaned up
+		[(AppDelegate *)[[UIApplication sharedApplication] delegate] rootViewControllerDidAppear:self];
+	}
 }
 
 - (void)initTabItems
@@ -82,8 +94,8 @@
 		[viewControllers addObject:navController];
 	}
 	
-	/*// Recent
-	UINavigationController *recentNavController = [[UIStoryboard mainStoryboard] instantiateViewControllerWithIdentifier:@"recentNav"];
+	// Recent
+	/*UINavigationController *recentNavController = [[UIStoryboard mainStoryboard] instantiateViewControllerWithIdentifier:@"recentNav"];
 	recentNavController.tabBarItem.image = [UIImage imageNamed:@"clock.png"];
 	[viewControllers addObject:recentNavController];
 	

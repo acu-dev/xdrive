@@ -10,9 +10,7 @@
 
 int main(int argc, char *argv[])
 {
-	int retVal = 0;
 	@autoreleasepool {
-	    retVal = UIApplicationMain(argc, argv, nil, NSStringFromClass([AppDelegate class]));
+	    return UIApplicationMain(argc, argv, nil, NSStringFromClass([AppDelegate class]));
 	}
-	return retVal;
 }

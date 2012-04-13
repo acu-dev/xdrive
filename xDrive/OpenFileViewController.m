@@ -63,6 +63,7 @@
 - (void)viewDidLoad
 {
     [super viewDidLoad];
+	
 	self.title = [file.name stringByDeletingPathExtension];
 	
 	if ([[NSFileManager defaultManager] fileExistsAtPath:[file cachePath]])

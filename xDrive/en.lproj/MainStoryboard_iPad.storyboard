@@ -97,7 +97,7 @@
                         <outlet property="passwordField" destination="TOs-QX-Eb4" id="BoU-H5-ktc"/>
                         <outlet property="serverField" destination="bSn-oG-yQj" id="mfe-tU-Dg8"/>
                         <outlet property="usernameField" destination="GpH-z1-ASa" id="8yg-yk-4Pj"/>
-                        <segue destination="Lm4-vx-ZMx" kind="modal" identifier="DismissSetupView" modalTransitionStyle="crossDissolve" id="mYg-8e-cBV"/>
+                        <segue destination="Lm4-vx-ZMx" kind="push" identifier="DismissSetupView" id="mYg-8e-cBV"/>
                     </connections>
                 </viewController>
                 <tapGestureRecognizer id="x0w-i6-vhh">
@@ -109,13 +109,13 @@
             </objects>
             <point key="canvasLocation" x="898" y="-263"/>
         </scene>
-        <!--Directory View Controller-->
+        <!--Directory View Controller - Item-->
         <scene sceneID="o85-Ib-hsb">
             <objects>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="lUx-tf-qRN" userLabel="First Responder" sceneMemberID="firstResponder"/>
                 <viewController storyboardIdentifier="directoryView" id="NDh-Us-GyN" customClass="DirectoryViewController" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="HXW-az-dv8">
-                        <rect key="frame" x="0.0" y="64" width="320" height="739"/>
+                        <rect key="frame" x="0.0" y="64" width="320" height="655"/>
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                         <subviews>
                             <view contentMode="scaleToFill" id="Q4i-N4-XkL">
@@ -138,9 +138,12 @@
                             </view>
                         </subviews>
                         <color key="backgroundColor" cocoaTouchSystemColor="scrollViewTexturedBackgroundColor"/>
+                        <simulatedOrientationMetrics key="simulatedOrientationMetrics" orientation="landscapeRight"/>
                     </view>
+                    <tabBarItem key="tabBarItem" title="Item" id="2U9-YY-7SQ"/>
                     <simulatedNavigationBarMetrics key="simulatedTopBarMetrics" prompted="NO"/>
                     <simulatedTabBarMetrics key="simulatedBottomBarMetrics"/>
+                    <simulatedOrientationMetrics key="simulatedOrientationMetrics" orientation="landscapeRight"/>
                     <splitViewMasterSimulatedSizeMetrics key="simulatedDestinationMetrics"/>
                     <connections>
                         <outlet property="activityIndicator" destination="kFx-ng-BXa" id="OjN-nP-4Xn"/>
@@ -157,9 +160,10 @@
                 <placeholder placeholderIdentifier="IBFirstResponder" id="Uba-aj-7te" userLabel="First Responder" sceneMemberID="firstResponder"/>
                 <tableViewController storyboardIdentifier="directoryContentsView" id="cDB-OY-5ga" customClass="DirectoryContentsViewController" sceneMemberID="viewController">
                     <tableView key="view" clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" rowHeight="50" sectionHeaderHeight="22" sectionFooterHeight="22" id="lUm-kd-2UB">
-                        <rect key="frame" x="0.0" y="64" width="320" height="739"/>
+                        <rect key="frame" x="0.0" y="64" width="320" height="655"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                        <simulatedOrientationMetrics key="simulatedOrientationMetrics" orientation="landscapeRight"/>
                         <view key="tableHeaderView" clipsSubviews="YES" contentMode="scaleToFill" id="m5q-Ti-3yx">
                             <rect key="frame" x="0.0" y="0.0" width="320" height="66"/>
                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
@@ -280,6 +284,7 @@
                     </tableView>
                     <simulatedNavigationBarMetrics key="simulatedTopBarMetrics" prompted="NO"/>
                     <simulatedTabBarMetrics key="simulatedBottomBarMetrics"/>
+                    <simulatedOrientationMetrics key="simulatedOrientationMetrics" orientation="landscapeRight"/>
                     <splitViewMasterSimulatedSizeMetrics key="simulatedDestinationMetrics"/>
                     <connections>
                         <outlet property="actionLabel" destination="tFR-nP-I5N" id="6Gp-PU-1hL"/>
@@ -298,13 +303,15 @@
                 <placeholder placeholderIdentifier="IBFirstResponder" id="oQt-tW-mUs" userLabel="First Responder" sceneMemberID="firstResponder"/>
                 <splitViewController id="Lm4-vx-ZMx" customClass="SplitViewController" sceneMemberID="viewController">
                     <toolbarItems/>
+                    <simulatedOrientationMetrics key="simulatedOrientationMetrics" orientation="landscapeRight"/>
+                    <simulatedScreenMetrics key="simulatedDestinationMetrics"/>
                     <connections>
                         <segue destination="DRr-dn-2pP" kind="relationship" relationship="masterViewController" id="duJ-5X-0b7"/>
                         <segue destination="fp6-sh-1dq" kind="relationship" relationship="detailViewController" id="sQF-60-WHx"/>
                     </connections>
                 </splitViewController>
             </objects>
-            <point key="canvasLocation" x="1809" y="-263"/>
+            <point key="canvasLocation" x="1822" y="-135"/>
         </scene>
         <!--Root Tab Bar Controller-->
         <scene sceneID="Qwm-ey-SfV">
@@ -320,27 +327,27 @@
                     </tabBar>
                 </tabBarController>
             </objects>
-            <point key="canvasLocation" x="2791" y="-764"/>
+            <point key="canvasLocation" x="3063" y="-727"/>
         </scene>
-        <!--Open File View Controller-->
+        <!--File View Controller-->
         <scene sceneID="SzL-p9-emj">
             <objects>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="CW3-9I-6zn" userLabel="First Responder" sceneMemberID="firstResponder"/>
-                <viewController id="fp6-sh-1dq" customClass="OpenFileViewController" sceneMemberID="viewController">
+                <viewController id="fp6-sh-1dq" customClass="FileViewController" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="xUd-WG-mtz">
-                        <rect key="frame" x="0.0" y="64" width="768" height="960"/>
+                        <rect key="frame" x="0.0" y="64" width="703" height="704"/>
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                         <subviews>
                             <view contentMode="scaleToFill" id="G59-gx-KeF">
-                                <rect key="frame" x="0.0" y="0.0" width="768" height="960"/>
+                                <rect key="frame" x="0.0" y="0.0" width="703" height="704"/>
                                 <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                 <subviews>
                                     <progressView opaque="NO" contentMode="scaleToFill" id="YVm-Tm-79k">
-                                        <rect key="frame" x="60" y="555" width="648" height="9"/>
+                                        <rect key="frame" x="60" y="405" width="583" height="9"/>
                                         <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMinY="YES" flexibleMaxY="YES"/>
                                     </progressView>
                                     <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" text="File Name" textAlignment="center" lineBreakMode="middleTruncation" numberOfLines="2" minimumFontSize="10" id="oho-PH-zAY">
-                                        <rect key="frame" x="20" y="362" width="728" height="55"/>
+                                        <rect key="frame" x="20" y="260" width="663" height="55"/>
                                         <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMinY="YES" flexibleMaxY="YES"/>
                                         <fontDescription key="fontDescription" type="boldSystem" pointSize="20"/>
                                         <color key="textColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="calibratedRGB"/>
@@ -351,23 +358,18 @@
                                 <color key="backgroundColor" cocoaTouchSystemColor="viewFlipsideBackgroundColor"/>
                             </view>
                             <webView contentMode="center" scalesPageToFit="YES" id="Lo4-r4-5jo">
-                                <rect key="frame" x="0.0" y="0.0" width="768" height="960"/>
+                                <rect key="frame" x="0.0" y="0.0" width="703" height="704"/>
                                 <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                 <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                             </webView>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
+                        <simulatedOrientationMetrics key="simulatedOrientationMetrics" orientation="landscapeRight"/>
                     </view>
                     <simulatedNavigationBarMetrics key="simulatedTopBarMetrics" prompted="NO"/>
-                    <connections>
-                        <outlet property="downloadFileNameLabel" destination="oho-PH-zAY" id="aWc-JJ-aUc"/>
-                        <outlet property="downloadProgressView" destination="YVm-Tm-79k" id="Xns-cn-kos"/>
-                        <outlet property="downloadView" destination="G59-gx-KeF" id="NAo-NP-sPd"/>
-                        <outlet property="webView" destination="Lo4-r4-5jo" id="guu-3T-FMy"/>
-                    </connections>
                 </viewController>
             </objects>
-            <point key="canvasLocation" x="2791" y="259"/>
+            <point key="canvasLocation" x="3063" y="235"/>
         </scene>
     </scenes>
     <resources>
@@ -396,14 +398,8 @@
                 <relationship kind="outlet" name="messageView" candidateClass="UIView"/>
             </relationships>
         </class>
-        <class className="OpenFileViewController" superclassName="UIViewController">
-            <source key="sourceIdentifier" type="project" relativePath="./Classes/OpenFileViewController.h"/>
-            <relationships>
-                <relationship kind="outlet" name="downloadFileNameLabel" candidateClass="UILabel"/>
-                <relationship kind="outlet" name="downloadProgressView" candidateClass="UIProgressView"/>
-                <relationship kind="outlet" name="downloadView" candidateClass="UIView"/>
-                <relationship kind="outlet" name="webView" candidateClass="UIWebView"/>
-            </relationships>
+        <class className="FileViewController" superclassName="UIViewController">
+            <source key="sourceIdentifier" type="project" relativePath="./Classes/FileViewController.h"/>
         </class>
         <class className="RootTabBarController" superclassName="UITabBarController">
             <source key="sourceIdentifier" type="project" relativePath="./Classes/RootTabBarController.h"/>
