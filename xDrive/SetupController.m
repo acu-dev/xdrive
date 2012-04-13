@@ -32,6 +32,8 @@ static NSUInteger const kXServiceDefaultTimoutInterval = 15;
 - (void)receiveServerInfoResult:(NSObject *)result;
 - (BOOL)isServerVersionCompatible:(NSString *)version;
 - (void)saveCredentials;
+- (void)removeCredentialsForProtectionSpace:(NSURLProtectionSpace *)protectionSpace;
+- (NSURLProtectionSpace *)protectionSpaceForServer:(XServer *)server;
 	
 @end
 
@@ -81,7 +83,7 @@ static NSUInteger const kXServiceDefaultTimoutInterval = 15;
 #pragma mark - Setup
 
 - (void)setupWithUsername:(NSString *)username password:(NSString *)password forHost:(NSString *)host
-{	
+{
 	// Save user/pass for validation on next step
 	_validateUser = username;
 	_validatePass = password;
@@ -145,6 +147,9 @@ static NSUInteger const kXServiceDefaultTimoutInterval = 15;
 																	   context:[xserviceInfo objectForKey:@"context"]
 																   servicePath:[xserviceInfo objectForKey:@"serviceBase"]];
 	
+	// Clear any stale credentials for this server
+	[self removeCredentialsForProtectionSpace:[self protectionSpaceForServer:_server]];
+	
 	// Fetch default paths
 	_defaultPathController = [[DefaultPathController alloc] initWithController:self];
 	[_defaultPathController fetchDefaultPaths];
@@ -158,18 +163,30 @@ static NSUInteger const kXServiceDefaultTimoutInterval = 15;
 
 - (void)saveCredentials
 {
-	// Create protection space for the new server
-	NSURLProtectionSpace *protectionSpace = [[NSURLProtectionSpace alloc] initWithHost:_server.hostname
-																				  port:[_server.port integerValue]
-																			  protocol:_server.protocol
-																				 realm:_server.hostname
-																  authenticationMethod:@"NSURLAuthenticationMethodDefault"];
 	// Make a credential with permanent persistence
 	NSURLCredential *credential = [NSURLCredential credentialWithUser:_validateUser password:_validatePass persistence:NSURLCredentialPersistencePermanent];
 	
 	// Save credential to the protection space
 	XDrvDebug(@"Saving credentials for user: %@", _validateUser);
-	[[NSURLCredentialStorage sharedCredentialStorage] setDefaultCredential:credential forProtectionSpace:protectionSpace];
+	[[NSURLCredentialStorage sharedCredentialStorage] setDefaultCredential:credential forProtectionSpace:[self protectionSpaceForServer:_server]];
+}
+
+- (void)removeCredentialsForProtectionSpace:(NSURLProtectionSpace *)protectionSpace
+{
+	NSDictionary *credentials = [[NSURLCredentialStorage sharedCredentialStorage] credentialsForProtectionSpace:protectionSpace];
+	[credentials enumerateKeysAndObjectsUsingBlock:^(id key, id obj, BOOL *stop) {
+		XDrvDebug(@"Removing credntial for %@ at %@", key, protectionSpace.host);
+		[[NSURLCredentialStorage sharedCredentialStorage] removeCredential:obj forProtectionSpace:protectionSpace];
+	}];
+}
+
+- (NSURLProtectionSpace *)protectionSpaceForServer:(XServer *)server
+{
+	return [[NSURLProtectionSpace alloc] initWithHost:_server.hostname
+												 port:[_server.port integerValue]
+											 protocol:_server.protocol
+												realm:_server.hostname
+								 authenticationMethod:@"NSURLAuthenticationMethodDefault"];
 }
 
 
