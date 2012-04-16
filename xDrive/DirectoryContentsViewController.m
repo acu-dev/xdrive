@@ -85,9 +85,12 @@ static float ReleaseToRefreshThreshold = -66;
 {
     [super viewDidLoad];
 	if (!self.title) self.title = directory.name;
-	//self.view.frame = [[UIScreen mainScreen] applicationFrame];
+
+	// Reset view origin
 	CGRect frame = self.view.frame;
-	XDrvLog(@"Dir Contents Frame :: Origin (%1.0f, %1.0f) - Size (%1.0f, %1.0f)", frame.origin.x, frame.origin.y, frame.size.width, frame.size.height);
+	frame.origin.x = 0;
+	frame.origin.y = 0;
+	self.view.frame = frame;
 	
 	// Display status message
 	if (_performingFirstUpdate)
