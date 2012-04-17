@@ -14,6 +14,7 @@
 @interface FileViewController ()
 @property (nonatomic, strong) XFile *_file;
 @property (nonatomic, strong) XServiceRemote *_remoteService;
+@property (nonatomic, strong) UIPopoverController *_dirPopoverController;
 - (void)downloadFile;
 - (void)displayFile;
 @end
@@ -22,6 +23,7 @@
 
 @synthesize _file;
 @synthesize _remoteService;
+@synthesize _dirPopoverController;
 @synthesize webView;
 @synthesize downloadView, noFileSelectedView;
 @synthesize downloadFileNameLabel;
@@ -79,14 +81,23 @@
 	_file = file;
 	self.title = [file.name stringByDeletingPathExtension];
 	
-	if ([[UIDevice currentDevice] userInterfaceIdiom] == UIUserInterfaceIdiomPad && noFileSelectedView.hidden == NO)
+	if ([[UIDevice currentDevice] userInterfaceIdiom] == UIUserInterfaceIdiomPad)
 	{
-		// Hide no file selected view
-		[UIView animateWithDuration:0.2 animations:^{
-			[noFileSelectedView setAlpha:0];
-		} completion:^(BOOL finished) {
-			noFileSelectedView.hidden = YES;
-		}];
+		if (noFileSelectedView.hidden == NO)
+		{
+			// Hide no file selected view
+			[UIView animateWithDuration:0.2 animations:^{
+				[noFileSelectedView setAlpha:0];
+			} completion:^(BOOL finished) {
+				noFileSelectedView.hidden = YES;
+			}];
+		}
+		
+		if (_dirPopoverController != nil)
+		{
+			// Hide popover
+			[_dirPopoverController dismissPopoverAnimated:YES];
+		}
 	}
 	
 	if ([[NSFileManager defaultManager] fileExistsAtPath:[file cachePath]])
@@ -186,15 +197,18 @@
 #pragma mark - UISplitViewControllerDelegate
 
 - (void)splitViewController:(UISplitViewController *)svc willHideViewController:(UIViewController *)aViewController 
-		  withBarButtonItem:(UIBarButtonItem *)barButtonItem forPopoverController:(UIPopoverController *)pc
+		  withBarButtonItem:(UIBarButtonItem *)barButtonItem forPopoverController:(UIPopoverController *)popoverController
 {
-	XDrvLog(@"svc will hide vc");
+	barButtonItem.title = @"xDrive";
+	[self.navigationItem setLeftBarButtonItem:barButtonItem animated:YES];
+	_dirPopoverController = popoverController;
 }
 
 - (void)splitViewController:(UISplitViewController *)svc willShowViewController:(UIViewController *)aViewController 
   invalidatingBarButtonItem:(UIBarButtonItem *)button
 {
-	XDrvLog(@"svc will show vc");
+	[self.navigationItem setLeftBarButtonItem:nil animated:YES];
+	_dirPopoverController = nil;
 }
 
 @end
