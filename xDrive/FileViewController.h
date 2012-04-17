@@ -7,7 +7,16 @@
 //
 
 #import <UIKit/UIKit.h>
+#import "XFile.h"
 
 @interface FileViewController : UIViewController
+
+@property (nonatomic, strong) IBOutlet UIWebView *webView;
+@property (nonatomic, strong) IBOutlet UIView *downloadView;
+@property (nonatomic, strong) IBOutlet UILabel *downloadFileNameLabel;
+@property (nonatomic, strong) IBOutlet UIProgressView *downloadProgressView;
+
++ (BOOL)isFileViewable:(XFile *)file;
+- (void)loadFile:(XFile *)file;
 
 @end
