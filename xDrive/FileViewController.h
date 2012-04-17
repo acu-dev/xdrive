@@ -12,7 +12,7 @@
 @interface FileViewController : UIViewController <UISplitViewControllerDelegate>
 
 @property (nonatomic, strong) IBOutlet UIWebView *webView;
-@property (nonatomic, strong) IBOutlet UIView *downloadView;
+@property (nonatomic, strong) IBOutlet UIView *downloadView, *noFileSelectedView;
 @property (nonatomic, strong) IBOutlet UILabel *downloadFileNameLabel;
 @property (nonatomic, strong) IBOutlet UIProgressView *downloadProgressView;
 

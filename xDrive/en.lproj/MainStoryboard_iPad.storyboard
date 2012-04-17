@@ -346,7 +346,7 @@
             </objects>
             <point key="canvasLocation" x="3063" y="254"/>
         </scene>
-        <!--File View Controller-->
+        <!--File View Controller - xDrive-->
         <scene sceneID="SzL-p9-emj">
             <objects>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="CW3-9I-6zn" userLabel="First Responder" sceneMemberID="firstResponder"/>
@@ -380,15 +380,32 @@
                                 <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                                 <dataDetectorType key="dataDetectorTypes" phoneNumber="YES" link="YES" address="YES" calendarEvent="YES"/>
                             </webView>
+                            <view hidden="YES" contentMode="scaleToFill" id="VnY-18-5g9">
+                                <rect key="frame" x="0.0" y="0.0" width="703" height="704"/>
+                                <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                                <subviews>
+                                    <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" text="No file selected" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" minimumFontSize="10" id="TpH-pu-s03">
+                                        <rect key="frame" x="20" y="211" width="663" height="81"/>
+                                        <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMaxY="YES"/>
+                                        <fontDescription key="fontDescription" type="system" pointSize="18"/>
+                                        <color key="textColor" white="0.66666666666666663" alpha="1" colorSpace="calibratedWhite"/>
+                                        <nil key="highlightedColor"/>
+                                        <color key="shadowColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                        <size key="shadowOffset" width="0.0" height="1"/>
+                                    </label>
+                                </subviews>
+                                <color key="backgroundColor" red="0.98291015625" green="0.98291015625" blue="0.98291015625" alpha="1" colorSpace="calibratedRGB"/>
+                            </view>
                         </subviews>
                         <color key="backgroundColor" cocoaTouchSystemColor="scrollViewTexturedBackgroundColor"/>
                         <simulatedOrientationMetrics key="simulatedOrientationMetrics" orientation="landscapeRight"/>
                     </view>
-                    <navigationItem key="navigationItem" id="3Qa-tz-pZX"/>
+                    <navigationItem key="navigationItem" title="xDrive" id="3Qa-tz-pZX"/>
                     <connections>
                         <outlet property="downloadFileNameLabel" destination="oho-PH-zAY" id="SCo-6b-Hkz"/>
                         <outlet property="downloadProgressView" destination="YVm-Tm-79k" id="nPn-bL-UJ6"/>
                         <outlet property="downloadView" destination="G59-gx-KeF" id="qRo-EZ-sTH"/>
+                        <outlet property="noFileSelectedView" destination="VnY-18-5g9" id="e7k-E3-0OD"/>
                         <outlet property="webView" destination="Lo4-r4-5jo" id="QXb-cp-3U6"/>
                     </connections>
                 </viewController>
@@ -428,7 +445,7 @@
                 <relationship kind="outlet" name="downloadFileNameLabel" candidateClass="UILabel"/>
                 <relationship kind="outlet" name="downloadProgressView" candidateClass="UIProgressView"/>
                 <relationship kind="outlet" name="downloadView" candidateClass="UIView"/>
-                <relationship kind="outlet" name="navigationBar" candidateClass="UINavigationBar"/>
+                <relationship kind="outlet" name="noFileSelectedView" candidateClass="UIView"/>
                 <relationship kind="outlet" name="webView" candidateClass="UIWebView"/>
             </relationships>
         </class>

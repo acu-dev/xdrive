@@ -23,7 +23,7 @@
 @synthesize _file;
 @synthesize _remoteService;
 @synthesize webView;
-@synthesize downloadView;
+@synthesize downloadView, noFileSelectedView;
 @synthesize downloadFileNameLabel;
 @synthesize downloadProgressView;
 
@@ -48,6 +48,10 @@
 - (void)viewDidLoad
 {
     [super viewDidLoad];
+	if ([[UIDevice currentDevice] userInterfaceIdiom] == UIUserInterfaceIdiomPad)
+	{
+		noFileSelectedView.hidden = NO;
+	}
 }
 
 - (void)viewDidUnload
@@ -57,6 +61,7 @@
 	self.downloadProgressView = nil;
 	self.downloadFileNameLabel = nil;
 	self.downloadView = nil;
+	self.noFileSelectedView = nil;
 	self.webView = nil;
 }
 
@@ -73,6 +78,16 @@
 {
 	_file = file;
 	self.title = [file.name stringByDeletingPathExtension];
+	
+	if ([[UIDevice currentDevice] userInterfaceIdiom] == UIUserInterfaceIdiomPad && noFileSelectedView.hidden == NO)
+	{
+		// Hide no file selected view
+		[UIView animateWithDuration:0.2 animations:^{
+			[noFileSelectedView setAlpha:0];
+		} completion:^(BOOL finished) {
+			noFileSelectedView.hidden = YES;
+		}];
+	}
 	
 	if ([[NSFileManager defaultManager] fileExistsAtPath:[file cachePath]])
 	{
