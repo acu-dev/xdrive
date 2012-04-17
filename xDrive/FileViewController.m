@@ -48,9 +48,6 @@
 - (void)viewDidLoad
 {
     [super viewDidLoad];
-	//self.title = [file.name stringByDeletingPathExtension];
-	
-	
 }
 
 - (void)viewDidUnload
@@ -74,8 +71,8 @@
 
 - (void)loadFile:(XFile *)file
 {
-	if ([file.path isEqualToString:_file.path]) return;
 	_file = file;
+	self.title = [file.name stringByDeletingPathExtension];
 	
 	if ([[NSFileManager defaultManager] fileExistsAtPath:[file cachePath]])
 	{
@@ -115,10 +112,14 @@
 
 
 
+
+
 # pragma mark - Download File
 
 - (void)downloadFile
-{	
+{
+	downloadView.hidden = NO;
+	
 	// Setup service
 	_remoteService = [[XServiceRemote alloc] initWithServer:[[XService sharedXService].localService server]];
 	[_remoteService setFailureBlock:^(NSError *error) {
