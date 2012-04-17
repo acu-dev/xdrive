@@ -131,6 +131,7 @@
                         <color key="backgroundColor" cocoaTouchSystemColor="scrollViewTexturedBackgroundColor"/>
                     </view>
                     <navigationItem key="navigationItem" title="File Name" id="aF7-gc-DRg"/>
+                    <simulatedNavigationBarMetrics key="simulatedTopBarMetrics" prompted="NO"/>
                     <nil key="simulatedBottomBarMetrics"/>
                     <connections>
                         <outlet property="downloadFileNameLabel" destination="h2j-Te-flo" id="5dx-oI-qFq"/>
@@ -140,7 +141,7 @@
                     </connections>
                 </viewController>
             </objects>
-            <point key="canvasLocation" x="1200" y="-722"/>
+            <point key="canvasLocation" x="937" y="-610"/>
         </scene>
         <!--Navigation Controller - Settings-->
         <scene sceneID="kkQ-al-qFB">
@@ -789,9 +790,6 @@
                                     <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                                 </view>
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
-                                <connections>
-                                    <segue destination="m2V-yS-yfv" kind="push" id="ZFl-Vv-uPc"/>
-                                </connections>
                             </tableViewCell>
                         </prototypes>
                         <sections/>
@@ -949,7 +947,7 @@
                 <relationship kind="outlet" name="downloadFileNameLabel" candidateClass="UILabel"/>
                 <relationship kind="outlet" name="downloadProgressView" candidateClass="UIProgressView"/>
                 <relationship kind="outlet" name="downloadView" candidateClass="UIView"/>
-                <relationship kind="outlet" name="navigationBar" candidateClass="UINavigationBar"/>
+                <relationship kind="outlet" name="noFileSelectedView" candidateClass="UIView"/>
                 <relationship kind="outlet" name="webView" candidateClass="UIWebView"/>
             </relationships>
         </class>
