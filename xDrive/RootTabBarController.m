@@ -30,9 +30,6 @@
 - (void)awakeFromNib
 {
 	self.delegate = self;
-	
-	CGRect frame = self.view.frame;
-	XDrvLog(@"Root Tabs Frame :: Origin (%1.0f, %1.0f) - Size (%1.0f, %1.0f)", frame.origin.x, frame.origin.y, frame.size.width, frame.size.height);
 }
 
 
