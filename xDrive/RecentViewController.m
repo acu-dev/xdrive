@@ -7,6 +7,7 @@
 //
 
 #import "RecentViewController.h"
+#import "UIStoryboard+Xdrive.h"
 #import "XService.h"
 #import "FileViewController.h"
 #import "XDriveConfig.h"
@@ -14,19 +15,27 @@
 
 
 @interface RecentViewController ()
-
 @property (nonatomic, strong) NSFetchedResultsController *_fetchedResultsController;
-
+@property (nonatomic, strong) FileViewController *_fileViewController;
 @end
 
 
 @implementation RecentViewController
 
 @synthesize _fetchedResultsController;
-
+@synthesize _fileViewController;
 
 
 #pragma mark - View lifecycle
+
+- (void)awakeFromNib
+{
+	if ([[UIDevice currentDevice] userInterfaceIdiom] == UIUserInterfaceIdiomPad)
+	{
+	    self.clearsSelectionOnViewWillAppear = NO;
+	}
+    [super awakeFromNib];
+}
 
 - (void)viewDidLoad
 {
@@ -39,17 +48,16 @@
 	{
 		XDrvLog(@"Error getting recent files: %@", error);
 	}
+	
+	if ([[UIDevice currentDevice] userInterfaceIdiom] == UIUserInterfaceIdiomPad)
+	{
+		_fileViewController = (FileViewController *)[[self.splitViewController.viewControllers lastObject] topViewController];
+	}
 }
 
 - (void)viewDidUnload
 {
     [super viewDidUnload];
-}
-
-- (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender
-{
-	XFile *file = [_fetchedResultsController objectAtIndexPath:[self.tableView indexPathForSelectedRow]];
-	[(id)segue.destinationViewController loadFile:file];
 }
 
 - (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)toInterfaceOrientation
@@ -71,7 +79,27 @@
 
 
 
-#pragma mark - Table view data source
+#pragma mark - UITableViewDelegate
+
+- (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
+{
+	XFile *file = [_fetchedResultsController objectAtIndexPath:indexPath];
+	
+	if ([[UIDevice currentDevice] userInterfaceIdiom] == UIUserInterfaceIdiomPhone)
+	{
+		FileViewController *viewController = [[UIStoryboard mainStoryboard] instantiateViewControllerWithIdentifier:@"fileView"];
+		[self.navigationController pushViewController:viewController animated:YES];
+		[viewController loadFile:file];
+	}
+	else
+	{
+		[_fileViewController loadFile:file];
+	}
+}
+
+
+
+#pragma mark - UITableViewDataSource
 
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView
 {
@@ -139,8 +167,7 @@
             break;
             
         case NSFetchedResultsChangeMove:
-            [tableView deleteRowsAtIndexPaths:[NSArray arrayWithObject:indexPath] withRowAnimation:UITableViewRowAnimationFade];
-            [tableView insertRowsAtIndexPaths:[NSArray arrayWithObject:newIndexPath]withRowAnimation:UITableViewRowAnimationFade];
+			[tableView moveRowAtIndexPath:indexPath toIndexPath:newIndexPath];
             break;
     }
 }
