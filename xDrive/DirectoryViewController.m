@@ -112,6 +112,7 @@
 	if ([[UIDevice currentDevice] userInterfaceIdiom] == UIUserInterfaceIdiomPhone)
 	{
 		FileViewController *viewController = [[UIStoryboard mainStoryboard] instantiateViewControllerWithIdentifier:@"fileView"];
+		viewController.title = [file.name stringByDeletingPathExtension];
 		[self.navigationController pushViewController:viewController animated:YES];
 		[viewController loadFile:file];
 	}
