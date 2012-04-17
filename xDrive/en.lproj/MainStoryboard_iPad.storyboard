@@ -346,7 +346,7 @@
             </objects>
             <point key="canvasLocation" x="3063" y="254"/>
         </scene>
-        <!--File View Controller - xDrive-->
+        <!--File View Controller-->
         <scene sceneID="SzL-p9-emj">
             <objects>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="CW3-9I-6zn" userLabel="First Responder" sceneMemberID="firstResponder"/>
@@ -400,7 +400,7 @@
                         <color key="backgroundColor" cocoaTouchSystemColor="scrollViewTexturedBackgroundColor"/>
                         <simulatedOrientationMetrics key="simulatedOrientationMetrics" orientation="landscapeRight"/>
                     </view>
-                    <navigationItem key="navigationItem" title="xDrive" id="3Qa-tz-pZX"/>
+                    <navigationItem key="navigationItem" id="3Qa-tz-pZX"/>
                     <connections>
                         <outlet property="downloadFileNameLabel" destination="oho-PH-zAY" id="SCo-6b-Hkz"/>
                         <outlet property="downloadProgressView" destination="YVm-Tm-79k" id="nPn-bL-UJ6"/>
