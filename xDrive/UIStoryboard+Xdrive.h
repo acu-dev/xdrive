@@ -11,5 +11,6 @@
 @interface UIStoryboard (Xdrive)
 
 + (UIStoryboard *)mainStoryboard;
++ (UIStoryboard *)deviceStoryboard;
 
 @end

@@ -10,7 +10,13 @@
 
 @implementation UIStoryboard (Xdrive)
 
-+ (UIStoryboard *)mainStoryboard {
++ (UIStoryboard *)mainStoryboard
+{
+    return [UIStoryboard storyboardWithName:@"MainStoryboard_iPhone" bundle:nil];
+}
+
++ (UIStoryboard *)deviceStoryboard
+{
 	NSString *storyboardName = ([[UIDevice currentDevice] userInterfaceIdiom] == UIUserInterfaceIdiomPhone) ? @"MainStoryboard_iPhone" : @"MainStoryboard_iPad";
     return [UIStoryboard storyboardWithName:storyboardName bundle:nil];
 }
