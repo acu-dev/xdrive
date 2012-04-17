@@ -309,7 +309,7 @@
                     <simulatedScreenMetrics key="simulatedDestinationMetrics"/>
                     <connections>
                         <segue destination="DRr-dn-2pP" kind="relationship" relationship="masterViewController" id="duJ-5X-0b7"/>
-                        <segue destination="fp6-sh-1dq" kind="relationship" relationship="detailViewController" id="sQF-60-WHx"/>
+                        <segue destination="crr-5p-AQE" kind="relationship" relationship="detailViewController" id="Nuy-DF-HSs"/>
                     </connections>
                 </splitViewController>
             </objects>
@@ -330,6 +330,21 @@
                 </tabBarController>
             </objects>
             <point key="canvasLocation" x="3063" y="-727"/>
+        </scene>
+        <!--Navigation Controller-->
+        <scene sceneID="kdV-XB-8Yk">
+            <objects>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="pCQ-jR-OWh" userLabel="First Responder" sceneMemberID="firstResponder"/>
+                <navigationController definesPresentationContext="YES" id="crr-5p-AQE" sceneMemberID="viewController">
+                    <navigationBar key="navigationBar" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" id="7dl-W0-Wqt">
+                        <autoresizingMask key="autoresizingMask"/>
+                    </navigationBar>
+                    <connections>
+                        <segue destination="fp6-sh-1dq" kind="relationship" relationship="rootViewController" id="QLz-mw-u8S"/>
+                    </connections>
+                </navigationController>
+            </objects>
+            <point key="canvasLocation" x="3063" y="254"/>
         </scene>
         <!--File View Controller-->
         <scene sceneID="SzL-p9-emj">
@@ -363,12 +378,13 @@
                                 <rect key="frame" x="0.0" y="0.0" width="703" height="704"/>
                                 <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                 <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
+                                <dataDetectorType key="dataDetectorTypes" phoneNumber="YES" link="YES" address="YES" calendarEvent="YES"/>
                             </webView>
                         </subviews>
-                        <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
+                        <color key="backgroundColor" cocoaTouchSystemColor="scrollViewTexturedBackgroundColor"/>
                         <simulatedOrientationMetrics key="simulatedOrientationMetrics" orientation="landscapeRight"/>
                     </view>
-                    <simulatedNavigationBarMetrics key="simulatedTopBarMetrics" prompted="NO"/>
+                    <navigationItem key="navigationItem" id="3Qa-tz-pZX"/>
                     <connections>
                         <outlet property="downloadFileNameLabel" destination="oho-PH-zAY" id="SCo-6b-Hkz"/>
                         <outlet property="downloadProgressView" destination="YVm-Tm-79k" id="nPn-bL-UJ6"/>
@@ -377,7 +393,7 @@
                     </connections>
                 </viewController>
             </objects>
-            <point key="canvasLocation" x="3063" y="235"/>
+            <point key="canvasLocation" x="3913" y="254"/>
         </scene>
     </scenes>
     <resources>
@@ -412,6 +428,7 @@
                 <relationship kind="outlet" name="downloadFileNameLabel" candidateClass="UILabel"/>
                 <relationship kind="outlet" name="downloadProgressView" candidateClass="UIProgressView"/>
                 <relationship kind="outlet" name="downloadView" candidateClass="UIView"/>
+                <relationship kind="outlet" name="navigationBar" candidateClass="UINavigationBar"/>
                 <relationship kind="outlet" name="webView" candidateClass="UIWebView"/>
             </relationships>
         </class>
