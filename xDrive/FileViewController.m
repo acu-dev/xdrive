@@ -112,8 +112,6 @@
 
 
 
-
-
 # pragma mark - Download File
 
 - (void)downloadFile
@@ -168,4 +166,39 @@
 	[[XService sharedXService].localService saveWithCompletionBlock:^(NSError *error) {}];
 }
 
+
+
+#pragma mark - UISplitViewControllerDelegate
+
+- (void)splitViewController:(UISplitViewController *)svc willHideViewController:(UIViewController *)aViewController 
+		  withBarButtonItem:(UIBarButtonItem *)barButtonItem forPopoverController:(UIPopoverController *)pc
+{
+	XDrvLog(@"svc will hide vc");
+}
+
+- (void)splitViewController:(UISplitViewController *)svc willShowViewController:(UIViewController *)aViewController 
+  invalidatingBarButtonItem:(UIBarButtonItem *)button
+{
+	XDrvLog(@"svc will show vc");
+}
+
 @end
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

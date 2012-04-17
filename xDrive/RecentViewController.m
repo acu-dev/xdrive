@@ -8,7 +8,7 @@
 
 #import "RecentViewController.h"
 #import "XService.h"
-#import "OpenFileViewController.h"
+#import "FileViewController.h"
 #import "XDriveConfig.h"
 
 
@@ -49,7 +49,7 @@
 - (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender
 {
 	XFile *file = [_fetchedResultsController objectAtIndexPath:[self.tableView indexPathForSelectedRow]];
-	[(id)segue.destinationViewController setFile:file];
+	[(id)segue.destinationViewController loadFile:file];
 }
 
 - (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)toInterfaceOrientation

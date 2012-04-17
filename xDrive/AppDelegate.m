@@ -44,7 +44,7 @@
 		{
 			// Make file view controller the split view controller's delegate
 			UISplitViewController *splitViewController = (UISplitViewController *)self.window.rootViewController;
-			UIViewController *detailViewController = [splitViewController.viewControllers lastObject];
+			UIViewController *detailViewController = [[splitViewController.viewControllers lastObject] topViewController];
 			splitViewController.delegate = (id)detailViewController;
 		}
 	}

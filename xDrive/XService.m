@@ -16,7 +16,6 @@
 #import "NSString+DTFormatNumbers.h"
 #import "UpdateDirectoryOperation.h"
 #import "DirectoryContentsViewController.h"
-#import "OpenFileViewController.h"
 
 
 @interface XService()

@@ -9,7 +9,7 @@
 #import "DirectoryContentsViewController.h"
 #import "XService.h"
 #import "XDriveConfig.h"
-#import "OpenFileViewController.h"
+#import "FileViewController.h"
 #import "UIStoryboard+Xdrive.h"
 
 
@@ -359,7 +359,7 @@ static float ReleaseToRefreshThreshold = -66;
 		// Directory
 		cellIdentifier = @"DirCell";
 	}
-	else if ([OpenFileViewController isFileViewable:(XFile *)entry])
+	else if ([FileViewController isFileViewable:(XFile *)entry])
 	{
 		// Readable file
 		cellIdentifier = @"ReadFileCell";
@@ -401,7 +401,7 @@ static float ReleaseToRefreshThreshold = -66;
 	{
 		[directoryViewController navigateToDirectory:(XDirectory *)entry];
 	}
-	else if ([OpenFileViewController isFileViewable:(XFile *)entry])
+	else if ([FileViewController isFileViewable:(XFile *)entry])
 	{
 		[directoryViewController navigateToFile:(XFile *)entry];
 	}
