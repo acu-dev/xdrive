@@ -83,6 +83,8 @@
 	
 	if ([[UIDevice currentDevice] userInterfaceIdiom] == UIUserInterfaceIdiomPad)
 	{
+		// iPad specifics
+		
 		if (noFileSelectedView.hidden == NO)
 		{
 			// Hide no file selected view
