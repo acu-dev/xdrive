@@ -85,7 +85,6 @@ static float ReleaseToRefreshThreshold = -66;
 {
 	if ([[UIDevice currentDevice] userInterfaceIdiom] == UIUserInterfaceIdiomPad) {
 	    self.clearsSelectionOnViewWillAppear = NO;
-	    self.contentSizeForViewInPopover = CGSizeMake(320.0, 600.0);
 	}
     [super awakeFromNib];
 }

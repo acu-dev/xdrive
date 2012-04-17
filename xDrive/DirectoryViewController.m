@@ -49,7 +49,10 @@
 	if (!self.title) self.title = directory.name;
 	
 	[self.view addSubview:_contentsViewController.view];
-	_fileViewController = (FileViewController *)[[self.splitViewController.viewControllers lastObject] topViewController];
+	if ([[UIDevice currentDevice] userInterfaceIdiom] == UIUserInterfaceIdiomPad)
+	{
+		_fileViewController = (FileViewController *)[[self.splitViewController.viewControllers lastObject] topViewController];
+	}
 }
 
 - (void)viewWillAppear:(BOOL)animated
