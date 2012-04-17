@@ -871,7 +871,7 @@
                             </tableViewSection>
                             <tableViewSection footerTitle="Logout out will clear all cached files and remove your login credentials." id="mAY-of-Lqs">
                                 <cells>
-                                    <tableViewCell contentMode="scaleToFill" selectionStyle="none" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" reuseIdentifier="ServerCell" id="Em6-Dd-NzB">
+                                    <tableViewCell contentMode="scaleToFill" selectionStyle="blue" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" reuseIdentifier="ServerCell" id="Em6-Dd-NzB">
                                         <rect key="frame" x="0.0" y="120" width="320" height="46"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <view key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center">

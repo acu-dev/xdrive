@@ -23,7 +23,7 @@ static NSString *defaultServiceBasepath = @"/xservice/rs";
 	// If defined, will log ERROR & WARNING type messages to the console.
 	// Watch for these logs during development.
 
-//#define XDRV_DEBUG
+#define XDRV_DEBUG
 	// If defined, will log INFO & DEBUG type messages to the console.
 	// Useful in examining data as it moves around.
 

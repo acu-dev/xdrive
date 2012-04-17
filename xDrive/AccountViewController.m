@@ -95,6 +95,7 @@
 
 - (void)logout
 {
+	[self dismissModalViewControllerAnimated:YES];
 	[(AppDelegate *)[[UIApplication sharedApplication] delegate] logoutAndBeginSetup];
 }
 

@@ -15,6 +15,7 @@
 		A937884C14F58839007F2A1A /* legal.html in Resources */ = {isa = PBXBuildFile; fileRef = A937884B14F58839007F2A1A /* legal.html */; };
 		A93E36AA13C5630600DE693D /* DirectoryContentsViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = A93E36A913C5630600DE693D /* DirectoryContentsViewController.m */; };
 		A9558828150FE0360038E36B /* libDTFoundation.a in Frameworks */ = {isa = PBXBuildFile; fileRef = A917270C14F2278C00A4FBA0 /* libDTFoundation.a */; };
+		A95C8EC7153E196B008AE5A9 /* SetupFinishedSegue.m in Sources */ = {isa = PBXBuildFile; fileRef = A95C8EC6153E196B008AE5A9 /* SetupFinishedSegue.m */; };
 		A95F17F514F6DBCE00EEA0A2 /* MessageUI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A95F17F414F6DBCE00EEA0A2 /* MessageUI.framework */; };
 		A95F180714F846BB00EEA0A2 /* VersionController.m in Sources */ = {isa = PBXBuildFile; fileRef = A95F180614F846BB00EEA0A2 /* VersionController.m */; };
 		A9674E3C14DCE69700464E37 /* UIStoryboard+Xdrive.m in Sources */ = {isa = PBXBuildFile; fileRef = A9674E3B14DCE69700464E37 /* UIStoryboard+Xdrive.m */; };
@@ -158,6 +159,8 @@
 		A937884B14F58839007F2A1A /* legal.html */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.html; path = legal.html; sourceTree = "<group>"; };
 		A93E36A813C5630600DE693D /* DirectoryContentsViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DirectoryContentsViewController.h; sourceTree = "<group>"; };
 		A93E36A913C5630600DE693D /* DirectoryContentsViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DirectoryContentsViewController.m; sourceTree = "<group>"; };
+		A95C8EC5153E196B008AE5A9 /* SetupFinishedSegue.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SetupFinishedSegue.h; sourceTree = "<group>"; };
+		A95C8EC6153E196B008AE5A9 /* SetupFinishedSegue.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SetupFinishedSegue.m; sourceTree = "<group>"; };
 		A95F17F414F6DBCE00EEA0A2 /* MessageUI.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MessageUI.framework; path = System/Library/Frameworks/MessageUI.framework; sourceTree = SDKROOT; };
 		A95F180514F846BB00EEA0A2 /* VersionController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = VersionController.h; sourceTree = "<group>"; };
 		A95F180614F846BB00EEA0A2 /* VersionController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = VersionController.m; sourceTree = "<group>"; };
@@ -422,6 +425,8 @@
 				A96CBBCF14C9EE2C0069A641 /* SetupController.m */,
 				C3B63B7F142B94C100152C8A /* DefaultPathController.h */,
 				C3B63B80142B94C100152C8A /* DefaultPathController.m */,
+				A95C8EC5153E196B008AE5A9 /* SetupFinishedSegue.h */,
+				A95C8EC6153E196B008AE5A9 /* SetupFinishedSegue.m */,
 			);
 			name = Setup;
 			sourceTree = "<group>";
@@ -753,6 +758,7 @@
 				A97AC30F1524F303007F361A /* DirectoryViewController.m in Sources */,
 				A91BFA2D152A2CD8008CCEC2 /* SplitViewController.m in Sources */,
 				A9BA215B152B4C80000C9682 /* FileViewController.m in Sources */,
+				A95C8EC7153E196B008AE5A9 /* SetupFinishedSegue.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

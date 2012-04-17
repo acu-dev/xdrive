@@ -349,6 +349,9 @@ static int FormDefaultYPosIpadLandscape = 166;
 {
 	XDrvDebug(@"Performing segue DismissSetupView");
 	[self performSegueWithIdentifier:@"DismissSetupView" sender:self];
+	
+	//XDrvDebug(@"dismissing setup view");
+	
 }
 
 

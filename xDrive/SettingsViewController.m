@@ -146,6 +146,7 @@ static NSString *FeedbackToAddress = @"xdrive-feedback@acu.edu";
 - (void)mailComposeController:(MFMailComposeViewController*)controller didFinishWithResult:(MFMailComposeResult)result error:(NSError*)error
 {
 	[self dismissModalViewControllerAnimated:YES];
+	[self.tableView deselectRowAtIndexPath:[self.tableView indexPathForSelectedRow] animated:YES];
 }
 
 

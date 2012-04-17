@@ -12,6 +12,7 @@
 #import "SetupController.h"
 #import "UIStoryboard+Xdrive.h"
 #import "VersionController.h"
+#import "FileViewController.h"
 
 
 @interface AppDelegate ()
@@ -51,9 +52,7 @@
 	else
 	{
 		// Load setup
-		XDrvDebug(@"Loading setup controller");
-		setupController = [[SetupController alloc] init];
-		window.rootViewController = [setupController viewController];
+		[self beginSetup];
 	}
 	
 	// Create version controller
@@ -106,6 +105,22 @@
 
 
 
+#pragma mark - Setup
+
+- (void)beginSetup
+{
+	XDrvDebug(@"Loading setup controller");
+	setupController = [[SetupController alloc] init];
+	window.rootViewController = [setupController viewController];
+}
+
+- (void)setupFinished
+{
+	
+}
+
+
+
 #pragma mark - Setup cleanup
 
 - (void)rootViewControllerDidAppear:(UIViewController *)viewController
@@ -125,10 +140,18 @@
 
 
 
-#pragma mark - Logout and setup
+#pragma mark - Logout
 
 - (void)logoutAndBeginSetup
 {
+	if ([[UIDevice currentDevice] userInterfaceIdiom] == UIUserInterfaceIdiomPad)
+	{
+		UISplitViewController *splitViewController = (UISplitViewController *)self.window.rootViewController;
+		FileViewController *fileViewController = (FileViewController *)[[splitViewController.viewControllers lastObject] topViewController];
+		[fileViewController hidePopover];
+	}
+	
+	
 	setupController = [[SetupController alloc] init];
 	[setupController resetBeforeSetup];
 	[window.rootViewController presentViewController:[setupController viewController] animated:YES completion:^{

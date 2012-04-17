@@ -97,7 +97,7 @@
                         <outlet property="passwordField" destination="TOs-QX-Eb4" id="BoU-H5-ktc"/>
                         <outlet property="serverField" destination="bSn-oG-yQj" id="mfe-tU-Dg8"/>
                         <outlet property="usernameField" destination="GpH-z1-ASa" id="8yg-yk-4Pj"/>
-                        <segue destination="Lm4-vx-ZMx" kind="push" identifier="DismissSetupView" id="mYg-8e-cBV"/>
+                        <segue destination="Lm4-vx-ZMx" kind="custom" identifier="DismissSetupView" customClass="SetupFinishedSegue" id="mYg-8e-cBV"/>
                     </connections>
                 </viewController>
                 <tapGestureRecognizer id="x0w-i6-vhh">

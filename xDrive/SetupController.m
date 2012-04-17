@@ -72,7 +72,7 @@ static NSUInteger const kXServiceDefaultTimoutInterval = 15;
 {
 	if (!_viewController)
 	{
-		_viewController = [[UIStoryboard mainStoryboard] instantiateViewControllerWithIdentifier:@"SetupView"];
+		_viewController = [[UIStoryboard deviceStoryboard] instantiateViewControllerWithIdentifier:@"SetupView"];
 		_viewController.setupController = self;
 	}
 	return _viewController;

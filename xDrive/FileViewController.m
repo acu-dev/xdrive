@@ -43,6 +43,14 @@
 	return ([supportedFileExtensions containsObject:[[file extension] lowercaseString]]);
 }
 
+- (void)hidePopover
+{
+	if (_dirPopoverController)
+	{
+		[_dirPopoverController dismissPopoverAnimated:YES];
+	}
+}
+
 
 
 #pragma mark - View lifecycle

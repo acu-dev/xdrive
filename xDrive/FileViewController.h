@@ -18,5 +18,6 @@
 
 + (BOOL)isFileViewable:(XFile *)file;
 - (void)loadFile:(XFile *)file;
+- (void)hidePopover;
 
 @end
