@@ -93,25 +93,25 @@
             </objects>
             <point key="canvasLocation" x="937" y="664"/>
         </scene>
-        <!--Open File View Controller - File Name-->
+        <!--File View Controller - File Name-->
         <scene sceneID="PJI-bt-McC">
             <objects>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="700-wd-rja" userLabel="First Responder" sceneMemberID="firstResponder"/>
-                <viewController storyboardIdentifier="fileView" hidesBottomBarWhenPushed="YES" id="m2V-yS-yfv" customClass="OpenFileViewController" sceneMemberID="viewController">
+                <viewController storyboardIdentifier="fileView" hidesBottomBarWhenPushed="YES" id="m2V-yS-yfv" customClass="FileViewController" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="2WA-5j-HFA">
-                        <rect key="frame" x="0.0" y="64" width="320" height="367"/>
+                        <rect key="frame" x="0.0" y="64" width="320" height="416"/>
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                         <subviews>
                             <view contentMode="scaleToFill" id="H24-cy-fLZ">
-                                <rect key="frame" x="0.0" y="0.0" width="320" height="367"/>
+                                <rect key="frame" x="0.0" y="0.0" width="320" height="416"/>
                                 <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                 <subviews>
                                     <progressView opaque="NO" contentMode="scaleToFill" id="JLX-cM-1HG">
-                                        <rect key="frame" x="60" y="209" width="200" height="9"/>
+                                        <rect key="frame" x="60" y="237" width="200" height="9"/>
                                         <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMinY="YES" flexibleMaxY="YES"/>
                                     </progressView>
                                     <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" text="File Name" textAlignment="center" lineBreakMode="middleTruncation" numberOfLines="2" minimumFontSize="10" id="h2j-Te-flo">
-                                        <rect key="frame" x="20" y="125" width="280" height="55"/>
+                                        <rect key="frame" x="20" y="144" width="280" height="55"/>
                                         <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMinY="YES" flexibleMaxY="YES"/>
                                         <fontDescription key="fontDescription" type="boldSystem" pointSize="20"/>
                                         <color key="textColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="calibratedRGB"/>
@@ -122,7 +122,7 @@
                                 <color key="backgroundColor" cocoaTouchSystemColor="viewFlipsideBackgroundColor"/>
                             </view>
                             <webView contentMode="center" scalesPageToFit="YES" id="Lbj-Le-8GX">
-                                <rect key="frame" x="0.0" y="0.0" width="320" height="367"/>
+                                <rect key="frame" x="0.0" y="0.0" width="320" height="416"/>
                                 <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                 <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                                 <dataDetectorType key="dataDetectorTypes" phoneNumber="YES" link="YES" address="YES" calendarEvent="YES"/>
@@ -131,11 +131,12 @@
                         <color key="backgroundColor" cocoaTouchSystemColor="scrollViewTexturedBackgroundColor"/>
                     </view>
                     <navigationItem key="navigationItem" title="File Name" id="aF7-gc-DRg"/>
+                    <nil key="simulatedBottomBarMetrics"/>
                     <connections>
-                        <outlet property="downloadFileNameLabel" destination="h2j-Te-flo" id="ePI-04-HoB"/>
-                        <outlet property="downloadProgressView" destination="JLX-cM-1HG" id="FaJ-Oh-bzc"/>
-                        <outlet property="downloadView" destination="H24-cy-fLZ" id="EJ0-tI-jIV"/>
-                        <outlet property="webView" destination="Lbj-Le-8GX" id="mVY-F3-Qzb"/>
+                        <outlet property="downloadFileNameLabel" destination="h2j-Te-flo" id="5dx-oI-qFq"/>
+                        <outlet property="downloadProgressView" destination="JLX-cM-1HG" id="Shd-gU-f2f"/>
+                        <outlet property="downloadView" destination="H24-cy-fLZ" id="fOy-vl-TRb"/>
+                        <outlet property="webView" destination="Lbj-Le-8GX" id="Zdp-TY-5hi"/>
                     </connections>
                 </viewController>
             </objects>
@@ -942,20 +943,21 @@
                 <relationship kind="outlet" name="messageView" candidateClass="UIView"/>
             </relationships>
         </class>
+        <class className="FileViewController" superclassName="UIViewController">
+            <source key="sourceIdentifier" type="project" relativePath="./Classes/FileViewController.h"/>
+            <relationships>
+                <relationship kind="outlet" name="downloadFileNameLabel" candidateClass="UILabel"/>
+                <relationship kind="outlet" name="downloadProgressView" candidateClass="UIProgressView"/>
+                <relationship kind="outlet" name="downloadView" candidateClass="UIView"/>
+                <relationship kind="outlet" name="navigationBar" candidateClass="UINavigationBar"/>
+                <relationship kind="outlet" name="webView" candidateClass="UIWebView"/>
+            </relationships>
+        </class>
         <class className="LocalStorageViewController" superclassName="UITableViewController">
             <source key="sourceIdentifier" type="project" relativePath="./Classes/LocalStorageViewController.h"/>
             <relationships>
                 <relationship kind="outlet" name="usageLabel" candidateClass="UILabel"/>
                 <relationship kind="outlet" name="usageProgressView" candidateClass="UIProgressView"/>
-            </relationships>
-        </class>
-        <class className="OpenFileViewController" superclassName="UIViewController">
-            <source key="sourceIdentifier" type="project" relativePath="./Classes/OpenFileViewController.h"/>
-            <relationships>
-                <relationship kind="outlet" name="downloadFileNameLabel" candidateClass="UILabel"/>
-                <relationship kind="outlet" name="downloadProgressView" candidateClass="UIProgressView"/>
-                <relationship kind="outlet" name="downloadView" candidateClass="UIView"/>
-                <relationship kind="outlet" name="webView" candidateClass="UIWebView"/>
             </relationships>
         </class>
         <class className="RecentViewController" superclassName="UITableViewController">

@@ -8,22 +8,25 @@
 
 #import "DirectoryViewController.h"
 #import "DirectoryContentsViewController.h"
-#import "OpenFileViewController.h"
+#import "FileViewController.h"
 #import "UIStoryboard+Xdrive.h"
 #import "XDriveConfig.h"
 
 @interface DirectoryViewController ()
 @property (nonatomic, strong) DirectoryContentsViewController *_contentsViewController;
+@property (nonatomic, strong) FileViewController *_fileViewController;
 @end
 
 @implementation DirectoryViewController
+
+@synthesize _contentsViewController;
+@synthesize _fileViewController;
 
 @synthesize directory;
 @synthesize messageView;
 @synthesize messageLabel;
 @synthesize activityIndicator;
 
-@synthesize _contentsViewController;
 
 
 #pragma mark - Directory
@@ -46,6 +49,7 @@
 	if (!self.title) self.title = directory.name;
 	
 	[self.view addSubview:_contentsViewController.view];
+	_fileViewController = (FileViewController *)[[self.splitViewController.viewControllers lastObject] topViewController];
 }
 
 - (void)viewWillAppear:(BOOL)animated
@@ -105,9 +109,16 @@
 
 - (void)navigateToFile:(XFile *)file
 {
-	OpenFileViewController *viewController = [[UIStoryboard mainStoryboard] instantiateViewControllerWithIdentifier:@"fileView"];
-	viewController.file = file;
-	[self.navigationController pushViewController:viewController animated:YES];
+	if ([[UIDevice currentDevice] userInterfaceIdiom] == UIUserInterfaceIdiomPhone)
+	{
+		FileViewController *viewController = [[UIStoryboard mainStoryboard] instantiateViewControllerWithIdentifier:@"fileView"];
+		[self.navigationController pushViewController:viewController animated:YES];
+		[viewController loadFile:file];
+	}
+	else
+	{
+		[_fileViewController loadFile:file];
+	}
 }
 
 @end

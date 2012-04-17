@@ -28,7 +28,6 @@
 		A9ACC7101501719500EB69DE /* Icon@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = A9ACC70D1501719500EB69DE /* Icon@2x.png */; };
 		A9ACC7111501719500EB69DE /* iTunesArtwork.png in Resources */ = {isa = PBXBuildFile; fileRef = A9ACC70E1501719500EB69DE /* iTunesArtwork.png */; };
 		A9BA215B152B4C80000C9682 /* FileViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = A9BA215A152B4C80000C9682 /* FileViewController.m */; };
-		A9C34FCC1426668400E3BC3C /* OpenFileViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = A9C34FCB1426668400E3BC3C /* OpenFileViewController.m */; };
 		A9DCAD8914ED6BE70014C8A8 /* LocalStorageViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = A9DCAD8814ED6BE70014C8A8 /* LocalStorageViewController.m */; };
 		A9DCAD8B14ED74C90014C8A8 /* LocalStorageOptions.plist in Resources */ = {isa = PBXBuildFile; fileRef = A9DCAD8A14ED74C90014C8A8 /* LocalStorageOptions.plist */; };
 		A9F626AF1506BEF200B2568E /* UpdateDirectoryOperation.m in Sources */ = {isa = PBXBuildFile; fileRef = A9F626AE1506BEF200B2568E /* UpdateDirectoryOperation.m */; };
@@ -179,8 +178,6 @@
 		A9ACC70E1501719500EB69DE /* iTunesArtwork.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = iTunesArtwork.png; sourceTree = "<group>"; };
 		A9BA2159152B4C80000C9682 /* FileViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FileViewController.h; sourceTree = "<group>"; };
 		A9BA215A152B4C80000C9682 /* FileViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FileViewController.m; sourceTree = "<group>"; };
-		A9C34FCA1426668400E3BC3C /* OpenFileViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OpenFileViewController.h; sourceTree = "<group>"; };
-		A9C34FCB1426668400E3BC3C /* OpenFileViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OpenFileViewController.m; sourceTree = "<group>"; };
 		A9DCAD8714ED6BE70014C8A8 /* LocalStorageViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LocalStorageViewController.h; sourceTree = "<group>"; };
 		A9DCAD8814ED6BE70014C8A8 /* LocalStorageViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LocalStorageViewController.m; sourceTree = "<group>"; };
 		A9DCAD8A14ED74C90014C8A8 /* LocalStorageOptions.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = LocalStorageOptions.plist; sourceTree = "<group>"; };
@@ -333,8 +330,6 @@
 		A9C34FC9142665CA00E3BC3C /* File Info */ = {
 			isa = PBXGroup;
 			children = (
-				A9C34FCA1426668400E3BC3C /* OpenFileViewController.h */,
-				A9C34FCB1426668400E3BC3C /* OpenFileViewController.m */,
 				A9BA2159152B4C80000C9682 /* FileViewController.h */,
 				A9BA215A152B4C80000C9682 /* FileViewController.m */,
 			);
@@ -742,7 +737,6 @@
 				C3E6E0BB13DE010A00EA014B /* XDirectory.m in Sources */,
 				C3E6E0BE13DE010A00EA014B /* XDefaultPath.m in Sources */,
 				C3E6E0C113DE06E100EA014B /* xDrive.xcdatamodeld in Sources */,
-				A9C34FCC1426668400E3BC3C /* OpenFileViewController.m in Sources */,
 				C3B63B81142B94C100152C8A /* DefaultPathController.m in Sources */,
 				C3AAF63D142CED6C002BC5C8 /* SettingsViewController.m in Sources */,
 				C3AAF642142CFCC1002BC5C8 /* RecentViewController.m in Sources */,
