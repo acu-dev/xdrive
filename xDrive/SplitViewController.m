@@ -16,6 +16,15 @@
 
 @implementation SplitViewController
 
+- (void)viewDidLoad
+{
+	[super viewDidLoad];
+	
+	// Set delegate
+	UIViewController *detailViewController = [[self.viewControllers lastObject] topViewController];
+	self.delegate = (id)detailViewController;
+}
+
 - (void)viewDidAppear:(BOOL)animated
 {
 	[super viewDidAppear:animated];
