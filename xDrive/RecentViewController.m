@@ -89,11 +89,11 @@
 	{
 		FileViewController *viewController = [[UIStoryboard mainStoryboard] instantiateViewControllerWithIdentifier:@"fileView"];
 		[self.navigationController pushViewController:viewController animated:YES];
-		[viewController loadFile:file];
+		[viewController showFile:file];
 	}
 	else
 	{
-		[_fileViewController loadFile:file];
+		[_fileViewController showFile:file];
 	}
 }
 

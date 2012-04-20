@@ -17,7 +17,7 @@
 @property (nonatomic, strong) IBOutlet UIProgressView *downloadProgressView;
 
 + (BOOL)isFileViewable:(XFile *)file;
-- (void)loadFile:(XFile *)file;
+- (void)showFile:(XFile *)file;
 - (void)hidePopover;
 
 @end

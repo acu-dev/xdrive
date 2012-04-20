@@ -84,7 +84,7 @@
 
 #pragma mark - Load file
 
-- (void)loadFile:(XFile *)file
+- (void)showFile:(XFile *)file
 {
 	_file = file;
 	self.title = [file.name stringByDeletingPathExtension];
