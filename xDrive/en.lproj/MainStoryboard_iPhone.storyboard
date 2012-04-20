@@ -10,7 +10,7 @@
         <scene sceneID="15">
             <objects>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="14" sceneMemberID="firstResponder"/>
-                <tabBarController storyboardIdentifier="" id="4" customClass="RootTabBarController" sceneMemberID="viewController">
+                <tabBarController storyboardIdentifier="rootView" id="4" customClass="RootTabBarController" sceneMemberID="viewController">
                     <navigationItem key="navigationItem" id="125"/>
                     <nil key="simulatedBottomBarMetrics"/>
                     <simulatedOrientationMetrics key="simulatedOrientationMetrics"/>
@@ -734,7 +734,6 @@
                         <outlet property="passwordField" destination="laj-XC-JMS" id="c9V-xN-tIe"/>
                         <outlet property="serverField" destination="HUm-KK-J4m" id="I9d-sQ-d2L"/>
                         <outlet property="usernameField" destination="3JH-kd-L0s" id="HnI-Hh-ROT"/>
-                        <segue destination="4" kind="modal" identifier="DismissSetupView" modalTransitionStyle="flipHorizontal" id="mcE-e0-Bdf"/>
                     </connections>
                 </viewController>
                 <tapGestureRecognizer id="t9U-zb-RfX">

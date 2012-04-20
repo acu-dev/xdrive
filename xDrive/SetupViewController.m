@@ -9,6 +9,7 @@
 #import <QuartzCore/QuartzCore.h>
 #import "SetupViewController.h"
 #import "XDriveConfig.h"
+#import "AppDelegate.h"
 #import "XService.h"
 #import "ATMHud.h"
 
@@ -347,11 +348,8 @@ static int FormDefaultYPosIpadLandscape = 166;
 
 - (void)dismissSetup
 {
-	XDrvDebug(@"Performing segue DismissSetupView");
-	[self performSegueWithIdentifier:@"DismissSetupView" sender:self];
-	
-	//XDrvDebug(@"dismissing setup view");
-	
+	AppDelegate *appDelegate = (AppDelegate *)[[UIApplication sharedApplication] delegate];
+	[appDelegate setupFinished];
 }
 
 

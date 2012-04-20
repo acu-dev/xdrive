@@ -39,17 +39,7 @@
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
 {	
-	if ([[XService sharedXService].localService server])
-	{
-		if ([[UIDevice currentDevice] userInterfaceIdiom] == UIUserInterfaceIdiomPad)
-		{
-			// Make file view controller the split view controller's delegate
-			UISplitViewController *splitViewController = (UISplitViewController *)self.window.rootViewController;
-			UIViewController *detailViewController = [[splitViewController.viewControllers lastObject] topViewController];
-			splitViewController.delegate = (id)detailViewController;
-		}
-	}
-	else
+	if (![[XService sharedXService].localService server])
 	{
 		// Load setup
 		[self beginSetup];
@@ -116,7 +106,14 @@
 
 - (void)setupFinished
 {
+	UIViewController *newRootViewController = [[UIStoryboard deviceStoryboard] instantiateViewControllerWithIdentifier:@"rootView"];
 	
+	[UIView transitionWithView:window duration:0.5 options:UIViewAnimationOptionTransitionCrossDissolve animations:^(void) {
+		BOOL oldState = [UIView areAnimationsEnabled];
+		[UIView setAnimationsEnabled:NO];
+		window.rootViewController = newRootViewController;
+		[UIView setAnimationsEnabled:oldState];
+	} completion:nil];
 }
 
 

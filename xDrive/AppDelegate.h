@@ -16,4 +16,6 @@
 - (void)logoutAndBeginSetup;
 	// Resets the database and launches setup controller
 
+- (void)setupFinished;
+
 @end
