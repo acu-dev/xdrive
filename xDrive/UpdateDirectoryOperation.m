@@ -90,7 +90,7 @@
 			XFile *file = [_localService fileWithPath:[entryFromJson objectForKey:@"path"]];
 			file.type = [entryFromJson objectForKey:@"type"];
 			file.size = [entryFromJson objectForKey:@"size"];
-			file.sizeDescription = [NSString stringByFormattingBytes:[file.size integerValue]];
+			file.sizeDescription = [NSString stringByFormattingBytes:[file.size longLongValue]];
 			entry = file;
 		}
 		// Common attributes
