@@ -138,6 +138,17 @@ static float ReleaseToRefreshThreshold = -66;
 {
 	[super viewWillAppear:animated];
 	
+	// Deselect row if it is a folder
+	if ([[UIDevice currentDevice] userInterfaceIdiom] == UIUserInterfaceIdiomPad && [self.tableView indexPathForSelectedRow])
+	{
+		// Get entry for selected row
+		XEntry *entry = [_fetchedResultsController objectAtIndexPath:[self.tableView indexPathForSelectedRow]];
+		if ([entry isKindOfClass:[XDirectory class]])
+			[self.tableView deselectRowAtIndexPath:[self.tableView indexPathForSelectedRow] animated:YES];
+	}
+	
+	
+	
 	if ([self shouldUpdateContentAutomatically])
 	{
 		XDrvDebug(@"%@ :: Directory is stale", directory.path);
