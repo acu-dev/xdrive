@@ -378,6 +378,9 @@
                                 <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                 <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                                 <dataDetectorType key="dataDetectorTypes" phoneNumber="YES" link="YES" address="YES" calendarEvent="YES"/>
+                                <connections>
+                                    <outlet property="delegate" destination="fp6-sh-1dq" id="5aH-Bw-Y8U"/>
+                                </connections>
                             </webView>
                             <view hidden="YES" contentMode="scaleToFill" id="VnY-18-5g9">
                                 <rect key="frame" x="0.0" y="0.0" width="703" height="704"/>

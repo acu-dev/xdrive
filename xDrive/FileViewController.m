@@ -16,6 +16,7 @@
 @property (nonatomic, strong) XServiceRemote *_remoteService;
 @property (nonatomic, strong) UIPopoverController *_dirPopoverController;
 - (void)downloadFile;
+- (void)loadFile;
 - (void)displayFile;
 @end
 
@@ -82,7 +83,7 @@
 
 
 
-#pragma mark - Load file
+#pragma mark - Show file
 
 - (void)showFile:(XFile *)file
 {
@@ -121,7 +122,7 @@
 			
 			// Display file
 			downloadView.hidden = YES;
-			[self displayFile];
+			[self loadFile];
 			
 			return;
 		}
@@ -144,6 +145,42 @@
 	
 	// Download file
 	[self downloadFile];
+}
+
+- (void)loadFile
+{
+	
+	
+	
+	XDrvDebug(@"Loading file from path %@", [_file cachePath]);
+	NSURLRequest *request = [NSURLRequest requestWithURL:[NSURL fileURLWithPath:[_file cachePath]]];
+    [webView loadRequest:request];
+	
+	// Update file's last access time
+	_file.lastAccessed = [NSDate date];
+	[[XService sharedXService].localService saveWithCompletionBlock:^(NSError *error) {}];
+}
+
+- (void)displayFile
+{
+	if (webView.loading)
+	{
+		XDrvDebug(@"File is still loading, call back later");
+		[self performSelector:@selector(displayFile) withObject:nil afterDelay:0.5];
+		return;
+	}
+	else
+	{
+		// Reveal webview
+		XDrvDebug(@"File is done loading, revealing webview");
+		[UIView animateWithDuration:0.3
+						 animations:^(void){
+							 [webView setAlpha:1.0];
+						 }
+						 completion:^(BOOL finished){
+							 downloadView.hidden = YES;
+						 }];
+	}
 }
 
 
@@ -180,26 +217,7 @@
 	[[XService sharedXService] cacheFile:_file fromTmpPath:tmpPath];
 	
 	// Load file
-	[self displayFile];
-	
-	// Reveal webview
-	[UIView animateWithDuration:0.3
-					 animations:^(void){
-						 [webView setAlpha:1.0];
-					 }
-					 completion:^(BOOL finished){
-						 downloadView.hidden = YES;
-					 }];
-}
-
-- (void)displayFile
-{
-    NSURLRequest *request = [NSURLRequest requestWithURL:[NSURL fileURLWithPath:[_file cachePath]]];
-    [webView loadRequest:request];
-	
-	// Update file's last access time
-	_file.lastAccessed = [NSDate date];
-	[[XService sharedXService].localService saveWithCompletionBlock:^(NSError *error) {}];
+	[self performSelector:@selector(loadFile) withObject:nil afterDelay:0.3];
 }
 
 
@@ -219,6 +237,15 @@
 {
 	[self.navigationItem setLeftBarButtonItem:nil animated:YES];
 	_dirPopoverController = nil;
+}
+
+
+
+#pragma mark - UIWebViewDelegate
+
+- (void)webViewDidFinishLoad:(UIWebView *)webView
+{
+	[self displayFile];
 }
 
 @end

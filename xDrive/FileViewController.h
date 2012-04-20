@@ -9,7 +9,7 @@
 #import <UIKit/UIKit.h>
 #import "XFile.h"
 
-@interface FileViewController : UIViewController <UISplitViewControllerDelegate>
+@interface FileViewController : UIViewController <UISplitViewControllerDelegate, UIWebViewDelegate>
 
 @property (nonatomic, strong) IBOutlet UIWebView *webView;
 @property (nonatomic, strong) IBOutlet UIView *downloadView, *noFileSelectedView;
