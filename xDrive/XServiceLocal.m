@@ -161,7 +161,7 @@ static NSString *ModelFileName = @"xDrive";
 		NSArray *fetchedObjects = [_managedObjectContext executeFetchRequest:fetchRequest error:&error];
 		if (![fetchedObjects count])
 		{
-			XDrvLog(@"No server object found");
+			XDrvDebug(@"No server object found");
 		}
 		else
 		{
