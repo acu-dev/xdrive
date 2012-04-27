@@ -33,13 +33,15 @@
 
 + (BOOL)isFileViewable:(XFile *)file
 {
-	NSArray *supportedFileExtensions = [NSArray arrayWithObjects:@"pdf",
+	NSArray *supportedFileExtensions = [NSArray arrayWithObjects:
 										@"pages", @"numbers", @"key",
 										@"doc",	@"xls", @"ppt",
+										@"docx", @"xlsx", @"pptx",
 										@"txt",	@"rtf",	@"html",
 										@"jpg",	@"jpeg", @"png",
 										@"m4v", @"mov", @"mp4",
 										@"mp3", @"wav", @"m4a",
+										@"pdf", @"csv",
 										nil];
 	return ([supportedFileExtensions containsObject:[[file extension] lowercaseString]]);
 }

@@ -26,14 +26,20 @@
 		<string>file.application.png</string>
 		<key>application/msword</key>
 		<string>file.document.png</string>
+		<key>application/vnd.openxmlformats-officedocument.spreadsheetml.sheet</key>
+		<string>file.document.png</string>
 		<key>application/powerpoint</key>
 		<string>file.document.png</string>
 		<key>application/vnd.ms-excel</key>
 		<string>file.document.png</string>
 		<key>application/vnd.ms-word</key>
 		<string>file.document.png</string>
+		<key>application/vnd.openxmlformats-officedocument.wordprocessingml.document</key>
+		<string>file.document.png</string>
 		<key>application/vnd.ms-powerpoint</key>
 		<string>file.document.png</string>
+		<key>application/vnd.openxmlformats-officedocument.presentationml.presentation</key>
+		<string>file.richtext.png</string>
 		<key>application/x-gtar</key>
 		<string>file.archive.png</string>
 		<key>application/x-gzip</key>
