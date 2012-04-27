@@ -10,6 +10,7 @@
 #import "XDriveConfig.h"
 #import "NSString+DTPaths.h"
 #import "XService.h"
+#import "DTAsyncFileDeleter.h"
 
 
 
@@ -364,7 +365,6 @@ static NSString *ModelFileName = @"xDrive";
 	
 	// Clear references to current server
 	_server = nil;
-	//[XService sharedXService].remoteService.activeServer = nil;
 
 	// Remove persistent store from the coordinator
 	NSPersistentStore *store = [_persistentStoreCoordinator persistentStoreForURL:storeURL];
@@ -376,11 +376,7 @@ static NSString *ModelFileName = @"xDrive";
 	}
 	
 	// Delete database file
-	if (![[NSFileManager defaultManager] removeItemAtPath:storeURL.path error:&error])
-	{
-		XDrvLog(@"Error deleting database file %@: %@", storeURL.path, error);
-		return;
-	}
+	[[DTAsyncFileDeleter sharedInstance] removeItemAtURL:storeURL];
 	
 	// Create new persistent store
 	error = nil;
